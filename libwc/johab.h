@@ -52,12 +52,12 @@ extern wc_uchar WC_JOHAB_MAP[];
 extern wc_wchar_t wc_johab_to_ksx1001(wc_wchar_t cc);
 extern wc_wchar_t wc_ksx1001_to_johab(wc_wchar_t cc);
 extern wc_wchar_t wc_ucs_to_johab(wc_uint32 ucs);
-extern wc_uint32  wc_johab1_to_N(wc_uint32 cc);
-extern wc_uint32  wc_N_to_johab1(wc_uint32 ucs);
+extern wc_uint32 wc_johab1_to_N(wc_uint32 cc);
+extern wc_uint32 wc_N_to_johab1(wc_uint32 ucs);
 extern wc_wchar_t wc_johab_to_cs128w(wc_wchar_t cc);
 extern wc_wchar_t wc_cs128w_to_johab(wc_wchar_t cc);
-extern Str        wc_conv_from_johab(Str is, wc_ces ces);
-extern void       wc_push_to_johab(Str os, wc_wchar_t cc, wc_status *st);
-extern Str        wc_char_conv_from_johab(wc_uchar c, wc_status *st);
+extern Str wc_conv_from_johab(Str is, wc_ces ces);
+extern void wc_push_to_johab(Str os, wc_wchar_t cc, wc_status * st);
+extern Str wc_char_conv_from_johab(wc_uchar c, wc_status * st);
 
 #endif

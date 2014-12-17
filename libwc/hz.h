@@ -13,8 +13,8 @@
 #define WC_HZ_MBYTE1	4
 #define WC_HZ_MBYTE1_GR	5
 
-extern Str  wc_conv_from_hz(Str is, wc_ces ces);
-extern void wc_push_to_hz(Str os, wc_wchar_t cc, wc_status *st);
-extern void wc_push_to_hz_end(Str os, wc_status *st);
+extern Str wc_conv_from_hz(Str is, wc_ces ces);
+extern void wc_push_to_hz(Str os, wc_wchar_t cc, wc_status * st);
+extern void wc_push_to_hz_end(Str os, wc_status * st);
 
 #endif

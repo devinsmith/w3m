@@ -14,7 +14,7 @@
 #define WC_C_G1_CS94	0x29	/* ESC ')' F */
 #define WC_C_G2_CS94	0x2A	/* ESC '*' F */
 #define WC_C_G3_CS94	0x2B	/* ESC '+' F */
-#define WC_C_G0_CS96	0x2C	/* ESC ',' F */ /* ISO 2022 does not permit */
+#define WC_C_G0_CS96	0x2C	/* ESC ',' F */	/* ISO 2022 does not permit */
 #define WC_C_G1_CS96	0x2D	/* ESC '-' F */
 #define WC_C_G2_CS96	0x2E	/* ESC '.' F */
 #define WC_C_G3_CS96	0x2F	/* ESC '/' F */
@@ -86,12 +86,12 @@
 #define WC_ISO_CSWOSR		0x20
 
 #define WC_ISO_MAP_CG   0xF0
-#define WC_ISO_MAP_C0	0x10			/* 0x00 - 0x1F */
-#define WC_ISO_MAP_GL	0x00			/* 0x21 - 0x7E */
-#define WC_ISO_MAP_GL96	0x20			/* 0x20,  0x7F */
-#define WC_ISO_MAP_C1	0x50			/* 0x80 - 0x9F */
-#define WC_ISO_MAP_GR	0x40			/* 0xA1 - 0xFE */
-#define WC_ISO_MAP_GR96	0x60			/* 0xA0,  0xFF */
+#define WC_ISO_MAP_C0	0x10	/* 0x00 - 0x1F */
+#define WC_ISO_MAP_GL	0x00	/* 0x21 - 0x7E */
+#define WC_ISO_MAP_GL96	0x20	/* 0x20,  0x7F */
+#define WC_ISO_MAP_C1	0x50	/* 0x80 - 0x9F */
+#define WC_ISO_MAP_GR	0x40	/* 0xA1 - 0xFE */
+#define WC_ISO_MAP_GR96	0x60	/* 0xA0,  0xFF */
 #define WC_ISO_MAP_SO	(0x1 | WC_ISO_MAP_C0)	/* 0x0E */
 #define WC_ISO_MAP_SI	(0x2 | WC_ISO_MAP_C0)	/* 0x0F */
 #define WC_ISO_MAP_ESC	(0x3 | WC_ISO_MAP_C0)	/* 0x1B */
@@ -100,9 +100,9 @@
 #define WC_ISO_MAP_DETECT	0x4F
 
 #define WC_CS94WUL_N(U,L)	(((U) - 0x21) * 0x5E + (L) - 0x21)
-#define WC_CS94W_N(c)	WC_CS94WUL_N(((c) >> 8) & 0x7F, (c) & 0x7F)     
+#define WC_CS94W_N(c)	WC_CS94WUL_N(((c) >> 8) & 0x7F, (c) & 0x7F)
 #define WC_CS96WUL_N(U,L)	(((U) - 0x20) * 0x60 + (L) - 0x20)
-#define WC_CS96W_N(c)	WC_CS96WUL_N(((c) >> 8) & 0x7F, (c) & 0x7F)     
+#define WC_CS96W_N(c)	WC_CS96WUL_N(((c) >> 8) & 0x7F, (c) & 0x7F)
 #define WC_N_CS94WU(c)	((c) / 0x5E + 0x21)
 #define WC_N_CS94WL(c)	((c) % 0x5E + 0x21)
 #define WC_N_CS94W(c)	((WC_N_CS94WU(c) << 8) + WC_N_CS94WL(c))
@@ -112,16 +112,16 @@
 
 extern wc_uint8 WC_ISO_MAP[];
 
-extern Str  wc_conv_from_iso2022(Str is, wc_ces ces);
-extern void wc_push_to_iso2022(Str os, wc_wchar_t cc, wc_status *st);
-extern void wc_push_to_euc(Str os, wc_wchar_t cc, wc_status *st);
-extern void wc_push_to_eucjp(Str os, wc_wchar_t cc, wc_status *st);
-extern void wc_push_to_euctw(Str os, wc_wchar_t cc, wc_status *st);
-extern void wc_push_to_iso8859(Str os, wc_wchar_t cc, wc_status *st);
-extern void wc_push_to_iso2022_end(Str os, wc_status *st);
-extern int  wc_parse_iso2022_esc(wc_uchar **ptr, wc_status *st);
-extern void wc_push_iso2022_esc(Str os, wc_ccs ccs, wc_uchar g, wc_uint8 invoke, wc_status *st);
-extern void wc_create_gmap(wc_status *st);
-extern Str  wc_char_conv_from_iso2022(wc_uchar c, wc_status *st);
+extern Str wc_conv_from_iso2022(Str is, wc_ces ces);
+extern void wc_push_to_iso2022(Str os, wc_wchar_t cc, wc_status * st);
+extern void wc_push_to_euc(Str os, wc_wchar_t cc, wc_status * st);
+extern void wc_push_to_eucjp(Str os, wc_wchar_t cc, wc_status * st);
+extern void wc_push_to_euctw(Str os, wc_wchar_t cc, wc_status * st);
+extern void wc_push_to_iso8859(Str os, wc_wchar_t cc, wc_status * st);
+extern void wc_push_to_iso2022_end(Str os, wc_status * st);
+extern int wc_parse_iso2022_esc(wc_uchar ** ptr, wc_status * st);
+extern void wc_push_iso2022_esc(Str os, wc_ccs ccs, wc_uchar g, wc_uint8 invoke, wc_status * st);
+extern void wc_create_gmap(wc_status * st);
+extern Str wc_char_conv_from_iso2022(wc_uchar c, wc_status * st);
 
 #endif
