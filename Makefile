@@ -17,7 +17,7 @@ SYS_CONF_DIR=	/etc
 LIBEXEC_DIR=	${PREFIX}/libexec
 LOCALE_DIR=	/usr/share/locale
 
-CFLAGS+=	-Wall -I${PREFIX}/include -I. -I./libwc \
+CFLAGS+=	-I${PREFIX}/include -I. -I./libwc \
 		-DCGIBIN_DIR="\"${LIBEXEC_DIR}/${PROG}/cgi-bin\"" \
 		-DAUXBIN_DIR="\"${LIBEXEC_DIR}/${PROG}\"" \
 		-DHELP_DIR="\"${PREFIX}/share/${PROG}\"" \
@@ -25,6 +25,10 @@ CFLAGS+=	-Wall -I${PREFIX}/include -I. -I./libwc \
 		-DETC_DIR="\"${SYS_CONF_DIR}\"" \
 		-DCONF_DIR="\"${SYS_CONF_DIR}/${PROG}\"" \
 		-DLOCALEDIR="\"${LOCALE_DIR}\""
+
+CFLAGS+=	-Wall
+CFLAGS+=	-Wshadow -Wpointer-arith -Wcast-qual
+CFLAGS+=	-Wsign-compare
 
 LDADD+=		-L${PREFIX}/lib -lssl -lcrypto -lgc -lm -lintl \
 		-ltermcap ./libwc/libwc.a

@@ -510,6 +510,9 @@ main(int argc, char **argv, char **envp)
 	if (!non_null(Mailer) && (p = getenv("MAILER")) != NULL)
 		Mailer = p;
 
+	const char *errstr;
+	long long conv_result;
+
 	/* argument search 2 */
 	i = 1;
 	while (i < argc) {
@@ -517,15 +520,21 @@ main(int argc, char **argv, char **envp)
 			if (!strcmp("-t", argv[i])) {
 				if (++i >= argc)
 					usage();
-				if (atoi(argv[i]) > 0)
-					Tabstop = atoi(argv[i]);
+				conv_result =
+				    strtonum(argv[i], 1, INT_MAX, &errstr);
+				if (errstr == NULL) {
+					Tabstop = conv_result;
+				}
 			} else if (!strcmp("-r", argv[i]))
 				ShowEffect = FALSE;
 			else if (!strcmp("-l", argv[i])) {
 				if (++i >= argc)
 					usage();
-				if (atoi(argv[i]) > 0)
-					PagerMax = atoi(argv[i]);
+				conv_result =
+				    strtonum(argv[i], 1, INT_MAX, &errstr);
+				if (errstr == NULL) {
+					PagerMax = conv_result;
+				}
 			}
 #ifdef USE_M17N
 			else if (!strcmp("-s", argv[i]))
@@ -622,8 +631,14 @@ main(int argc, char **argv, char **envp)
 			} else if (!strcmp("-cols", argv[i])) {
 				if (++i >= argc)
 					usage();
-				COLS = atoi(argv[i]);
-				if (COLS > MAXIMUM_COLS) {
+				conv_result =
+				    strtonum(argv[i], 0, INT_MAX, &errstr);
+				if (errstr == NULL) {
+					COLS = conv_result;
+					if (COLS > MAXIMUM_COLS) {
+						COLS = MAXIMUM_COLS;
+					}
+				} else {
 					COLS = MAXIMUM_COLS;
 				}
 			} else if (!strcmp("-ppc", argv[i])) {
@@ -2495,8 +2510,14 @@ _goLine(char *l)
 			lineSkip(Currentbuf, Currentbuf->lastLine,
 				 -(Currentbuf->LINES + 1) / 2, TRUE);
 		Currentbuf->currentLine = Currentbuf->lastLine;
-	} else
-		gotoRealLine(Currentbuf, atoi(l));
+	} else {
+		long long temp;
+		const char *errstr = NULL;
+		temp = strtonum(l, 0, INT_MAX, &errstr);
+		if (errstr == NULL) {
+		    gotoRealLine(Currentbuf, (int) temp);
+		}
+	}
 	arrangeCursor(Currentbuf);
 	displayBuffer(Currentbuf, B_FORCE_REDRAW);
 }
@@ -4759,8 +4780,14 @@ change_charset(struct parsed_tagarg * arg)
 		return;
 	charset = Currentbuf->document_charset;
 	for (; arg; arg = arg->next) {
-		if (!strcmp(arg->arg, "charset"))
-			charset = atoi(arg->value);
+		if (!strcmp(arg->arg, "charset")) {
+			const char *errstr = NULL;
+			long long temp;
+			temp = strtonum(arg->value, 0, INT_MAX, &errstr);
+			if (errstr == NULL) {
+				charset = (int) temp;
+			}
+		}
 	}
 	_docCSet(charset);
 }
@@ -5611,8 +5638,13 @@ searchKeyNum(void)
 	int n = 1;
 
 	d = searchKeyData();
-	if (d != NULL)
-		n = atoi(d);
+	if (d != NULL) {
+		const char *errstr;
+		long long temp = strtonum(d, 0, INT_MAX, &errstr);
+		if (errstr == NULL) {
+			n = temp;
+		}
+	}
 	return n * PREC_NUM;
 }
 
@@ -5767,17 +5799,19 @@ DEFUN(setAlarm, ALARM, "Set alarm")
 		}
 	}
 	if (*data != '\0') {
-		sec = atoi(getWord(&data));
+		sec = strtonum(getWord(&data), 0, INT_MAX, NULL);
 		if (sec > 0)
 			cmd = getFuncList(getWord(&data));
 	}
 	if (cmd >= 0) {
 		data = getQWord(&data);
 		setAlarmEvent(&DefaultAlarm, sec, AL_EXPLICIT, cmd, data);
-		disp_message_nsec(Sprintf("%dsec %s %s", sec, w3mFuncList[cmd].id,
-					  data)->ptr, FALSE, 1, FALSE, TRUE);
+		disp_message_nsec(Sprintf("%dsec %s %s", sec,
+		    w3mFuncList[cmd].id, data)->ptr,
+		    FALSE, 1, FALSE, TRUE);
 	} else {
-		setAlarmEvent(&DefaultAlarm, 0, AL_UNSET, FUNCNAME_nulcmd, NULL);
+		setAlarmEvent(&DefaultAlarm, 0, AL_UNSET,
+		    FUNCNAME_nulcmd, NULL);
 	}
 	displayBuffer(Currentbuf, B_NORMAL);
 }
@@ -6384,17 +6418,26 @@ download_action(struct parsed_tagarg * arg)
 {
 	DownloadList *d;
 	pid_t pid;
+	const char *errstr = NULL;
 
 	for (; arg; arg = arg->next) {
 		if (!strncmp(arg->arg, "stop", 4)) {
-			pid = (pid_t) atoi(&arg->arg[4]);
+			pid = (pid_t) strtonum(&arg->arg[4],
+			    0, INT_MAX, &errstr);
 #ifndef __MINGW32_VERSION
-			kill(pid, SIGKILL);
+			if (errstr == NULL) {
+				kill(pid, SIGKILL);
+			}
 #endif
-		} else if (!strncmp(arg->arg, "ok", 2))
-			pid = (pid_t) atoi(&arg->arg[2]);
-		else
+		} else if (!strncmp(arg->arg, "ok", 2)) {
+			pid = (pid_t) strtonum(&arg->arg[2],
+			    0, INT_MAX, &errstr);
+		} else {
 			continue;
+		}
+		if (errstr != NULL) {
+			continue;
+		}
 		for (d = FirstDL; d; d = d->next) {
 			if (d->pid == pid) {
 				unlink(d->lock);
