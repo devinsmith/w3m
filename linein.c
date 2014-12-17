@@ -923,11 +923,12 @@ doComplete(Str ifn, int *status, int next)
 			    && (!strcmp(dir->d_name, ".") || !strcmp(dir->d_name, "..")))
 				continue;
 			if (!strncmp(dir->d_name, fn, fl)) {	/* match */
+				size_t len = strlen(dir->d_name);
 				NCFileBuf++;
 				CFileBuf = New_Reuse(char *, CFileBuf, NCFileBuf);
-				CFileBuf[NCFileBuf - 1] =
-					NewAtom_N(char, strlen(dir->d_name) + 1);
-				strcpy(CFileBuf[NCFileBuf - 1], dir->d_name);
+				CFileBuf[NCFileBuf - 1] = NewAtom_N(char, len + 1);
+				memcpy(CFileBuf[NCFileBuf - 1], dir->d_name, len);
+				CFileBuf[NCFileBuf - 1][len] = '\0';
 				if (NCFileBuf == 1) {
 					CFileName = Strnew_charp(dir->d_name);
 				} else {

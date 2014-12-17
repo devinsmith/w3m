@@ -735,23 +735,35 @@ lc2c(longchar * x, int len)
 	char *r;
 
 	while (x[j].type != RE_TYPE_END && j < len) {
-		if (x[j].type == RE_WHICH_RANGE)
-			y[i++] = '-';
+		if (x[j].type == RE_WHICH_RANGE) {
+			if (i < sizeof(y)) {
+				y[i++] = '-';
+			}
+		}
 #ifdef USE_M17N
 		else if (x[j].type == RE_TYPE_WCHAR_T) {
 			char buf[20];
-			sprintf(buf, "[%x-%x]", x[j].wch.ccs, x[j].wch.code);
-			strcpy(&y[i], buf);
+			snprintf(buf, sizeof(buf),
+			    "[%x-%x]", x[j].wch.ccs, x[j].wch.code);
+			strlcpy(&y[i], buf, sizeof(y) - i);
 			i += strlen(buf);
+			if (i >= sizeof(y)) {
+				break;
+			}
 		}
 #endif
-		else
+		else if (i < sizeof(y)) {
 			y[i++] = x[j].ch;
+		}
 		j++;
 	}
-	y[i] = '\0';
+	if (i < sizeof(y)) {
+		y[i] = '\0';
+	} else {
+		y[sizeof(y) - 1] = '\0';
+	}
 	r = GC_malloc_atomic(i + 1);
-	strcpy(r, y);
+	strlcpy(r, y, i + 1);
 	return r;
 }
 
