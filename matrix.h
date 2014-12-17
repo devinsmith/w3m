@@ -41,7 +41,8 @@ typedef struct vector *Vector;
 
 #define m_entry(m,i,j) (M_VAL(m,i,j))
 #define v_entry(v,i) (V_VAL(v,i))
-#define m_copy(m1,m2) (bcopy((m1)->me,(m2)->me,(m1)->dim*(m1)->dim*sizeof(double)))
+#define m_copy(m1,m2) \
+    (memcpy((m2)->me, (m1)->me, (m1)->dim * (m1)->dim * sizeof(double)))
 #define v_free(v) ((v)=NULL)
 #define m_free(m) ((m)=NULL)
 #define px_free(px) ((px)=NULL)
