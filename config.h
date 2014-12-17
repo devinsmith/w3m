@@ -138,8 +138,6 @@ typedef long clen_t;
 #define HAVE_SYMLINK 1
 #define HAVE_READLINK 1
 #define HAVE_LSTAT 1
-#define HAVE_SETENV 1
-#define HAVE_PUTENV 1
 /* #undef HAVE_GETPASSPHRASE */
 #define HAVE_CHDIR 1
 #define HAVE_SETPGRP 1

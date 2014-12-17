@@ -204,52 +204,8 @@ check_local_cgi(char *file, int status)
 void
 set_environ(char *var, char *value)
 {
-#ifdef HAVE_SETENV
 	if (var != NULL && value != NULL)
 		setenv(var, value, 1);
-#else				/* not HAVE_SETENV */
-#ifdef HAVE_PUTENV
-	static Hash_sv *env_hash = NULL;
-	Str tmp = Strnew_m_charp(var, "=", value, NULL);
-
-	if (env_hash == NULL)
-		env_hash = newHash_sv(20);
-	putHash_sv(env_hash, var, (void *) tmp->ptr);
-	putenv(tmp->ptr);
-#else				/* not HAVE_PUTENV */
-	extern char **environ;
-	char **ne;
-	char *p;
-	int i, l, el;
-	char **e, **newenv;
-
-	/* I have no setenv() nor putenv() */
-	/* This part is taken from terms.c of skkfep */
-	l = strlen(var);
-	for (e = environ, i = 0; *e != NULL; e++, i++) {
-		if (strncmp(e, var, l) == 0 && (*e)[l] == '=') {
-			el = strlen(*e) - l - 1;
-			if (el >= strlen(value)) {
-				strcpy(*e + l + 1, value);
-				return 0;
-			} else {
-				for (; *e != NULL; e++, i++) {
-					*e = *(e + 1);
-				}
-				i--;
-				break;
-			}
-		}
-	}
-	newenv = (char **) GC_malloc((i + 2) * sizeof(char *));
-	if (newenv == NULL)
-		return;
-	for (e = environ, ne = newenv; *e != NULL; *(ne++) = *(e++));
-	*(ne++) = p;
-	*ne = NULL;
-	environ = newenv;
-#endif				/* not HAVE_PUTENV */
-#endif				/* not HAVE_SETENV */
 }
 
 static void
