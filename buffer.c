@@ -249,20 +249,22 @@ gotoLine(Buffer * buf, int n)
 		       (getNextPage(buf, 1) != NULL));
 	}
 	if (l->linenumber > n) {
-		/* FIXME: gettextize? */
-		sprintf(msg, "First line is #%ld", l->linenumber);
-		set_delayed_message(msg);
+		if (snprintf(msg, sizeof(msg), "First line is #%ld",
+		    l->linenumber) < sizeof(msg)) {
+			set_delayed_message(msg);
+		}
 		buf->topLine = buf->currentLine = l;
 		return;
 	}
 	if (buf->lastLine->linenumber < n) {
 		l = buf->lastLine;
-		/* FIXME: gettextize? */
-		sprintf(msg, "Last line is #%ld", buf->lastLine->linenumber);
-		set_delayed_message(msg);
+		if (snprintf(msg, sizeof(msg), "Last line is #%ld",
+		    buf->lastLine->linenumber) < sizeof(msg)) {
+			set_delayed_message(msg);
+		}
 		buf->currentLine = l;
-		buf->topLine = lineSkip(buf, buf->currentLine, -(buf->LINES - 1),
-					FALSE);
+		buf->topLine = lineSkip(buf, buf->currentLine,
+		    -(buf->LINES - 1), FALSE);
 		return;
 	}
 	for (; l != NULL; l = l->next) {
@@ -294,28 +296,32 @@ gotoRealLine(Buffer * buf, int n)
 		       (getNextPage(buf, 1) != NULL));
 	}
 	if (l->real_linenumber > n) {
-		/* FIXME: gettextize? */
-		sprintf(msg, "First line is #%ld", l->real_linenumber);
-		set_delayed_message(msg);
+		if (snprintf(msg, sizeof(msg), "First line is #%ld",
+		    l->real_linenumber) < sizeof(msg)) {
+			set_delayed_message(msg);
+		}
 		buf->topLine = buf->currentLine = l;
 		return;
 	}
 	if (buf->lastLine->real_linenumber < n) {
 		l = buf->lastLine;
-		/* FIXME: gettextize? */
-		sprintf(msg, "Last line is #%ld", buf->lastLine->real_linenumber);
-		set_delayed_message(msg);
+		if (snprintf(msg, sizeof(msg), "Last line is #%ld",
+		    buf->lastLine->real_linenumber) < sizeof(msg)) {
+			set_delayed_message(msg);
+		}
 		buf->currentLine = l;
-		buf->topLine = lineSkip(buf, buf->currentLine, -(buf->LINES - 1),
-					FALSE);
+		buf->topLine = lineSkip(buf, buf->currentLine,
+		    -(buf->LINES - 1), FALSE);
 		return;
 	}
 	for (; l != NULL; l = l->next) {
 		if (l->real_linenumber >= n) {
 			buf->currentLine = l;
 			if (n < buf->topLine->real_linenumber ||
-			    buf->topLine->real_linenumber + buf->LINES <= n)
-				buf->topLine = lineSkip(buf, l, -(buf->LINES + 1) / 2, FALSE);
+			    buf->topLine->real_linenumber + buf->LINES <= n) {
+				buf->topLine = lineSkip(buf, l,
+				-(buf->LINES + 1) / 2, FALSE);
+			}
 			break;
 		}
 	}

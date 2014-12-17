@@ -1240,7 +1240,8 @@ static char *
 color_seq(int colmode)
 {
 	static char seqbuf[32];
-	sprintf(seqbuf, "\033[%dm", ((colmode >> 8) & 7) + 30);
+	snprintf(seqbuf, sizeof(seqbuf), "\033[%dm",
+	    ((colmode >> 8) & 7) + 30);
 	return seqbuf;
 }
 
@@ -1257,7 +1258,8 @@ static char *
 bcolor_seq(int colmode)
 {
 	static char seqbuf[32];
-	sprintf(seqbuf, "\033[%dm", ((colmode >> 12) & 7) + 40);
+	snprintf(seqbuf, sizeof(seqbuf), "\033[%dm",
+	    ((colmode >> 12) & 7) + 40);
 	return seqbuf;
 }
 #endif				/* USE_BG_COLOR */

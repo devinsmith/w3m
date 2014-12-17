@@ -195,7 +195,7 @@ drawImage()
 			fputs("0;", Imgdisplay_wf);	/* DrawImage() */
 		} else
 			fputs("1;", Imgdisplay_wf);	/* DrawImage(redraw) */
-		sprintf(buf, "%d;%d;%d;%d;%d;%d;%d;%d;%d;",
+		snprintf(buf, sizeof(buf), "%d;%d;%d;%d;%d;%d;%d;%d;%d;",
 			(-i->cache->index - 1) % MAX_IMAGE + 1, i->x, i->y,
 			(i->cache->width > 0) ? i->cache->width : 0,
 			(i->cache->height > 0) ? i->cache->height : 0,
@@ -232,7 +232,8 @@ clearImage()
 		if (!(i->cache->loaded & IMG_FLAG_LOADED &&
 		      i->width > 0 && i->height > 0))
 			continue;
-		sprintf(buf, "6;%d;%d;%d;%d\n", i->x, i->y, i->width, i->height);
+		snprintf(buf, sizeof(buf), "6;%d;%d;%d;%d\n",
+		    i->x, i->y, i->width, i->height);
 		fputs(buf, Imgdisplay_wf);
 	}
 	syncImage();

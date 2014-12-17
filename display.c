@@ -674,19 +674,24 @@ redrawLine(Buffer * buf, Line * l, int i)
 	if (showLineNum) {
 		char tmp[16];
 		if (!buf->rootX) {
-			if (buf->lastLine->real_linenumber > 0)
-				buf->rootX = (int) (log(buf->lastLine->real_linenumber + 0.1)
-						    / log(10)) + 2;
+			if (buf->lastLine->real_linenumber > 0) {
+				buf->rootX = (int)
+				    (log(buf->lastLine->real_linenumber + 0.1)
+				    / log(10)) + 2;
+			}
 			if (buf->rootX < 5)
 				buf->rootX = 5;
 			if (buf->rootX > COLS)
 				buf->rootX = COLS;
 			buf->COLS = COLS - buf->rootX;
 		}
-		if (l->real_linenumber && !l->bpos)
-			sprintf(tmp, "%*ld:", buf->rootX - 1, l->real_linenumber);
-		else
-			sprintf(tmp, "%*s ", buf->rootX - 1, "");
+		if (l->real_linenumber && !l->bpos) {
+			(void)snprintf(tmp, sizeof(tmp), "%*ld:",
+				buf->rootX - 1, l->real_linenumber);
+		} else {
+			(void)snprintf(tmp, sizeof(tmp), "%*s ",
+				buf->rootX - 1, "");
+		}
 		addstr(tmp);
 	}
 	move(i, buf->rootX);
@@ -1138,7 +1143,7 @@ addChar(char c, Lineprop mode)
 #ifdef USE_M17N
 	else if (mode & PC_UNKNOWN) {
 		char buf[5];
-		sprintf(buf, "[%.2X]",
+		snprintf(buf, sizeof(buf), "[%.2X]",
 			(unsigned char) wtf_get_code((wc_uchar *) p) | 0x80);
 		addstr(buf);
 	} else

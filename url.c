@@ -1906,10 +1906,11 @@ check_no_proxy(char *domain)
 		}
 		for (h_addr_list = (unsigned char **) he->h_addr_list; *h_addr_list;
 		     h_addr_list++) {
-			sprintf(addr, "%d", h_addr_list[0][0]);
+			snprintf(addr, sizeof(addr), "%d", h_addr_list[0][0]);
 			for (n = 1; n < he->h_length; n++) {
-				sprintf(buf, ".%d", h_addr_list[0][n]);
-				strcat(addr, buf);
+				snprintf(buf, sizeof(buf), ".%d",
+				    h_addr_list[0][n]);
+				strlcat(addr, buf, sizeof(addr));
 			}
 			for (tl = NO_proxy_domains->first; tl != NULL; tl = tl->next) {
 				if (strncmp(tl->ptr, addr, strlen(tl->ptr)) == 0) {
