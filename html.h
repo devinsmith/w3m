@@ -18,17 +18,17 @@
 #define UFfileno(f) ISfileno((f)->stream)
 
 struct cmdtable {
-    char *cmdname;
-    int cmd;
+	char *cmdname;
+	int cmd;
 };
 
 struct mailcap {
-    char *type;
-    char *viewer;
-    int flags;
-    char *test;
-    char *nametemplate;
-    char *edit;
+	char *type;
+	char *viewer;
+	int flags;
+	char *test;
+	char *nametemplate;
+	char *edit;
 };
 
 #define MAILCAP_NEEDSTERMINAL	0x01
@@ -40,42 +40,42 @@ struct mailcap {
 #define MCSTAT_REPPARAM         0x04
 
 struct table2 {
-    char *item1;
-    char *item2;
+	char *item1;
+	char *item2;
 };
 
 typedef struct {
-    char *referer;
-    int flag;
+	char *referer;
+	int flag;
 } URLOption;
 
 typedef struct _ParsedURL {
-    int scheme;
-    char *user;
-    char *pass;
-    char *host;
-    int port;
-    char *file;
-    char *real_file;
-    char *query;
-    char *label;
-    int is_nocache;
+	int scheme;
+	char *user;
+	char *pass;
+	char *host;
+	int port;
+	char *file;
+	char *real_file;
+	char *query;
+	char *label;
+	int is_nocache;
 } ParsedURL;
 
 typedef struct {
-    unsigned char scheme;
-    char is_cgi;
-    char encoding;
-    InputStream stream;
-    char *ext;
-    int compression;
-    int content_encoding;
-    char *guess_type;
+	unsigned char scheme;
+	char is_cgi;
+	char encoding;
+	InputStream stream;
+	char *ext;
+	int compression;
+	int content_encoding;
+	char *guess_type;
 #ifdef USE_SSL
-    char *ssl_certificate;
+	char *ssl_certificate;
 #endif
-    char *url;
-    time_t modtime;
+	char *url;
+	time_t modtime;
 } URLFile;
 
 #define CMP_NOCOMPRESS   0
@@ -230,7 +230,7 @@ typedef struct {
 #define HTML_SMALL      138
 #define HTML_N_SMALL    139
 
-   /* pseudo tag */
+/* pseudo tag */
 #define HTML_SELECT_INT     160
 #define HTML_N_SELECT_INT   161
 #define HTML_OPTION_INT     162
@@ -335,10 +335,10 @@ typedef struct {
 /* HTML Tag Information Table */
 
 typedef struct html_tag_info {
-    char *name;
-    unsigned char *accept_attribute;
-    unsigned char max_attribute;
-    unsigned char flag;
+	char *name;
+	unsigned char *accept_attribute;
+	unsigned char max_attribute;
+	unsigned char flag;
 } TagInfo;
 
 #define TFLG_END	1
@@ -347,9 +347,9 @@ typedef struct html_tag_info {
 /* HTML Tag Attribute Information Table */
 
 typedef struct tag_attribute_info {
-    char *name;
-    unsigned char vtype;
-    unsigned char flag;
+	char *name;
+	unsigned char vtype;
+	unsigned char flag;
 } TagAttrInfo;
 
 #define AFLG_INT	1
@@ -376,10 +376,10 @@ extern TagInfo TagMAP[];
 extern TagAttrInfo AttrMAP[];
 
 struct environment {
-    unsigned char env;
-    int type;
-    int count;
-    char indent;
+	unsigned char env;
+	int type;
+	int count;
+	char indent;
 };
 
 #define MAX_ENV_LEVEL    20

@@ -14,89 +14,89 @@
 #include <fcntl.h>
 
 struct stream_buffer {
-    unsigned char *buf;
-    int size, cur, next;
+	unsigned char *buf;
+	int size, cur, next;
 };
 
 typedef struct stream_buffer *StreamBuffer;
 
 struct file_handle {
-    FILE *f;
-    void (*close) ();
+	FILE *f;
+	void (*close) ();
 };
 
 #ifdef USE_SSL
 struct ssl_handle {
-    SSL *ssl;
-    int sock;
+	SSL *ssl;
+	int sock;
 };
 #endif
 
 union input_stream;
 
 struct ens_handle {
-    union input_stream *is;
-    Str s;
-    int pos;
-    char encoding;
+	union input_stream *is;
+	Str s;
+	int pos;
+	char encoding;
 };
 
 
 struct base_stream {
-    struct stream_buffer stream;
-    void *handle;
-    char type;
-    char iseos;
-    int (*read) ();
-    void (*close) ();
+	struct stream_buffer stream;
+	void *handle;
+	char type;
+	char iseos;
+	int (*read) ();
+	void (*close) ();
 };
 
 struct file_stream {
-    struct stream_buffer stream;
-    struct file_handle *handle;
-    char type;
-    char iseos;
-    int (*read) ();
-    void (*close) ();
+	struct stream_buffer stream;
+	struct file_handle *handle;
+	char type;
+	char iseos;
+	int (*read) ();
+	void (*close) ();
 };
 
 struct str_stream {
-    struct stream_buffer stream;
-    Str handle;
-    char type;
-    char iseos;
-    int (*read) ();
-    void (*close) ();
+	struct stream_buffer stream;
+	Str handle;
+	char type;
+	char iseos;
+	int (*read) ();
+	void (*close) ();
 };
 
 #ifdef USE_SSL
 struct ssl_stream {
-    struct stream_buffer stream;
-    struct ssl_handle *handle;
-    char type;
-    char iseos;
-    int (*read) ();
-    void (*close) ();
+	struct stream_buffer stream;
+	struct ssl_handle *handle;
+	char type;
+	char iseos;
+	int (*read) ();
+	void (*close) ();
 };
 #endif				/* USE_SSL */
 
 struct encoded_stream {
-    struct stream_buffer stream;
-    struct ens_handle *handle;
-    char type;
-    char iseos;
-    int (*read) ();
-    void (*close) ();
+	struct stream_buffer stream;
+	struct ens_handle *handle;
+	char type;
+	char iseos;
+	int (*read) ();
+	void (*close) ();
 };
 
 union input_stream {
-    struct base_stream base;
-    struct file_stream file;
-    struct str_stream str;
+	struct base_stream base;
+	struct file_stream file;
+	struct str_stream str;
 #ifdef USE_SSL
-    struct ssl_stream ssl;
+	struct ssl_stream ssl;
 #endif				/* USE_SSL */
-    struct encoded_stream ens;
+	struct encoded_stream ens;
 };
 
 typedef struct base_stream *BaseStream;

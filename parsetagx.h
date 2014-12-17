@@ -8,11 +8,11 @@
 /* Parsed Tag structure */
 
 struct parsed_tag {
-    unsigned char tagid;
-    unsigned char *attrid;
-    char **value;
-    unsigned char *map;
-    char need_reconstruct;
+	unsigned char tagid;
+	unsigned char *attrid;
+	char **value;
+	unsigned char *map;
+	char need_reconstruct;
 };
 
 #define parsedtag_accepts(tag, id) ((tag)->map&&(tag)->map[id]!=MAX_TAGATTR)
@@ -22,7 +22,7 @@ struct parsed_tag {
 #define parsedtag_attname(tag, i) (AttrMAP[(tag)->attrid[i]].name)
 
 extern struct parsed_tag *parse_tag(char **s, int internal);
-extern int parsedtag_get_value(struct parsed_tag *tag, int id, void *value);
-extern int parsedtag_set_value(struct parsed_tag *tag, int id, char *value);
-extern Str parsedtag2str(struct parsed_tag *tag);
+extern int parsedtag_get_value(struct parsed_tag * tag, int id, void *value);
+extern int parsedtag_set_value(struct parsed_tag * tag, int id, char *value);
+extern Str parsedtag2str(struct parsed_tag * tag);
 #endif

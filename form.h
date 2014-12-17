@@ -1,6 +1,6 @@
 /* $Id: form.h,v 1.6 2003/09/22 21:02:18 ukai Exp $ */
 /*
- * HTML forms 
+ * HTML forms
  */
 #ifndef FORM_H
 #define FORM_H
@@ -33,67 +33,67 @@
 #define FORM_ENCTYPE_URLENCODED 0
 #define FORM_ENCTYPE_MULTIPART  1
 
-#define MAX_TEXTAREA 10		/* max number of <textarea>..</textarea> 
+#define MAX_TEXTAREA 10		/* max number of <textarea>..</textarea>
 				 * within one document */
 #ifdef MENU_SELECT
-#define MAX_SELECT 10		/* max number of <select>..</select>
-				 * within one document */
+#define MAX_SELECT 10		/* max number of <select>..</select> within
+				 * one document */
 #endif				/* MENU_SELECT */
 
 typedef struct form_list {
-    struct form_item_list *item;
-    struct form_item_list *lastitem;
-    int method;
-    Str action;
-    char *target;
-    char *name;
+	struct form_item_list *item;
+	struct form_item_list *lastitem;
+	int method;
+	Str action;
+	char *target;
+	char *name;
 #ifdef USE_M17N
-    wc_ces charset;
+	wc_ces charset;
 #endif
-    int enctype;
-    struct form_list *next;
-    int nitems;
-    char *body;
-    char *boundary;
-    unsigned long length;
+	int enctype;
+	struct form_list *next;
+	int nitems;
+	char *body;
+	char *boundary;
+	unsigned long length;
 } FormList;
 
 #ifdef MENU_SELECT
 typedef struct form_select_option_item {
-    Str value;
-    Str label;
-    int checked;
-    struct form_select_option_item *next;
+	Str value;
+	Str label;
+	int checked;
+	struct form_select_option_item *next;
 } FormSelectOptionItem;
 
 typedef struct form_select_option {
-    FormSelectOptionItem *first;
-    FormSelectOptionItem *last;
+	FormSelectOptionItem *first;
+	FormSelectOptionItem *last;
 } FormSelectOption;
 
-void addSelectOption(FormSelectOption *fso, Str value, Str label, int chk);
-void chooseSelectOption(struct form_item_list *fi, FormSelectOptionItem *item);
-void updateSelectOption(struct form_item_list *fi, FormSelectOptionItem *item);
-int formChooseOptionByMenu(struct form_item_list *fi, int x, int y);
+void addSelectOption(FormSelectOption * fso, Str value, Str label, int chk);
+void chooseSelectOption(struct form_item_list * fi, FormSelectOptionItem * item);
+void updateSelectOption(struct form_item_list * fi, FormSelectOptionItem * item);
+int formChooseOptionByMenu(struct form_item_list * fi, int x, int y);
 #endif				/* MENU_SELECT */
 
 typedef struct form_item_list {
-    int type;
-    Str name;
-    Str value, init_value;
-    int checked, init_checked;
-    int accept;
-    int size;
-    int rows;
-    int maxlength;
-    int readonly;
+	int type;
+	Str name;
+	Str value, init_value;
+	int checked, init_checked;
+	int accept;
+	int size;
+	int rows;
+	int maxlength;
+	int readonly;
 #ifdef MENU_SELECT
-    FormSelectOptionItem *select_option;
-    Str label, init_label;
-    int selected, init_selected;
+	FormSelectOptionItem *select_option;
+	Str label, init_label;
+	int selected, init_selected;
 #endif				/* MENU_SELECT */
-    struct form_list *parent;
-    struct form_item_list *next;
+	struct form_list *parent;
+	struct form_item_list *next;
 } FormItemList;
 
 #endif				/* not FORM_H */

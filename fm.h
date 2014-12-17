@@ -1,5 +1,5 @@
 /* $Id: fm.h,v 1.149 2010/08/20 09:47:09 htrb Exp $ */
-/* 
+/*
  * w3m: WWW wo Miru utility
  * 
  * by A.ITO  Feb. 1995
@@ -43,7 +43,7 @@
 #include "wc.h"
 #include "wtf.h"
 #else
-typedef int wc_ces;	/* XXX: not used */
+typedef int wc_ces;		/* XXX: not used */
 #endif
 
 #ifdef HAVE_LOCALE_H
@@ -58,13 +58,13 @@ typedef int wc_ces;	/* XXX: not used */
 #define _(String) gettext (String)
 #define N_(String) (String)
 #else
-# undef bindtextdomain
-# define bindtextdomain(Domain, Directory)	/* empty */
-# undef textdomain
-# define textdomain(Domain)	/* empty */
-# define _(Text) Text
-# define N_(Text) Text
-# define gettext(Text) Text
+#undef bindtextdomain
+#define bindtextdomain(Domain, Directory)	/* empty */
+#undef textdomain
+#define textdomain(Domain)	/* empty */
+#define _(Text) Text
+#define N_(Text) Text
+#define gettext(Text) Text
 #endif
 
 #include "form.h"
@@ -95,7 +95,7 @@ void bzero(void *, int);
 
 #define DEFUN(funcname, macroname, docstring) void funcname(void)
 
-/* 
+/*
  * Constants.
  */
 #define LINELEN	256		/* Initial line length */
@@ -134,7 +134,7 @@ void bzero(void *, int);
 #define DICTBUFFERNAME "*dictionary*"
 #endif				/* USE_DICT */
 
-/* 
+/*
  * Line Property
  */
 
@@ -218,7 +218,7 @@ void bzero(void *, int);
 
 #ifdef MAINPROGRAM
 int REV_LB[MAX_LB] = {
-    LB_N_FRAME, LB_FRAME, LB_N_INFO, LB_INFO, LB_N_SOURCE,
+	LB_N_FRAME, LB_FRAME, LB_N_INFO, LB_INFO, LB_N_SOURCE,
 };
 #else				/* not MAINPROGRAM */
 extern int REV_LB[];
@@ -264,7 +264,7 @@ extern int REV_LB[];
 #define IMG_FLAG_ERROR		2
 #define IMG_FLAG_DONT_REMOVE	4
 
-/* 
+/*
  * Macros.
  */
 
@@ -299,7 +299,7 @@ extern int REV_LB[];
 #define EOL(l) (&(l)->ptr[(l)->length])
 #define IS_EOL(p,l) ((p)==&(l)->ptr[(l)->length])
 
-/* 
+/*
  * Types.
  */
 
@@ -309,221 +309,221 @@ typedef unsigned char Linecolor;
 #endif
 
 typedef struct _MapArea {
-    char *url;
-    char *target;
-    char *alt;
+	char *url;
+	char *target;
+	char *alt;
 #ifdef USE_IMAGE
-    char shape;
-    short *coords;
-    int ncoords;
-    short center_x;
-    short center_y;
+	char shape;
+	short *coords;
+	int ncoords;
+	short center_x;
+	short center_y;
 #endif
 } MapArea;
 
 typedef struct _MapList {
-    Str name;
-    GeneralList *area;
-    struct _MapList *next;
+	Str name;
+	GeneralList *area;
+	struct _MapList *next;
 } MapList;
 
 typedef struct _Line {
-    char *lineBuf;
-    Lineprop *propBuf;
+	char *lineBuf;
+	Lineprop *propBuf;
 #ifdef USE_ANSI_COLOR
-    Linecolor *colorBuf;
+	Linecolor *colorBuf;
 #endif
-    struct _Line *next;
-    struct _Line *prev;
-    int len;
-    int width;
-    long linenumber;		/* on buffer */
-    long real_linenumber;	/* on file */
-    unsigned short usrflags;
-    int size;
-    int bpos;
-    int bwidth;
+	struct _Line *next;
+	struct _Line *prev;
+	int len;
+	int width;
+	long linenumber;	/* on buffer */
+	long real_linenumber;	/* on file */
+	unsigned short usrflags;
+	int size;
+	int bpos;
+	int bwidth;
 } Line;
 
 typedef struct {
-    int line;
-    int pos;
-    int invalid;
+	int line;
+	int pos;
+	int invalid;
 } BufferPoint;
 
 #ifdef USE_IMAGE
 typedef struct _imageCache {
-    char *url;
-    ParsedURL *current;
-    char *file;
-    char *touch;
-    pid_t pid;
-    char loaded;
-    int index;
-    short width;
-    short height;
+	char *url;
+	ParsedURL *current;
+	char *file;
+	char *touch;
+	pid_t pid;
+	char loaded;
+	int index;
+	short width;
+	short height;
 } ImageCache;
 
 typedef struct _image {
-    char *url;
-    char *ext;
-    short width;
-    short height;
-    short xoffset;
-    short yoffset;
-    short y;
-    short rows;
-    char *map;
-    char ismap;
-    int touch;
-    ImageCache *cache;
+	char *url;
+	char *ext;
+	short width;
+	short height;
+	short xoffset;
+	short yoffset;
+	short y;
+	short rows;
+	char *map;
+	char ismap;
+	int touch;
+	ImageCache *cache;
 } Image;
 #endif
 
 typedef struct _anchor {
-    char *url;
-    char *target;
-    char *referer;
-    char *title;
-    unsigned char accesskey;
-    BufferPoint start;
-    BufferPoint end;
-    int hseq;
-    char slave;
-    short y;
-    short rows;
+	char *url;
+	char *target;
+	char *referer;
+	char *title;
+	unsigned char accesskey;
+	BufferPoint start;
+	BufferPoint end;
+	int hseq;
+	char slave;
+	short y;
+	short rows;
 #ifdef USE_IMAGE
-    Image *image;
+	Image *image;
 #endif
 } Anchor;
 
 #define NO_REFERER ((char*)-1)
 
 typedef struct _anchorList {
-    Anchor *anchors;
-    int nanchor;
-    int anchormax;
-    int acache;
+	Anchor *anchors;
+	int nanchor;
+	int anchormax;
+	int acache;
 } AnchorList;
 
 typedef struct {
-    BufferPoint *marks;
-    int nmark;
-    int markmax;
-    int prevhseq;
+	BufferPoint *marks;
+	int nmark;
+	int markmax;
+	int prevhseq;
 } HmarkerList;
 
 #define LINK_TYPE_NONE 0
 #define LINK_TYPE_REL  1
 #define LINK_TYPE_REV  2
 typedef struct _LinkList {
-    char *url;
-    char *title;		/* Next, Contents, ... */
-    char *ctype;		/* Content-Type */
-    char type;			/* Rel, Rev */
-    struct _LinkList *next;
+	char *url;
+	char *title;		/* Next, Contents, ... */
+	char *ctype;		/* Content-Type */
+	char type;		/* Rel, Rev */
+	struct _LinkList *next;
 } LinkList;
 
 typedef struct _Buffer {
-    char *filename;
-    char *buffername;
-    Line *firstLine;
-    Line *topLine;
-    Line *currentLine;
-    Line *lastLine;
-    struct _Buffer *nextBuffer;
-    struct _Buffer *linkBuffer[MAX_LB];
-    short width;
-    short height;
-    char *type;
-    char *real_type;
-    int allLine;
-    short bufferprop;
-    int currentColumn;
-    short cursorX;
-    short cursorY;
-    int pos;
-    int visualpos;
-    short rootX;
-    short rootY;
-    short COLS;
-    short LINES;
-    InputStream pagerSource;
-    AnchorList *href;
-    AnchorList *name;
-    AnchorList *img;
-    AnchorList *formitem;
-    LinkList *linklist;
-    FormList *formlist;
-    MapList *maplist;
-    HmarkerList *hmarklist;
-    HmarkerList *imarklist;
-    ParsedURL currentURL;
-    ParsedURL *baseURL;
-    char *baseTarget;
-    int real_scheme;
-    char *sourcefile;
-    struct frameset *frameset;
-    struct frameset_queue *frameQ;
-    int *clone;
-    size_t trbyte;
-    char check_url;
+	char *filename;
+	char *buffername;
+	Line *firstLine;
+	Line *topLine;
+	Line *currentLine;
+	Line *lastLine;
+	struct _Buffer *nextBuffer;
+	struct _Buffer *linkBuffer[MAX_LB];
+	short width;
+	short height;
+	char *type;
+	char *real_type;
+	int allLine;
+	short bufferprop;
+	int currentColumn;
+	short cursorX;
+	short cursorY;
+	int pos;
+	int visualpos;
+	short rootX;
+	short rootY;
+	short COLS;
+	short LINES;
+	InputStream pagerSource;
+	AnchorList *href;
+	AnchorList *name;
+	AnchorList *img;
+	AnchorList *formitem;
+	LinkList *linklist;
+	FormList *formlist;
+	MapList *maplist;
+	HmarkerList *hmarklist;
+	HmarkerList *imarklist;
+	ParsedURL currentURL;
+	ParsedURL *baseURL;
+	char *baseTarget;
+	int real_scheme;
+	char *sourcefile;
+	struct frameset *frameset;
+	struct frameset_queue *frameQ;
+	int *clone;
+	size_t trbyte;
+	char check_url;
 #ifdef USE_M17N
-    wc_ces document_charset;
-    wc_uint8 auto_detect;
+	wc_ces document_charset;
+	wc_uint8 auto_detect;
 #endif
-    TextList *document_header;
-    FormItemList *form_submit;
-    char *savecache;
-    char *edit;
-    struct mailcap *mailcap;
-    char *mailcap_source;
-    char *header_source;
-    char search_header;
+	TextList *document_header;
+	FormItemList *form_submit;
+	char *savecache;
+	char *edit;
+	struct mailcap *mailcap;
+	char *mailcap_source;
+	char *header_source;
+	char search_header;
 #ifdef USE_SSL
-    char *ssl_certificate;
+	char *ssl_certificate;
 #endif
-    char image_flag;
-    char image_loaded;
-    char need_reshape;
-    Anchor *submit;
-    struct _BufferPos *undo;
+	char image_flag;
+	char image_loaded;
+	char need_reshape;
+	Anchor *submit;
+	struct _BufferPos *undo;
 #ifdef USE_ALARM
-    struct _AlarmEvent *event;
+	struct _AlarmEvent *event;
 #endif
 } Buffer;
 
 typedef struct _BufferPos {
-    long top_linenumber;
-    long cur_linenumber;
-    int currentColumn;
-    int pos;
-    int bpos;
-    struct _BufferPos *next;
-    struct _BufferPos *prev;
+	long top_linenumber;
+	long cur_linenumber;
+	int currentColumn;
+	int pos;
+	int bpos;
+	struct _BufferPos *next;
+	struct _BufferPos *prev;
 } BufferPos;
 
 typedef struct _TabBuffer {
-    struct _TabBuffer *nextTab;
-    struct _TabBuffer *prevTab;
-    Buffer *currentBuffer;
-    Buffer *firstBuffer;
-    short x1;
-    short x2;
-    short y;
+	struct _TabBuffer *nextTab;
+	struct _TabBuffer *prevTab;
+	Buffer *currentBuffer;
+	Buffer *firstBuffer;
+	short x1;
+	short x2;
+	short y;
 } TabBuffer;
 
 typedef struct _DownloadList {
-    pid_t pid;
-    char *url;
-    char *save;
-    char *lock;
-    clen_t size;
-    time_t time;
-    int running;
-    int err;
-    struct _DownloadList *next;
-    struct _DownloadList *prev;
+	pid_t pid;
+	char *url;
+	char *save;
+	char *lock;
+	clen_t size;
+	time_t time;
+	int running;
+	int err;
+	struct _DownloadList *next;
+	struct _DownloadList *prev;
 } DownloadList;
 #define DOWNLOAD_LIST_TITLE "Download List Panel"
 
@@ -563,43 +563,43 @@ typedef struct _DownloadList {
 #define FOLD_BUFFER_WIDTH (FoldLine ? (INIT_BUFFER_WIDTH + 1) : -1)
 
 typedef struct {
-    int pos;
-    int len;
-    int tlen;
-    long flag;
-    Anchor anchor;
-    Str img_alt;
-    char fontstat[FONTSTAT_SIZE];
-    short nobr_level;
-    Lineprop prev_ctype;
-    char init_flag;
-    short top_margin;
-    short bottom_margin;
+	int pos;
+	int len;
+	int tlen;
+	long flag;
+	Anchor anchor;
+	Str img_alt;
+	char fontstat[FONTSTAT_SIZE];
+	short nobr_level;
+	Lineprop prev_ctype;
+	char init_flag;
+	short top_margin;
+	short bottom_margin;
 } Breakpoint;
 
 struct readbuffer {
-    Str line;
-    Lineprop cprop;
-    short pos;
-    Str prevchar;
-    long flag;
-    long flag_stack[RB_STACK_SIZE];
-    int flag_sp;
-    int status;
-    unsigned char end_tag;
-    short table_level;
-    short nobr_level;
-    Anchor anchor;
-    Str img_alt;
-    char fontstat[FONTSTAT_SIZE];
-    char fontstat_stack[FONT_STACK_SIZE][FONTSTAT_SIZE];
-    int fontstat_sp;
-    Lineprop prev_ctype;
-    Breakpoint bp;
-    struct cmdtable *tag_stack[TAG_STACK_SIZE];
-    int tag_sp;
-    short top_margin;
-    short bottom_margin;
+	Str line;
+	Lineprop cprop;
+	short pos;
+	Str prevchar;
+	long flag;
+	long flag_stack[RB_STACK_SIZE];
+	int flag_sp;
+	int status;
+	unsigned char end_tag;
+	short table_level;
+	short nobr_level;
+	Anchor anchor;
+	Str img_alt;
+	char fontstat[FONTSTAT_SIZE];
+	char fontstat_stack[FONT_STACK_SIZE][FONTSTAT_SIZE];
+	int fontstat_sp;
+	Lineprop prev_ctype;
+	Breakpoint bp;
+	struct cmdtable *tag_stack[TAG_STACK_SIZE];
+	int tag_sp;
+	short top_margin;
+	short bottom_margin;
 };
 
 #define in_bold fontstat[0]
@@ -679,39 +679,39 @@ struct readbuffer {
 #define RG_FRAME_SRC 4
 
 struct html_feed_environ {
-    struct readbuffer *obuf;
-    TextLineList *buf;
-    FILE *f;
-    Str tagbuf;
-    int limit;
-    int maxlimit;
-    struct environment *envs;
-    int nenv;
-    int envc;
-    int envc_real;
-    char *title;
-    int blank_lines;
+	struct readbuffer *obuf;
+	TextLineList *buf;
+	FILE *f;
+	Str tagbuf;
+	int limit;
+	int maxlimit;
+	struct environment *envs;
+	int nenv;
+	int envc;
+	int envc_real;
+	char *title;
+	int blank_lines;
 };
 
 #ifdef USE_COOKIE
 struct portlist {
-    unsigned short port;
-    struct portlist *next;
+	unsigned short port;
+	struct portlist *next;
 };
 
 struct cookie {
-    ParsedURL url;
-    Str name;
-    Str value;
-    time_t expires;
-    Str path;
-    Str domain;
-    Str comment;
-    Str commentURL;
-    struct portlist *portl;
-    char version;
-    char flag;
-    struct cookie *next;
+	ParsedURL url;
+	Str name;
+	Str value;
+	time_t expires;
+	Str path;
+	Str domain;
+	Str comment;
+	Str commentURL;
+	struct portlist *portl;
+	char version;
+	char flag;
+	struct cookie *next;
 };
 #define COO_USE		1
 #define COO_SECURE	2
@@ -720,18 +720,25 @@ struct cookie {
 #define COO_DISCARD	16
 #define COO_OVERRIDE	32	/* user chose to override security checks */
 
-#define COO_OVERRIDE_OK	32	/* flag to specify that an error is overridable */
-						/* version 0 refers to the original cookie_spec.html */
-						/* version 1 refers to RFC 2109 */
-						/* version 1' refers to the Internet draft to obsolete RFC 2109 */
-#define COO_EINTERNAL	(1)	/* unknown error; probably forgot to convert "return 1" in cookie.c */
-#define COO_ETAIL	(2 | COO_OVERRIDE_OK)	/* tail match failed (version 0) */
+#define COO_OVERRIDE_OK	32	/* flag to specify that an error is
+				 * overridable */
+/* version 0 refers to the original cookie_spec.html */
+/* version 1 refers to RFC 2109 */
+/* version 1' refers to the Internet draft to obsolete RFC 2109 */
+#define COO_EINTERNAL	(1)	/* unknown error; probably forgot to convert
+				 * "return 1" in cookie.c */
+#define COO_ETAIL	(2 | COO_OVERRIDE_OK)	/* tail match failed (version
+						 * 0) */
 #define COO_ESPECIAL	(3)	/* special domain check failed (version 0) */
 #define COO_EPATH	(4)	/* Path attribute mismatch (version 1 case 1) */
-#define COO_ENODOT	(5 | COO_OVERRIDE_OK)	/* no embedded dots in Domain (version 1 case 2.1) */
-#define COO_ENOTV1DOM	(6 | COO_OVERRIDE_OK)	/* Domain does not start with a dot (version 1 case 2.2) */
-#define COO_EDOM	(7 | COO_OVERRIDE_OK)	/* domain-match failed (version 1 case 3) */
-#define COO_EBADHOST	(8 | COO_OVERRIDE_OK)	/* dot in matched host name in FQDN (version 1 case 4) */
+#define COO_ENODOT	(5 | COO_OVERRIDE_OK)	/* no embedded dots in Domain
+						 * (version 1 case 2.1) */
+#define COO_ENOTV1DOM	(6 | COO_OVERRIDE_OK)	/* Domain does not start with
+						 * a dot (version 1 case 2.2) */
+#define COO_EDOM	(7 | COO_OVERRIDE_OK)	/* domain-match failed
+						 * (version 1 case 3) */
+#define COO_EBADHOST	(8 | COO_OVERRIDE_OK)	/* dot in matched host name
+						 * in FQDN (version 1 case 4) */
 #define COO_EPORT	(9)	/* Port match failed (version 1' case 5) */
 #define COO_EMAX	COO_EPORT
 #endif				/* USE_COOKIE */
@@ -750,10 +757,10 @@ struct cookie {
 #define VALIGN_BOTTOM 2
 
 typedef struct http_request {
-    char command;
-    char flag;
-    char *referer;
-    FormList *request;
+	char command;
+	char flag;
+	char *referer;
+	FormList *request;
 } HRequest;
 
 #define HR_COMMAND_GET		0
@@ -778,7 +785,7 @@ typedef struct http_request {
 
 #define set_no_proxy(domains) (NO_proxy_domains=make_domain_list(domains))
 
-/* 
+/*
  * Globals.
  */
 
@@ -913,7 +920,7 @@ global int override_content_type init(FALSE);
 #ifdef USE_COLOR
 global int useColor init(TRUE);
 global int basic_color init(8);	/* don't change */
-global int anchor_color init(4);	/* blue  */
+global int anchor_color init(4);/* blue  */
 global int image_color init(2);	/* green */
 global int form_color init(1);	/* red   */
 #ifdef USE_BG_COLOR
@@ -921,7 +928,7 @@ global int bg_color init(8);	/* don't change */
 global int mark_color init(6);	/* cyan */
 #endif				/* USE_BG_COLOR */
 global int useActiveColor init(FALSE);
-global int active_color init(6);	/* cyan */
+global int active_color init(6);/* cyan */
 global int useVisitedColor init(FALSE);
 global int visited_color init(5);	/* magenta  */
 #endif				/* USE_COLOR */
@@ -950,7 +957,8 @@ global int useExtImageViewer init(TRUE);
 global int maxLoadImage init(4);
 global int image_map_list init(TRUE);
 #else
-global int displayImage init(FALSE);	/* XXX: emacs-w3m use display_image=off */
+global int displayImage init(FALSE);	/* XXX: emacs-w3m use
+					 * display_image=off */
 #endif
 global int pseudoInlines init(TRUE);
 global char *Editor init(DEF_EDITOR);
@@ -1089,23 +1097,23 @@ global int relative_wheel_scroll init(FALSE);
 global int fixed_wheel_scroll_count init(5);
 global int relative_wheel_scroll_ratio init(30);
 typedef struct _MouseActionMap {
-    void (*func) ();
-    char *data;
+	void (*func) ();
+	char *data;
 } MouseActionMap;
 typedef struct _MouseAction {
-    char *menu_str;
-    char *lastline_str;
-    int menu_width;
-    int lastline_width;
-    int in_action;
-    int cursorX;
-    int cursorY;
-    MouseActionMap default_map[3];
-    MouseActionMap anchor_map[3];
-    MouseActionMap active_map[3];
-    MouseActionMap tab_map[3];
-    MouseActionMap *menu_map[3];
-    MouseActionMap *lastline_map[3];
+	char *menu_str;
+	char *lastline_str;
+	int menu_width;
+	int lastline_width;
+	int in_action;
+	int cursorX;
+	int cursorY;
+	MouseActionMap default_map[3];
+	MouseActionMap anchor_map[3];
+	MouseActionMap active_map[3];
+	MouseActionMap tab_map[3];
+	MouseActionMap *menu_map[3];
+	MouseActionMap *lastline_map[3];
 } MouseAction;
 global MouseAction mouse_action;
 #define LIMIT_MOUSE_MENU 100
@@ -1190,14 +1198,14 @@ void w3m_exit(int i);
 #define AL_IMPLICIT_ONCE 3
 
 typedef struct _AlarmEvent {
-    int sec;
-    short status;
-    int cmd;
-    void *data;
+	int sec;
+	short status;
+	int cmd;
+	void *data;
 } AlarmEvent;
 #endif
 
-/* 
+/*
  * Externals
  */
 

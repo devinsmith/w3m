@@ -36,82 +36,82 @@ typedef unsigned short table_attr;
 #define MAXCELL 20
 #define MAXROWCELL 1000
 struct table_cell {
-    short col[MAXCELL];
-    short colspan[MAXCELL];
-    short index[MAXCELL];
-    short maxcell;
-    short icell;
+	short col[MAXCELL];
+	short colspan[MAXCELL];
+	short index[MAXCELL];
+	short maxcell;
+	short icell;
 #ifdef MATRIX
-    short eindex[MAXCELL];
-    short necell;
+	short eindex[MAXCELL];
+	short necell;
 #endif				/* MATRIX */
-    short width[MAXCELL];
-    short minimum_width[MAXCELL];
-    short fixed_width[MAXCELL];
+	short width[MAXCELL];
+	short minimum_width[MAXCELL];
+	short fixed_width[MAXCELL];
 };
 
 struct table_in {
-    struct table *ptr;
-    short col;
-    short row;
-    short cell;
-    short indent;
-    TextLineList *buf;
+	struct table *ptr;
+	short col;
+	short row;
+	short cell;
+	short indent;
+	TextLineList *buf;
 };
 
 struct table_linfo {
-    Lineprop prev_ctype;
-    signed char prev_spaces;
-    Str prevchar;
-    short length;
+	Lineprop prev_ctype;
+	signed char prev_spaces;
+	Str prevchar;
+	short length;
 };
 
 struct table {
-    int row;
-    int col;
-    int maxrow;
-    int maxcol;
-    int max_rowsize;
-    int border_mode;
-    int total_width;
-    int total_height;
-    int tabcontentssize;
-    int indent;
-    int cellspacing;
-    int cellpadding;
-    int vcellpadding;
-    int vspace;
-    int flag;
+	int row;
+	int col;
+	int maxrow;
+	int maxcol;
+	int max_rowsize;
+	int border_mode;
+	int total_width;
+	int total_height;
+	int tabcontentssize;
+	int indent;
+	int cellspacing;
+	int cellpadding;
+	int vcellpadding;
+	int vspace;
+	int flag;
 #ifdef TABLE_EXPAND
-    int real_width;
+	int real_width;
 #endif				/* TABLE_EXPAND */
-    Str caption;
+	Str caption;
 #ifdef ID_EXT
-    Str id;
+	Str id;
 #endif
-    GeneralList ***tabdata;
-    table_attr **tabattr;
-    table_attr trattr;
+	GeneralList ***tabdata;
+	table_attr **tabattr;
+	table_attr trattr;
 #ifdef ID_EXT
-    Str **tabidvalue;
-    Str *tridvalue;
+	Str **tabidvalue;
+	Str *tridvalue;
 #endif
-    short tabwidth[MAXCOL];
-    short minimum_width[MAXCOL];
-    short fixed_width[MAXCOL];
-    struct table_cell cell;
-    short *tabheight;
-    struct table_in *tables;
-    short ntable;
-    short tables_size;
-    TextList *suspended_data;
-    /* use for counting skipped spaces */
-    struct table_linfo linfo;
+	short tabwidth[MAXCOL];
+	short minimum_width[MAXCOL];
+	short fixed_width[MAXCOL];
+	struct table_cell cell;
+	short *tabheight;
+	struct table_in *tables;
+	short ntable;
+	short tables_size;
+	TextList *suspended_data;
+	/* use for counting skipped spaces */
+	struct table_linfo linfo;
 #ifdef MATRIX
-    MAT *matrix;
-    VEC *vector;
+	MAT *matrix;
+	VEC *vector;
 #endif				/* MATRIX */
-    int sloppy_width;
+	int sloppy_width;
 };
 
 #define TBLM_PRE	RB_PRE
@@ -129,13 +129,13 @@ struct table {
 #define TBLM_ANCHOR	0x1000000
 
 struct table_mode {
-    unsigned int pre_mode;
-    char indent_level;
-    char caption;
-    short nobr_offset;
-    char nobr_level;
-    short anchor_offset;
-    unsigned char end_tag;
+	unsigned int pre_mode;
+	char indent_level;
+	char caption;
+	short nobr_offset;
+	char nobr_level;
+	short anchor_offset;
+	unsigned char end_tag;
 };
 
 /* Local Variables:    */
