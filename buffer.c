@@ -607,7 +607,7 @@ void
 copyBuffer(Buffer * a, Buffer * b)
 {
 	readBufferCache(b);
-	bcopy((void *) b, (void *) a, sizeof(Buffer));
+	memcpy(a, b, sizeof(Buffer));
 }
 
 Buffer *

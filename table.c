@@ -3231,8 +3231,10 @@ pushTable(struct table * tbl, struct table * tbl1)
 		struct table_in *tmp;
 		tbl->tables_size += MAX_TABLE_N;
 		tmp = New_N(struct table_in, tbl->tables_size);
-		if (tbl->tables)
-			bcopy(tbl->tables, tmp, tbl->ntable * sizeof(struct table_in));
+		if (tbl->tables) {
+			memcpy(tmp, tbl->tables,
+			    tbl->ntable * sizeof(struct table_in));
+		}
 		tbl->tables = tmp;
 	}
 	tbl->tables[tbl->ntable].ptr = tbl1;

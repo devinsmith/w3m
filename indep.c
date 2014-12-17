@@ -82,7 +82,7 @@ allocStr(const char *s, int len)
 		fprintf(stderr, "fm: Can't allocate string. Give me more memory!\n");
 		exit(-1);
 	}
-	bcopy(s, ptr, len);
+	memcpy(ptr, s, len);
 	ptr[len] = '\0';
 	return ptr;
 }

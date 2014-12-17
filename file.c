@@ -2432,7 +2432,7 @@ set_breakpoint(struct readbuffer * obuf, int tag_length)
 	if (!obuf->bp.init_flag)
 		return;
 
-	bcopy((void *) &obuf->anchor, (void *) &obuf->bp.anchor,
+	memcpy(&obuf->bp.anchor, &obuf->anchor, 
 	      sizeof(obuf->anchor));
 	obuf->bp.img_alt = obuf->img_alt;
 	obuf->bp.in_bold = obuf->in_bold;
@@ -2449,7 +2449,7 @@ static void
 back_to_breakpoint(struct readbuffer * obuf)
 {
 	obuf->flag = obuf->bp.flag;
-	bcopy((void *) &obuf->bp.anchor, (void *) &obuf->anchor,
+	memcpy(&obuf->anchor, &obuf->bp.anchor, 
 	      sizeof(obuf->anchor));
 	obuf->img_alt = obuf->bp.img_alt;
 	obuf->in_bold = obuf->bp.in_bold;
@@ -2762,7 +2762,7 @@ flushline(struct html_feed_environ * h_env, struct readbuffer * obuf, int indent
 
 		if (obuf->bp.pos == obuf->pos && tp <= ep &&
 		    tp > line->ptr && tp[-1] == ' ') {
-			bcopy(tp, tp - 1, ep - tp + 1);
+			memmove(tp - 1, tp, ep - tp + 1);
 			line->length--;
 			obuf->pos--;
 		}
@@ -3028,7 +3028,7 @@ close_effect0(struct readbuffer * obuf, int cmd)
 	}
 	if (i >= 0) {
 		obuf->tag_sp--;
-		bcopy(&obuf->tag_stack[i + 1], &obuf->tag_stack[i],
+		memcpy(&obuf->tag_stack[i], &obuf->tag_stack[i + 1], 
 		      (obuf->tag_sp - i) * sizeof(struct cmdtable *));
 		return 1;
 	} else if ((p = has_hidden_link(obuf, cmd)) != NULL) {
@@ -3062,8 +3062,10 @@ close_anchor(struct html_feed_environ * h_env, struct readbuffer * obuf)
 			} else {
 				if (i >= 0) {
 					obuf->tag_sp--;
-					bcopy(&obuf->tag_stack[i + 1], &obuf->tag_stack[i],
-					      (obuf->tag_sp - i) * sizeof(struct cmdtable *));
+					memcpy(&obuf->tag_stack[i],
+					    &obuf->tag_stack[i + 1],
+					    (obuf->tag_sp - i) *
+					    sizeof(struct cmdtable *));
 				} else {
 					passthrough(obuf, p, 1);
 				}
@@ -3086,7 +3088,7 @@ void
 save_fonteffect(struct html_feed_environ * h_env, struct readbuffer * obuf)
 {
 	if (obuf->fontstat_sp < FONT_STACK_SIZE)
-		bcopy(obuf->fontstat, obuf->fontstat_stack[obuf->fontstat_sp],
+		memcpy(obuf->fontstat_stack[obuf->fontstat_sp], obuf->fontstat, 
 		      FONTSTAT_SIZE);
 	obuf->fontstat_sp++;
 	if (obuf->in_bold)
@@ -3108,8 +3110,8 @@ restore_fonteffect(struct html_feed_environ * h_env, struct readbuffer * obuf)
 	if (obuf->fontstat_sp > 0)
 		obuf->fontstat_sp--;
 	if (obuf->fontstat_sp < FONT_STACK_SIZE)
-		bcopy(obuf->fontstat_stack[obuf->fontstat_sp], obuf->fontstat,
-		      FONTSTAT_SIZE);
+		memcpy(obuf->fontstat, obuf->fontstat_stack[obuf->fontstat_sp],
+			FONTSTAT_SIZE);
 	if (obuf->in_bold)
 		push_tag(obuf, "<b>", HTML_B);
 	if (obuf->in_italic)
@@ -6429,7 +6431,7 @@ addnewline(Buffer * buf, char *line, Lineprop * prop, Linecolor * color, int pos
 	if (pos > 0) {
 		s = allocStr(line, pos);
 		p = NewAtom_N(Lineprop, pos);
-		bcopy((void *) prop, (void *) p, pos * sizeof(Lineprop));
+		memcpy(p, prop, pos * sizeof(Lineprop));
 	} else {
 		s = NullLine;
 		p = NullProp;
@@ -6437,7 +6439,7 @@ addnewline(Buffer * buf, char *line, Lineprop * prop, Linecolor * color, int pos
 #ifdef USE_ANSI_COLOR
 	if (pos > 0 && color) {
 		c = NewAtom_N(Linecolor, pos);
-		bcopy((void *) color, (void *) c, pos * sizeof(Linecolor));
+		memcpy(c, color, pos * sizeof(Linecolor));
 	} else {
 		c = NULL;
 	}
@@ -7654,7 +7656,7 @@ save2tmp(URLFile uf, char *tmpf)
 		/* fclose(f); */
 		return -1;
 	}
-	bcopy(AbortLoading, env_bak, sizeof(JMP_BUF));
+	memcpy(env_bak, AbortLoading, sizeof(JMP_BUF));
 	if (SETJMP(AbortLoading) != 0) {
 		goto _end;
 	}
@@ -7685,7 +7687,7 @@ save2tmp(URLFile uf, char *tmpf)
 		Str buf = Strnew_size(SAVE_BUF_SIZE);
 		while (UFread(&uf, buf, SAVE_BUF_SIZE)) {
 			if (Strfputs(buf, ff) != buf->length) {
-				bcopy(env_bak, AbortLoading, sizeof(JMP_BUF));
+				memcpy(AbortLoading, env_bak, sizeof(JMP_BUF));
 				TRAP_OFF;
 				fclose(ff);
 				current_content_length = 0;
@@ -7696,7 +7698,7 @@ save2tmp(URLFile uf, char *tmpf)
 		}
 	}
 _end:
-	bcopy(env_bak, AbortLoading, sizeof(JMP_BUF));
+	memcpy(AbortLoading, env_bak, sizeof(JMP_BUF));
 	TRAP_OFF;
 	fclose(ff);
 	current_content_length = 0;

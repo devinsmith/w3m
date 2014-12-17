@@ -4442,7 +4442,7 @@ _peekURL(int only_img)
 #ifdef USE_M17N
 	s = checkType(s, &pp, NULL);
 	p = NewAtom_N(Lineprop, s->length);
-	bcopy((void *) pp, (void *) p, s->length * sizeof(Lineprop));
+	memcpy(p, pp, s->length * sizeof(Lineprop));
 #endif
 disp:
 	n = searchKeyNum();
@@ -4500,7 +4500,7 @@ DEFUN(curURL, PEEK, "Peek current URL")
 #ifdef USE_M17N
 		s = checkType(s, &pp, NULL);
 		p = NewAtom_N(Lineprop, s->length);
-		bcopy((void *) pp, (void *) p, s->length * sizeof(Lineprop));
+		memcpy(p, pp, s->length * sizeof(Lineprop));
 #endif
 	}
 	n = searchKeyNum();
