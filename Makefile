@@ -26,7 +26,7 @@ CFLAGS+=	-Wall -I${PREFIX}/include -I. -I./libwc \
 		-DCONF_DIR="\"${SYS_CONF_DIR}/${PROG}\"" \
 		-DLOCALEDIR="\"${LOCALE_DIR}\""
 
-LDADD+=		-L${PREFIX}/lib -lssl -lcrypto -lgc -lm -lintl -lz \
+LDADD+=		-L${PREFIX}/lib -lssl -lcrypto -lgc -lm -lintl \
 		-ltermcap ./libwc/libwc.a
 
 .include <bsd.prog.mk>
