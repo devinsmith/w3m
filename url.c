@@ -919,7 +919,6 @@ do_label:
 		p_url->label = NULL;
 }
 
-#define initParsedURL(p) bzero(p,sizeof(ParsedURL))
 #define ALLOC_STR(s) ((s)==NULL?NULL:allocStr(s,-1))
 
 void
