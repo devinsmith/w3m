@@ -106,7 +106,7 @@ make_portlist(Str port)
 		if (tmp->length == 0)
 			break;
 		pl = New(struct portlist);
-		pl->port = atoi(tmp->ptr);
+		pl->port = strtonum(tmp->ptr, 0, INT_MAX, NULL);
 		pl->next = first;
 		first = pl;
 	}
@@ -531,7 +531,8 @@ load_cookies(void)
 		cookie->value = readcol(&str);
 		if (!*str)
 			return;
-		cookie->expires = (time_t) atol(readcol(&str)->ptr);
+		cookie->expires = (time_t) strtonum(readcol(&str)->ptr,
+		    0, LLONG_MAX, NULL);
 		if (!*str)
 			return;
 		cookie->domain = readcol(&str);
@@ -540,10 +541,11 @@ load_cookies(void)
 		cookie->path = readcol(&str);
 		if (!*str)
 			return;
-		cookie->flag = atoi(readcol(&str)->ptr);
+		cookie->flag = strtonum(readcol(&str)->ptr, 0, INT_MAX, NULL);
 		if (!*str)
 			return;
-		cookie->version = atoi(readcol(&str)->ptr);
+		cookie->version = strtonum(readcol(&str)->ptr,
+		    0, INT_MAX, NULL);
 		if (!*str)
 			return;
 		cookie->comment = readcol(&str);
@@ -682,11 +684,20 @@ set_cookie_flag(struct parsed_tagarg * arg)
 {
 	int n, v;
 	struct cookie *p;
+	const char *errstr;
 
 	while (arg) {
 		if (arg->arg && *arg->arg && arg->value && *arg->value) {
-			n = atoi(arg->arg);
-			v = atoi(arg->value);
+			n = strtonum(arg->arg, 0, INT_MAX, &errstr);
+			if (errstr != NULL) {
+				arg = arg->next;
+				continue;
+			}
+			v = strtonum(arg->value, 0, INT_MAX, &errstr);
+			if (errstr != NULL) {
+				arg = arg->next;
+				continue;
+			}
 			if ((p = nth_cookie(n)) != NULL) {
 				if (v && !(p->flag & COO_USE)) {
 					p->flag |= COO_USE;

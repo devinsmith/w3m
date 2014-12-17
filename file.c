@@ -736,7 +736,7 @@ readHeader(URLFile * uf, Buffer * newBuf, int thru, ParsedURL * pu)
 				p++;
 			while (*p && IS_SPACE(*p))
 				p++;
-			http_response_code = atoi(p);
+			http_response_code = strtonum(p, 0, INT_MAX, NULL);
 			if (fmInitialized) {
 				message(lineBuf2->ptr, 0, 0);
 				refresh();
@@ -836,7 +836,8 @@ readHeader(URLFile * uf, Buffer * newBuf, int thru, ParsedURL * pu)
 				} else if (matchattr(p, "comment", 7, &tmp2)) {
 					comment = tmp2;
 				} else if (matchattr(p, "version", 7, &tmp2)) {
-					version = atoi(tmp2->ptr);
+					version = strtonum(tmp2->ptr,
+					    0, INT_MAX, NULL);
 				} else if (matchattr(p, "port", 4, &tmp2)) {
 					/* version 1, Set-Cookie2 */
 					port = tmp2;
@@ -2243,8 +2244,11 @@ page_loaded:
 					arrangeCursor(b);
 				}
 			} else {/* plain text */
-				int l = atoi(pu.label);
-				gotoRealLine(b, l);
+				const char *errstr;
+				int l = strtonum(pu.label, 0, INT_MAX, &errstr);
+				if (errstr == NULL) {
+				    gotoRealLine(b, l);
+				}
 				b->pos = 0;
 				arrangeCursor(b);
 			}
@@ -3864,7 +3868,7 @@ process_textarea(struct parsed_tag * tag, int width)
 	cur_textarea = Strnew_charp(p);
 	cur_textarea_size = 20;
 	if (parsedtag_get_value(tag, ATTR_COLS, &p)) {
-		cur_textarea_size = atoi(p);
+		cur_textarea_size = strtonum(p, 0, INT_MAX, NULL);
 		if (p[strlen(p) - 1] == '%')
 			cur_textarea_size = width * cur_textarea_size / 100 - 2;
 		if (cur_textarea_size <= 0) {
@@ -3875,7 +3879,7 @@ process_textarea(struct parsed_tag * tag, int width)
 	}
 	cur_textarea_rows = 1;
 	if (parsedtag_get_value(tag, ATTR_ROWS, &p)) {
-		cur_textarea_rows = atoi(p);
+		cur_textarea_rows = strtonum(p, 0, INT_MAX, NULL);
 		if (cur_textarea_rows <= 0) {
 			cur_textarea_rows = 1;
 		} else if (cur_textarea_rows > TEXTAREA_ATTR_ROWS_MAX) {
@@ -4208,12 +4212,13 @@ getMetaRefreshParam(char *q, Str * refresh_uri)
 	int refresh_interval;
 	char *r;
 	Str s_tmp = NULL;
+	const char *errstr;
 
 	if (q == NULL || refresh_uri == NULL)
 		return 0;
 
-	refresh_interval = atoi(q);
-	if (refresh_interval < 0)
+	refresh_interval = strtonum(q, 0, INT_MAX, &errstr);
+	if (errstr != NULL)
 		return 0;
 
 	while (*q) {
@@ -4435,7 +4440,7 @@ HTMLtagproc1(struct parsed_tag * tag, struct html_feed_environ * h_env)
 			     envs[h_env->envc - 1].indent, 0, h_env->limit);
 			envs[h_env->envc].count++;
 			if (parsedtag_get_value(tag, ATTR_VALUE, &p)) {
-				count = atoi(p);
+				count = strtonum(p, 0, INT_MAX, NULL);
 				if (count > 0)
 					envs[h_env->envc].count = count;
 				else
@@ -5833,8 +5838,12 @@ proc_again:
 					break;
 				case HTML_SYMBOL:
 					effect |= PC_SYMBOL;
-					if (parsedtag_get_value(tag, ATTR_TYPE, &p))
-						symbol = (char) atoi(p);
+					if (parsedtag_get_value(tag,
+					    ATTR_TYPE, &p)) {
+						/* XXX: check range */
+						symbol = (char) strtonum(p,
+						    0, INT_MAX, NULL);
+					}
 					break;
 				case HTML_N_SYMBOL:
 					effect &= ~PC_SYMBOL;

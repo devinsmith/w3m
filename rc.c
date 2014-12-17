@@ -978,6 +978,8 @@ str_to_color(char *value)
 static int
 set_param(char *name, char *value)
 {
+	const char *errstr;
+	long long tempnum;
 	struct param_ptr *p;
 	double ppc;
 
@@ -988,21 +990,32 @@ set_param(char *name, char *value)
 		return 0;
 	switch (p->type) {
 	case P_INT:
-		if (atoi(value) >= 0)
-			*(int *) p->varptr = (p->inputtype == PI_ONOFF)
-				? str_to_bool(value, *(int *) p->varptr) : atoi(value);
+		tempnum = strtonum(value, 0, INT_MAX, &errstr);
+		if (errstr == NULL) {
+			*(int *) p->varptr = (p->inputtype == PI_ONOFF) ?
+			    str_to_bool(value, *(int *) p->varptr) : tempnum;
+		}
 		break;
 	case P_NZINT:
-		if (atoi(value) > 0)
-			*(int *) p->varptr = atoi(value);
+		tempnum = strtonum(value, 1, INT_MAX, &errstr);
+		if (errstr == NULL) {
+			*(int *) p->varptr = tempnum;
+		}
 		break;
 	case P_SHORT:
-		*(short *) p->varptr = (p->inputtype == PI_ONOFF)
-			? str_to_bool(value, *(short *) p->varptr) : atoi(value);
+		tempnum = strtonum(value, 0, SHRT_MAX, &errstr);
+		if (errstr == NULL) {
+			*(short *) p->varptr = (p->inputtype == PI_ONOFF) ?
+			    str_to_bool(value, *(short *) p->varptr) : tempnum;
+		}
 		break;
 	case P_CHARINT:
-		*(char *) p->varptr = (p->inputtype == PI_ONOFF)
-			? str_to_bool(value, *(char *) p->varptr) : atoi(value);
+		/* XXX: check range */
+		tempnum = strtonum(value, INT_MIN, INT_MAX, &errstr);
+		if (errstr == NULL) {
+			*(char *) p->varptr = (p->inputtype == PI_ONOFF) ?
+			    str_to_bool(value, *(char *) p->varptr) : tempnum;
+		}
 		break;
 	case P_CHAR:
 		*(char *) p->varptr = value[0];
@@ -1421,7 +1434,8 @@ load_option_panel(void)
 				   html_quote(to_str(p)->ptr), "\">", NULL);
 				break;
 			case PI_ONOFF:
-				x = atoi(to_str(p)->ptr);
+				/* XXX: check range */
+				x = strtonum(to_str(p)->ptr, 0, INT_MAX, NULL);
 				Strcat_m_charp(src, "<input type=radio name=",
 					       p->name,
 					       " value=1",
@@ -1436,9 +1450,13 @@ load_option_panel(void)
 				for (s = (struct sel_c *) p->select; s->text != NULL; s++) {
 					Strcat_charp(src, "<option value=");
 					Strcat(src, Sprintf("%s\n", s->cvalue));
-					if ((p->type != P_CHAR && s->value == atoi(tmp->ptr)) ||
-					    (p->type == P_CHAR && (char) s->value == *(tmp->ptr)))
+					if ((p->type != P_CHAR &&
+					    s->value == strtonum(tmp->ptr,
+						0, INT_MAX, NULL)) ||
+					    (p->type == P_CHAR &&
+					    (char) s->value == *(tmp->ptr))) {
 						Strcat_charp(src, " selected");
+					}
 					Strcat_char(src, '>');
 					Strcat_charp(src, s->text);
 				}
@@ -1448,10 +1466,15 @@ load_option_panel(void)
 			case PI_CODE:
 				tmp = to_str(p);
 				Strcat_m_charp(src, "<select name=", p->name, ">", NULL);
-				for (c = *(wc_ces_list **) p->select; c->desc != NULL; c++) {
+				for (c = *(wc_ces_list **) p->select;
+				    c->desc != NULL; c++) {
+					const char *errstr;
+					long long tempnum;
 					Strcat_charp(src, "<option value=");
 					Strcat(src, Sprintf("%s\n", c->name));
-					if (c->id == atoi(tmp->ptr))
+					tempnum = strtonum(tmp->ptr,
+					    0, INT_MAX, &errstr);
+					if (errstr == NULL && c->id == tempnum)
 						Strcat_charp(src, " selected");
 					Strcat_char(src, '>');
 					Strcat_charp(src, c->desc);
