@@ -469,7 +469,7 @@ save_cookies(void)
 	for (p = First_cookie; p; p = p->next) {
 		if (!(p->flag & COO_USE) || p->flag & COO_DISCARD)
 			continue;
-		fprintf(fp, "%s\t%s\t%s\t%ld\t%s\t%s\t%d\t%d\t%s\t%s\t%s\n",
+		fprintf(fp, "%s\t%s\t%s\t%lld\t%s\t%s\t%d\t%d\t%s\t%s\t%s\n",
 			parsedURL2Str(&p->url)->ptr,
 			p->name->ptr, p->value->ptr, p->expires,
 			p->domain->ptr, p->path->ptr, p->flag,
