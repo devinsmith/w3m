@@ -155,8 +155,9 @@ char *
 cleanupName(char *name)
 {
 	char *buf, *p, *q;
+	size_t len = strlen(name);
 
-	buf = allocStr(name, -1);
+	buf = allocStr(name, len++);
 	p = buf;
 	q = name;
 	while (*q != '\0') {
@@ -173,7 +174,7 @@ cleanupName(char *name)
 				while (p != buf && *--p != '/');	/* ->foo/FOO */
 				*p = '\0';
 				q += 3;
-				strcat(buf, q);
+				strlcat(buf, q, len);
 			}
 		} else if (strcmp(p, "/..") == 0) {	/* foo/bar/..   */
 			if (p - 2 == buf && strncmp(p - 2, "..", 2) == 0) {
@@ -188,7 +189,7 @@ cleanupName(char *name)
 		} else if (strncmp(p, "/./", 3) == 0) {	/* foo/./bar */
 			*p = '\0';	/* -> foo/bar           */
 			q += 2;
-			strcat(buf, q);
+			strlcat(buf, q, len);
 		} else if (strcmp(p, "/.") == 0) {	/* foo/. */
 			*++p = '\0';	/* -> foo/              */
 			break;
@@ -196,7 +197,7 @@ cleanupName(char *name)
 			/* -> foo/bar           */
 			*p = '\0';
 			q++;
-			strcat(buf, q);
+			strlcat(buf, q, len);
 		} else {
 			p++;
 			q++;
