@@ -512,7 +512,7 @@ openSocket(char *const hostname,
 	}
 #else				/* not INET6 */
 	s_port = htons(remoteport_num);
-	bzero((char *) &hostaddr, sizeof(struct sockaddr_in));
+	explicit_bzero(&hostaddr, sizeof(struct sockaddr_in));
 	if ((proto = getprotobyname("tcp")) == NULL) {
 		/* protocol number of TCP is 6 */
 		proto = New(struct protoent);

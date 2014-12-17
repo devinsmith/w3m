@@ -142,7 +142,7 @@ parse_tag(char **s, int internal)
 		goto skip_parse_tagarg;
 
 	tag = New(struct parsed_tag);
-	bzero(tag, sizeof(struct parsed_tag));
+	memset(tag, 0, sizeof(struct parsed_tag));
 	tag->tagid = tag_id;
 
 	if ((nattr = TagMAP[tag_id].max_attribute) > 0) {

@@ -341,7 +341,7 @@ loadImage(Buffer * buf, int flag)
 		n_load_image = maxLoadImage;
 	if (!image_cache) {
 		image_cache = New_N(ImageCache *, MAX_LOAD_IMAGE);
-		bzero(image_cache, sizeof(ImageCache *) * MAX_LOAD_IMAGE);
+		memset(image_cache, 0, sizeof(ImageCache *) * MAX_LOAD_IMAGE);
 	}
 	for (i = 0; i < n_load_image; i++) {
 		cache = image_cache[i];

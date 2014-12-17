@@ -459,7 +459,7 @@ putHmarker(HmarkerList * ml, int line, int pos, int seq)
 	if (ml->markmax == 0) {
 		ml->markmax = FIRST_MARKER_SIZE;
 		ml->marks = NewAtom_N(BufferPoint, ml->markmax);
-		bzero(ml->marks, sizeof(BufferPoint) * ml->markmax);
+		memset(ml->marks, 0, sizeof(BufferPoint) * ml->markmax);
 	}
 	if (seq + 1 > ml->nmark)
 		ml->nmark = seq + 1;

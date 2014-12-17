@@ -85,7 +85,7 @@ newFrame(struct parsed_tag * tag, Buffer * buf)
 	char *p;
 
 	body = New(struct frame_body);
-	bzero((void *) body, sizeof(*body));
+	memset(body, 0, sizeof(*body));
 	body->attr = F_UNLOADED;
 	body->flags = 0;
 	body->baseURL = baseURL(buf);
@@ -110,7 +110,7 @@ deleteFrame(struct frame_body * b)
 	if (b == NULL)
 		return;
 	unloadFrame(b);
-	bzero((void *) b, sizeof(*b));
+	explicit_bzero(b, sizeof(*b));
 }
 
 void
@@ -280,7 +280,7 @@ popFrameTree(struct frameset_queue ** fqpp)
 		(rfq = cfq->back)->next = cfq->next;
 	}
 	*fqpp = rfq;
-	bzero((void *) cfq, sizeof(struct frameset_queue));
+	memset(cfq, 0, sizeof(struct frameset_queue));
 	return rfs;
 }
 

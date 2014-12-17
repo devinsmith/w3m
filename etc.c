@@ -1021,7 +1021,7 @@ parsePasswd(FILE * fp, int netrc)
 	struct auth_pass ent;
 	Str line = NULL;
 
-	bzero(&ent, sizeof(struct auth_pass));
+	memset(&ent, 0, sizeof(struct auth_pass));
 	while (1) {
 		Str arg = NULL;
 		char *p;
@@ -1042,7 +1042,7 @@ parsePasswd(FILE * fp, int netrc)
 		if (!strcmp(p, "machine") || !strcmp(p, "host")
 		    || (netrc && !strcmp(p, "default"))) {
 			add_auth_pass_entry(&ent, netrc, 0);
-			bzero(&ent, sizeof(struct auth_pass));
+			explicit_bzero(&ent, sizeof(struct auth_pass));
 			if (netrc)
 				ent.port = 21;	/* XXX: getservbyname("ftp");
 						 * ? */
