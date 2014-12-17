@@ -416,10 +416,6 @@ Stralign_center(Str s, int width)
 	return n;
 }
 
-#define SP_NORMAL 0
-#define SP_PREC   1
-#define SP_PREC2  2
-
 Str
 Sprintf(char *fmt, ...)
 {
