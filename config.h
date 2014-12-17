@@ -131,7 +131,6 @@ typedef long clen_t;
 #define HAVE_BCOPY 1
 #define HAVE_WAITPID 1
 #define HAVE_WAIT3 1
-#define HAVE_STRFTIME 1
 #define HAVE_GETCWD 1
 #define HAVE_GETWD 1
 #define HAVE_SYMLINK 1
