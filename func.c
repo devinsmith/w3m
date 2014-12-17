@@ -575,8 +575,8 @@ initMouseAction(void)
 	memcpy(&mouse_action, &default_mouse_action,
 	      sizeof(default_mouse_action));
 	mouse_action.lastline_map[0] = New_N(MouseActionMap, 6);
-	memcpy(&mouse_action.lastline_map[0],
-	      default_lastline_action,
+	memcpy(mouse_action.lastline_map[0],
+	      &default_lastline_action,
 	      sizeof(default_lastline_action));
 	{
 #ifdef USE_M17N
