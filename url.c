@@ -342,9 +342,6 @@ openSSLHandle(int sock, char *hostname, char **p_cert)
     }
     handle = SSL_new(ssl_ctx);
     SSL_set_fd(handle, sock);
-#if SSLEAY_VERSION_NUMBER >= 0x00905100
-    init_PRNG();
-#endif				/* SSLEAY_VERSION_NUMBER >= 0x00905100 */
 #if (SSLEAY_VERSION_NUMBER >= 0x00908070) && !defined(OPENSSL_NO_TLSEXT)
     SSL_set_tlsext_host_name(handle,hostname);
 #endif				/* (SSLEAY_VERSION_NUMBER >= 0x00908070) && !defined(OPENSSL_NO_TLSEXT) */

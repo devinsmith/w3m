@@ -139,8 +139,6 @@ typedef long clen_t;
 #define HAVE_LSTAT 1
 #define HAVE_SETENV 1
 #define HAVE_PUTENV 1
-#define HAVE_SRAND48 1
-#define HAVE_SRANDOM 1
 /* #undef HAVE_GETPASSPHRASE */
 #define HAVE_CHDIR 1
 #define HAVE_SETPGRP 1
@@ -182,15 +180,6 @@ typedef RETSIGTYPE MySignalHandler;
 # define SETJMP(env) setjmp(env)
 # define LONGJMP(env,val) longjmp(env)
 # define JMP_BUF jmp_buf
-#endif
-
-#ifndef HAVE_SRAND48
-#ifdef HAVE_SRANDOM
-#define srand48 srandom
-#define lrand48 random
-#else /* HAVE_SRANDOM */
-#define USE_INCLUDED_SRAND48
-#endif /* HAVE_SRANDOM */
 #endif
 
 #ifndef HAVE_LSTAT

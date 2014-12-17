@@ -56,8 +56,7 @@ localCookie()
     if (Local_cookie)
 	return Local_cookie;
     gethostname(hostname, 256);
-    srand48((long)New(char) + (long)time(NULL));
-    Local_cookie = Sprintf("%ld@%s", lrand48(), hostname);
+    Local_cookie = Sprintf("%ld@%s", arc4random_uniform(INT32_MAX), hostname);
     return Local_cookie;
 }
 

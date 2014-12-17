@@ -782,9 +782,4 @@ extern Str getLinkNumberStr(int correction);
 
 extern void dispVer(void);
 
-#ifdef USE_INCLUDED_SRAND48
-void srand48(long);
-long lrand48(void);
-#endif
-
 #include "indep.h"

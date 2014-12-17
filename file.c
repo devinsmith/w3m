@@ -1257,9 +1257,9 @@ AuthDigestCred(struct http_auth *ha, Str uname, Str pw, ParsedURL *pu,
 	} cnonce_seed;
 	int qop_i = QOP_NONE;
 
-	cnonce_seed.r[0] = rand();
-	cnonce_seed.r[1] = rand();
-	cnonce_seed.r[2] = rand();
+	cnonce_seed.r[0] = (int) arc4random();
+	cnonce_seed.r[1] = (int) arc4random();
+	cnonce_seed.r[2] = (int) arc4random();
 	MD5(cnonce_seed.s, sizeof(cnonce_seed.s), md5);
 	cnonce = digest_hex(md5);
 	cnonce_seed.r[3]++;
