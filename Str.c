@@ -438,6 +438,7 @@ Sprintf(char *fmt, ...)
 	s = Strnew_size(n);
 	s->length = ret;
 	memcpy(s->ptr, cb, n);
+	free(cb);
 	return s;
 }
 
