@@ -1,30 +1,26 @@
 2ch.cgi
 
   [w3m-dev 03635] 2ch.cgi
-  2ch の dat を直読みする local CGI です。
+  localcgi to read 2ch dat directly
 
   w3m file:/cgi-bin/2ch.cgi?http://pc.2ch.net/test/read.cgi/unix/1035755937/
 
-  wget の差分転送(-c)を使います。
-  読んだ dat は ~/.w3m2ch/ 以下に保存します。
-  書き込みはできません。
+  It uses wget -c.
+  `dat' files are recorded under ~/w3m2ch/.
+  You can not post.
 
 smb.cgi
 
   [w3m-dev 03634] smb.cgi
-  SMB にアクセスする local CGI です。
-  nmblookup,smbclient を使うので sabma がインストールされている
-  必要があります。
-  パスワードは、
-  1) ~/.w3m/smb にパスワードが設定されており、
-     smbclient の -A オプションを使えるなら
-     smbclient -A ~/.w3m/smb として渡します。
-  2) 環境変数 PASSWD_FILE (パスワードのみのファイル)が設定
-     されている場合は、環境変数 PASSWD_FILE を使います。
-  3) ~/.w3m/smb にパスワードが設定されていれば、
-     環境変数 PASSWD_FD を使って標準入力経由で渡します。
-  どちらにせよ、あまり良い事ではないので SMB(CIFS)プロトコルを
-  喋る版を希望。
+  localcgi to access SMB.
+  Since it uses nmblookup, smbclient, you should install samba.
+  Password can be passed to smbclient:
+  1) When the password is set by contents of ~/.w3m/smb and
+     -A option available, `smbclient -A ~/.w3m/smb' is used.
+  2) When the environment variable PASSWD_FILE, it is used.
+  3) When the password is set by contents of ~/.w3m/smb,
+     the password is passed via standrad I/O using
+     the environment variable PASSWD_FD.
 
 google.cgi
 
@@ -32,49 +28,50 @@ google.cgi
 
 html2latex
 
-  HTMLの文書をLaTeX に変換します．Rubyスクリプトです．不完全です．
-  ある程度の役には立つかもしれません．
+  Convert HTML document into LaTeX. Ruby script. incomplete.
 
-  使用法
+  Usage:
 
     html2latex file.html > file.tex
 
-  ここに置いてある理由
+  Why this script is here?
 
-    makeref のための部品取りです :-)
+    To exploit code for makeref. :-)
 
 makeref
 
-  HTMLの文書を読み，アンカーに番号を振ります．番号を振った文書を
-  標準出力に書き出し，最後にその一覧を出力します．Ruby スクリプトです．
+  Read HTML document and number the anchors. Print numbered document
+  into standard output and append reference index. Ruby script.
 
-  使用法
+  Usage:
 
-    makeref [-url base_url] [file]
+    makeref [-u] [-url base_url] [file]
 
-    -url: 文書のURLを指定します．リンクの一覧を出すときに，そのURLを
-          補完するために使います．
+    -url: Specify URL of the document. It is used to complete link
+          in the document.
 
-  バグ
+    -u: Append URL after each anchor, instead of reference number.
 
-    HTMLの記述ミス( &lt; ではなく < を使う，&... の最後に ; を付けない
-    等)があると，悲惨な結果になることがあります．
+  Bugs
 
-    半角カナ(JIS X-0201カナ)に対応していません．
+    If there are any error in HTML (unbalanced < , character entity
+    without ; , etc.), output will be miserable.
 
 htmldump
 
-  URL からHTML文書を読み，アンカーに番号を振って整形し，標準出力に
-  書き出します．
+  Read HTML document from URL, number the anchors and format it,
+  and output it on standard output.
 
-  使用法
+  Usage
 
-    dumphtml [URL]
+    htmldump [-u] [URL]
 
-    URL を省略すると，$WWW_HOME の内容を読みます．
+    -u: Append URL after each anchor, instead of reference number.
 
-  バグ
+    If URL is omitted, $WWW_HOME is used instead.
 
-    URL の指す文書がHTMLでなかった場合，かわいそうなことになります．
-    makeref を使っているので，makeref がうまく処理できない文書の表示
-    は変になります．
+  Bugs
+
+    It assumes that the document on URL is HTML.
+    As it uses makeref to number the anchor, it can't handle any document
+    makeref can't handle.
