@@ -13,7 +13,7 @@
 #define HELP_FILE "w3mhelp-w3m_en.html"
 #define HELP_CGI     "w3mhelp"
 #define W3MCONFIG    "w3mconfig"
-#define IMGDISPLAY   "w3mimgdisplay"
+#define IMGDISPLAY   "feh"
 #define XFACE2XPM    "xface2xpm"
 
 #define BOOKMARK     "bookmark.html"
