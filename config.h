@@ -44,8 +44,10 @@
 #define W3M_LANG EN
 #define LANG W3M_LANG
 
-/* Define to 1 if translation of program messages to the user's
-   native language is requested. */
+/*
+ * Define to 1 if translation of program messages to the user's native
+ * language is requested.
+ */
 #define ENABLE_NLS 1
 
 #define USE_COLOR 1
@@ -151,7 +153,7 @@ typedef long clen_t;
 #else
 #define SETPGRP() setpgrp(0,0)
 #endif
-#else /* no HAVE_SETPGRP; OS/2 EMX */
+#else				/* no HAVE_SETPGRP; OS/2 EMX */
 #define SETPGRP() setpgid(0, 0)
 #endif
 #define HAVE_FLOAT_H 1
@@ -167,18 +169,18 @@ typedef RETSIGTYPE MySignalHandler;
 
 #ifdef HAVE_SIGSETJMP
 #ifdef __MINGW32_VERSION
-# define SETJMP(env) setjmp(env)
-# define LONGJMP(env,val) longjmp(env, val)
-# define JMP_BUF jmp_buf
+#define SETJMP(env) setjmp(env)
+#define LONGJMP(env,val) longjmp(env, val)
+#define JMP_BUF jmp_buf
 #else
-# define SETJMP(env) sigsetjmp(env,1)
-# define LONGJMP(env,val) siglongjmp(env,val)
-# define JMP_BUF sigjmp_buf
-#endif /* __MINGW32_VERSION */
+#define SETJMP(env) sigsetjmp(env,1)
+#define LONGJMP(env,val) siglongjmp(env,val)
+#define JMP_BUF sigjmp_buf
+#endif				/* __MINGW32_VERSION */
 #else
-# define SETJMP(env) setjmp(env)
-# define LONGJMP(env,val) longjmp(env)
-# define JMP_BUF jmp_buf
+#define SETJMP(env) setjmp(env)
+#define LONGJMP(env,val) longjmp(env)
+#define JMP_BUF jmp_buf
 #endif
 
 #ifndef HAVE_LSTAT
@@ -204,7 +206,7 @@ typedef RETSIGTYPE MySignalHandler;
 #define DEFAULT_TERM	0	/* XXX */
 #endif
 
-#if defined(__EMX__) /* use $extension? */
+#if defined(__EMX__)		/* use $extension? */
 #define GUNZIP_CMDNAME  "gzip"
 #define BUNZIP2_CMDNAME "bzip2"
 #define INFLATE_CMDNAME  "inflate.exe"
@@ -236,6 +238,6 @@ typedef RETSIGTYPE MySignalHandler;
 #define S_IXOTH 0
 #define S_IRWXG 0
 #define S_IRWXO 0
-#endif /* __MINGW32_VERSION */
+#endif				/* __MINGW32_VERSION */
 
-#endif /* CONFIG_H_SEEN */
+#endif				/* CONFIG_H_SEEN */
