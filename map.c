@@ -564,7 +564,7 @@ page_info_panel(Buffer * buf)
 		Strcat_charp(tmp,
 		"<tr><td nowrap>Document Charset<td><select name=charset>");
 		for (; list->name != NULL; list++) {
-			snprintf(charset, sizeof(charset), "%d",
+			snprintf(charset, sizeof(charset), "%u",
 			    (unsigned int) list->id);
 			Strcat_m_charp(tmp, "<option value=", charset,
 			  (buf->document_charset == list->id) ? " selected>"
