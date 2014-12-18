@@ -260,7 +260,7 @@ find_cookie(ParsedURL * pu)
 			}
 			if (p1->portl) {
 				Strcat(tmp, Sprintf("; $Port=\"%s\"",
-						  portlist2str(p1->portl)));
+				    portlist2str(p1->portl)->ptr));
 			}
 		}
 	}
