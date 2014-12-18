@@ -292,9 +292,9 @@ make_lastline_message(Buffer * buf)
 
 	if (displayLink) {
 #ifdef USE_IMAGE
-		MapArea *a = retrieveCurrentMapArea(buf);
-		if (a)
-			s = make_lastline_link(buf, a->alt, a->url);
+		MapArea *ma = retrieveCurrentMapArea(buf);
+		if (ma)
+			s = make_lastline_link(buf, ma->alt, ma->url);
 		else
 #endif
 		{
