@@ -6202,17 +6202,22 @@ proc_normal:
 					continue;
 				/* all tables have been read */
 				if (tbl->vspace > 0 && !(obuf->flag & RB_IGNORE_P)) {
-					int indent = h_env->envs[h_env->envc].indent;
-					flushline(h_env, obuf, indent, 0, h_env->limit);
-					do_blankline(h_env, obuf, indent, 0, h_env->limit);
+					int bl_indent =
+					    h_env->envs[h_env->envc].indent;
+					flushline(h_env, obuf, bl_indent, 0,
+					    h_env->limit);
+					do_blankline(h_env, obuf, bl_indent,
+					    0, h_env->limit);
 				}
 				save_fonteffect(h_env, obuf);
 				renderTable(tbl, tbl_width, h_env);
 				restore_fonteffect(h_env, obuf);
 				obuf->flag &= ~RB_IGNORE_P;
 				if (tbl->vspace > 0) {
-					int indent = h_env->envs[h_env->envc].indent;
-					do_blankline(h_env, obuf, indent, 0, h_env->limit);
+					int bl_indent =
+					    h_env->envs[h_env->envc].indent;
+					do_blankline(h_env, obuf, bl_indent, 0,
+					    h_env->limit);
 					obuf->flag |= RB_IGNORE_P;
 				}
 				set_space_to_prevchar(obuf->prevchar);
