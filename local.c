@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <inttypes.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <signal.h>
@@ -56,7 +57,7 @@ localCookie()
 	if (Local_cookie)
 		return Local_cookie;
 	gethostname(hostname, 256);
-	Local_cookie = Sprintf("%ld@%s", arc4random_uniform(INT32_MAX), hostname);
+	Local_cookie = Sprintf("%" PRIu32 "@%s", arc4random_uniform(INT32_MAX), hostname);
 	return Local_cookie;
 }
 
@@ -343,7 +344,7 @@ localcgi_post(char *uri, char *qstr, FormList * request, char *referer)
 		set_environ("REQUEST_METHOD", "POST");
 		if (qstr)
 			set_environ("QUERY_STRING", qstr);
-		set_environ("CONTENT_LENGTH", Sprintf("%d", request->length)->ptr);
+		set_environ("CONTENT_LENGTH", Sprintf("%lu", request->length)->ptr);
 		if (request->enctype == FORM_ENCTYPE_MULTIPART) {
 			set_environ("CONTENT_TYPE",
 				 Sprintf("multipart/form-data; boundary=%s",
