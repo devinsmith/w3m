@@ -46,8 +46,8 @@
 #define NewAtom_N(type,n)       ((type*)GC_MALLOC_ATOMIC((n)*sizeof(type)))
 #define Renew_N(type,ptr,n)   ((type*)GC_REALLOC((ptr),(n)*sizeof(type)))
 
-#define SWAPD(a,b) { double tmp = a; a = b; b = tmp; }
-#define SWAPI(a,b) { int tmp = a; a = b; b = tmp; }
+#define SWAPD(a,b) { double tmp_ = a; a = b; b = tmp_; }
+#define SWAPI(a,b) { int tmp_ = a; a = b; b = tmp_; }
 
 #ifdef HAVE_FLOAT_H
 #include <float.h>
