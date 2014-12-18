@@ -59,8 +59,8 @@ Str Stralign_left(Str, int);
 Str Stralign_right(Str, int);
 Str Stralign_center(Str, int);
 
-Str Sprintf(char *fmt,...);
-
+Str Sprintf(char *fmt, ...)
+    __attribute__ ((format (printf, 1, 2)));
 Str Strfgets(FILE *);
 Str Strfgetall(FILE *);
 
