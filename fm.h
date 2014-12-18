@@ -179,11 +179,11 @@ typedef int wc_ces;		/* XXX: not used */
 
 /* Mode for displayBuffer() */
 enum DBmode {
-	B_NORMAL =		0,
-	B_FORCE_REDRAW =	1,
-	B_REDRAW =		2,
-	B_SCROLL =		3,
-	B_REDRAW_IMAGE =	4
+	B_NORMAL	= 0,
+	B_FORCE_REDRAW	= 1,
+	B_REDRAW	= 2,
+	B_SCROLL	= 3,
+	B_REDRAW_IMAGE	= 4
 };
 
 /* Buffer Property */
