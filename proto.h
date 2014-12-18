@@ -305,7 +305,7 @@ extern int writeBufferCache(Buffer * buf);
 extern int readBufferCache(Buffer * buf);
 extern void fmTerm(void);
 extern void fmInit(void);
-extern void displayBuffer(Buffer * buf, int mode);
+extern void displayBuffer(Buffer * buf, enum DBmode mode);
 extern void addChar(char c, Lineprop mode);
 #ifdef USE_M17N
 extern void addMChar(char *c, Lineprop mode, size_t len);

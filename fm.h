@@ -177,12 +177,14 @@ typedef int wc_ces;		/* XXX: not used */
 
 #define COLPOS(l,c)	calcPosition(l->lineBuf,l->propBuf,l->len,c,0,CP_AUTO)
 
-/* Flags for displayBuffer() */
-#define B_NORMAL	0
-#define B_FORCE_REDRAW	1
-#define B_REDRAW	2
-#define B_SCROLL        3
-#define B_REDRAW_IMAGE	4
+/* Mode for displayBuffer() */
+enum DBmode {
+	B_NORMAL =		0,
+	B_FORCE_REDRAW =	1,
+	B_REDRAW =		2,
+	B_SCROLL =		3,
+	B_REDRAW_IMAGE =	4
+};
 
 /* Buffer Property */
 #define BP_NORMAL	0x0

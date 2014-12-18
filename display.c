@@ -360,7 +360,7 @@ make_lastline_message(Buffer * buf)
 }
 
 void
-displayBuffer(Buffer * buf, int mode)
+displayBuffer(Buffer * buf, enum DBmode mode)
 {
 	Str msg;
 	int ny = 0;
