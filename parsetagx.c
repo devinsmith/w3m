@@ -73,20 +73,20 @@ toLength(char *oval, int *len)
 }
 
 static int
-toAlign(char *oval, int *align)
+toAlign(char *str, int *out)
 {
-	if (strcasecmp(oval, "left") == 0)
-		*align = ALIGN_LEFT;
-	else if (strcasecmp(oval, "right") == 0)
-		*align = ALIGN_RIGHT;
-	else if (strcasecmp(oval, "center") == 0)
-		*align = ALIGN_CENTER;
-	else if (strcasecmp(oval, "top") == 0)
-		*align = ALIGN_TOP;
-	else if (strcasecmp(oval, "bottom") == 0)
-		*align = ALIGN_BOTTOM;
-	else if (strcasecmp(oval, "middle") == 0)
-		*align = ALIGN_MIDDLE;
+	if (strcasecmp(str, "left") == 0)
+		*out = ALIGN_LEFT;
+	else if (strcasecmp(str, "right") == 0)
+		*out = ALIGN_RIGHT;
+	else if (strcasecmp(str, "center") == 0)
+		*out = ALIGN_CENTER;
+	else if (strcasecmp(str, "top") == 0)
+		*out = ALIGN_TOP;
+	else if (strcasecmp(str, "bottom") == 0)
+		*out = ALIGN_BOTTOM;
+	else if (strcasecmp(str, "middle") == 0)
+		*out = ALIGN_MIDDLE;
 	else
 		return 0;
 	return 1;

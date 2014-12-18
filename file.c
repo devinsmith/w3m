@@ -2144,17 +2144,17 @@ page_loaded:
 	}
 #ifdef USE_IMAGE
 	if (image_source) {
-		Buffer *b = NULL;
+		Buffer *imagebuf = NULL;
 		if (IStype(f.stream) != IST_ENCODED)
 			f.stream = newEncodedStream(f.stream, f.encoding);
 		if (save2tmp(f, image_source) == 0) {
-			b = newBuffer(INIT_BUFFER_WIDTH);
-			b->sourcefile = image_source;
-			b->real_type = t;
+			imagebuf = newBuffer(INIT_BUFFER_WIDTH);
+			imagebuf->sourcefile = image_source;
+			imagebuf->real_type = t;
 		}
 		UFclose(&f);
 		TRAP_OFF;
-		return b;
+		return imagebuf;
 	}
 #endif
 
@@ -3504,8 +3504,8 @@ process_input(struct parsed_tag * tag)
 	int qlen = 0;
 
 	if (cur_form_id < 0) {
-		char *s = "<form_int method=internal action=none>";
-		tmp = process_form(parse_tag(&s, TRUE));
+		char *int_tag = "<form_int method=internal action=none>";
+		tmp = process_form(parse_tag(&int_tag, TRUE));
 	}
 	if (tmp == NULL)
 		tmp = Strnew();
@@ -4126,10 +4126,10 @@ static void
 set_alignment(struct readbuffer * obuf, struct parsed_tag * tag)
 {
 	long flag = -1;
-	int align;
+	int tag_align;
 
-	if (parsedtag_get_value(tag, ATTR_ALIGN, &align)) {
-		switch (align) {
+	if (parsedtag_get_value(tag, ATTR_ALIGN, &tag_align)) {
+		switch (tag_align) {
 		case ALIGN_CENTER:
 			flag = RB_CENTER;
 			break;
