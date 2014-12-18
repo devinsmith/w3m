@@ -551,11 +551,13 @@ getImageSize(ImageCache * cache)
 		cache->width = (w > MAX_IMAGE_SIZE) ? MAX_IMAGE_SIZE : w;
 		cache->height = (h > MAX_IMAGE_SIZE) ? MAX_IMAGE_SIZE : h;
 	} else if (cache->width < 0) {
-		int tmp = (int) ((double) cache->height * w / h + 0.5);
-		cache->width = (tmp > MAX_IMAGE_SIZE) ? MAX_IMAGE_SIZE : tmp;
+		int tmp_w = (int) ((double) cache->height * w / h + 0.5);
+		cache->width = (tmp_w > MAX_IMAGE_SIZE) ?
+		    MAX_IMAGE_SIZE : tmp_w;
 	} else if (cache->height < 0) {
-		int tmp = (int) ((double) cache->width * h / w + 0.5);
-		cache->height = (tmp > MAX_IMAGE_SIZE) ? MAX_IMAGE_SIZE : tmp;
+		int tmp_h = (int) ((double) cache->width * h / w + 0.5);
+		cache->height = (tmp_h > MAX_IMAGE_SIZE) ?
+		    MAX_IMAGE_SIZE : tmp_h;
 	}
 	if (cache->width == 0)
 		cache->width = 1;
