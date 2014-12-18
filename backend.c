@@ -215,7 +215,7 @@ set(TextList * argv)
 		int i;
 		for (i = 0; variable_table[i].name; i++) {
 			if (!strcasecmp(variable_table[i].name, argv->first->ptr)) {
-				popText(argv);
+				(void)popText(argv);
 				if (variable_table[i].set_func)
 					variable_table[i].set_func(argv);
 				break;
@@ -233,7 +233,7 @@ show(TextList * argv)
 		int i;
 		for (i = 0; variable_table[i].name; i++) {
 			if (!strcasecmp(variable_table[i].name, argv->first->ptr)) {
-				popText(argv);
+				(void)popText(argv);
 				if (variable_table[i].show_func)
 					variable_table[i].show_func(argv);
 				break;
@@ -292,7 +292,7 @@ call_command_function(char *str)
 	if (argv->nitem > 0) {
 		for (i = 0; command_table[i].name; i++) {
 			if (!strcasecmp(command_table[i].name, argv->first->ptr)) {
-				popText(argv);
+				(void)popText(argv);
 				if (command_table[i].func)
 					command_table[i].func(argv);
 				break;
