@@ -19,6 +19,9 @@
 #include "myctype.h"
 
 static int is_saved = 1;
+static const char *special_domain[] = {
+	".com", ".edu", ".gov", ".mil", ".net", ".org", ".int", NULL
+};
 
 #define contain_no_dots(p, ep) (total_dot_number((p),(ep),1)==0)
 
@@ -263,10 +266,6 @@ find_cookie(ParsedURL * pu)
 	}
 	return tmp;
 }
-
-char *special_domain[] = {
-	".com", ".edu", ".gov", ".mil", ".net", ".org", ".int", NULL
-};
 
 int
 check_avoid_wrong_number_of_dots_domain(Str domain)
