@@ -113,8 +113,6 @@
 /* #undef HAVE_SGTTY_H */
 #define HAVE_DIRENT_H 1
 #define HAVE_LOCALE_H 1
-#define HAVE_STDINT_H 1
-#define HAVE_INTTYPES_H 1
 #define SIZEOF_LONG_LONG 8
 #if SIZEOF_LONG_LONG > 0
 typedef long long clen_t;
