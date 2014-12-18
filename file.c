@@ -6825,7 +6825,7 @@ print_internal_information(struct html_feed_environ * henv)
 	pushTextLine(tl, newTextLine(s, 0));
 
 	if (henv->buf)
-		appendTextLineList(henv->buf, tl);
+		(void)appendTextLineList(henv->buf, tl);
 	else if (henv->f) {
 		TextLineListItem *p;
 		for (p = tl->first; p; p = p->next)
