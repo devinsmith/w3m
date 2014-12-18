@@ -11,10 +11,10 @@
 /* parse HTML tag */
 
 static int noConv(char *, char **);
-static int toNumber(char *, int *);
-static int toLength(char *, int *);
-static int toAlign(char *, int *);
-static int toVAlign(char *, int *);
+static int toNumber(const char *, int *);
+static int toLength(const char *, int *);
+static int toAlign(const char *, int *);
+static int toVAlign(const char *, int *);
 
 /* *INDENT-OFF* */
 static int (*toValFunc[]) () = {
@@ -40,7 +40,7 @@ noConv(char *oval, char **str)
 }
 
 static int
-toNumber(char *oval, int *num)
+toNumber(const char *oval, int *num)
 {
 	char *ep;
 	int x;
@@ -55,7 +55,7 @@ toNumber(char *oval, int *num)
 }
 
 static int
-toLength(char *oval, int *len)
+toLength(const char *oval, int *len)
 {
 	int w;
 	if (!IS_DIGIT(oval[0]))
@@ -73,7 +73,7 @@ toLength(char *oval, int *len)
 }
 
 static int
-toAlign(char *str, int *out)
+toAlign(const char *str, int *out)
 {
 	if (strcasecmp(str, "left") == 0)
 		*out = ALIGN_LEFT;
@@ -93,7 +93,7 @@ toAlign(char *str, int *out)
 }
 
 static int
-toVAlign(char *oval, int *valign)
+toVAlign(const char *oval, int *valign)
 {
 	if (strcasecmp(oval, "top") == 0 || strcasecmp(oval, "baseline") == 0)
 		*valign = VALIGN_TOP;
