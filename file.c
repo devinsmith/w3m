@@ -689,33 +689,41 @@ readHeader(URLFile * uf, Buffer * newBuf, int thru, ParsedURL * pu)
 			}
 #ifdef USE_IMAGE
 			if (thru && activeImage && displayImage) {
-				Str src = NULL;
-				if (!strncasecmp(tmp->ptr, "X-Image-URL:", 12)) {
+				Str im_srct = NULL;
+				if (!strncasecmp(tmp->ptr,
+				    "X-Image-URL:", 12)) {
 					tmpf = &tmp->ptr[12];
 					SKIP_BLANKS(tmpf);
-					src = Strnew_m_charp("<img src=\"", html_quote(tmpf),
-					   "\" alt=\"X-Image-URL\">", NULL);
+					im_srct = Strnew_m_charp(
+					    "<img src=\"", html_quote(tmpf),
+					    "\" alt=\"X-Image-URL\">", NULL);
 				}
 #ifdef USE_XFACE
 				else if (!strncasecmp(tmp->ptr, "X-Face:", 7)) {
 					tmpf = xface2xpm(&tmp->ptr[7]);
-					if (tmpf)
-						src = Strnew_m_charp("<img src=\"file:",
-							   html_quote(tmpf),
-							"\" alt=\"X-Face\"",
-								     " width=48 height=48>", NULL);
+					if (tmpf) {
+						im_srct = Strnew_m_charp(
+						    "<img src=\"file:",
+						    html_quote(tmpf),
+						    "\" alt=\"X-Face\"",
+						     " width=48 height=48>",
+						    NULL);
+					}
 				}
 #endif
-				if (src) {
+				if (im_srct) {
 					URLFile f;
 					Line *l;
 #ifdef USE_M17N
-					wc_ces old_charset = newBuf->document_charset;
+					wc_ces old_charset =
+					    newBuf->document_charset;
 #endif
-					init_stream(&f, SCM_LOCAL, newStrStream(src));
+					init_stream(&f, SCM_LOCAL,
+					    newStrStream(im_srct));
 					loadHTMLstream(&f, newBuf, NULL, TRUE);
-					for (l = newBuf->lastLine; l && l->real_linenumber;
-					     l = l->prev)
+					for (l = newBuf->lastLine; l &&
+					    l->real_linenumber;
+					    l = l->prev)
 						l->real_linenumber = 0;
 #ifdef USE_M17N
 					newBuf->document_charset = old_charset;
