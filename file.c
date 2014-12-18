@@ -736,7 +736,7 @@ readHeader(URLFile * uf, Buffer * newBuf, int thru, ParsedURL * pu)
 				p++;
 			while (*p && IS_SPACE(*p))
 				p++;
-			http_response_code = strtonum(p, 0, INT_MAX, NULL);
+			http_response_code = atoi(p);
 			if (fmInitialized) {
 				message(lineBuf2->ptr, 0, 0);
 				refresh();
