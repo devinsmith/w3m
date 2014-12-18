@@ -403,6 +403,17 @@ ssl_match_cert_ident(char *ident, int ilen, char *hostname)
 	return *hostname == '\0';
 }
 
+static void
+replace_char(char *str, char old, char new, int len)
+{
+	int i;
+	for (i = 0; i < len; ++i) {
+		if (str[i] == old) {
+			str[i] = new;
+		}
+	}
+}
+
 static Str
 ssl_check_cert_ident(X509 * x, char *hostname)
 {
@@ -446,11 +457,7 @@ ssl_check_cert_ident(X509 * x, char *hostname)
 					 * visible to user
 					 */
 					if (sl != strlen(sn)) {
-						int i;
-						for (i = 0; i < sl; ++i) {
-							if (!sn[i])
-								sn[i] = '!';
-						}
+						replace_char(sn, '\0', '!', sl);
 					}
 					Strcat_m_charp(seen_dnsname, sn, " ", NULL);
 					if (sl == strlen(sn)	/* catch \0 in SAN */
@@ -483,11 +490,7 @@ ssl_check_cert_ident(X509 * x, char *hostname)
 		     || !ssl_match_cert_ident(buf, strlen(buf), hostname)) {
 			/* replace \0 to make full string visible to user */
 			if (slen != strlen(buf)) {
-				int i;
-				for (i = 0; i < slen; ++i) {
-					if (!buf[i])
-						buf[i] = '!';
-				}
+				replace_char(buf, '\0', '!', slen);
 			}
 			/* FIXME: gettextize? */
 			ret = Sprintf("Bad cert ident %s from %s", buf, hostname);
