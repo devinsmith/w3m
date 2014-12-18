@@ -14,7 +14,7 @@ static int noConv(char *, char **);
 static int toNumber(const char *, int *);
 static int toLength(const char *, int *);
 static int toAlign(const char *, enum Align *);
-static int toVAlign(const char *, int *);
+static int toVAlign(const char *, enum VAlign *);
 
 /* *INDENT-OFF* */
 static int (*toValFunc[]) () = {
@@ -93,7 +93,7 @@ toAlign(const char *str, enum Align *out)
 }
 
 static int
-toVAlign(const char *oval, int *valign)
+toVAlign(const char *oval, enum VAlign *valign)
 {
 	if (strcasecmp(oval, "top") == 0 || strcasecmp(oval, "baseline") == 0)
 		*valign = VALIGN_TOP;

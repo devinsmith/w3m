@@ -748,9 +748,11 @@ enum Align {
 	ALIGN_BOTTOM	= 6
 };
 
-#define VALIGN_MIDDLE 0
-#define VALIGN_TOP    1
-#define VALIGN_BOTTOM 2
+enum VAlign {
+	VALIGN_MIDDLE	= 0,
+	VALIGN_TOP	= 1,
+	VALIGN_BOTTOM	= 2
+};
 
 typedef struct http_request {
 	char command;
