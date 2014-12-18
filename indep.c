@@ -55,17 +55,7 @@ char *HTML_QUOTE_MAP[] = {
 clen_t
 strtoclen(const char *s)
 {
-#ifdef HAVE_STRTOLL
 	return strtoll(s, NULL, 10);
-#elif defined(HAVE_STRTOQ)
-	return strtoq(s, NULL, 10);
-#elif defined(HAVE_ATOLL)
-	return atoll(s);
-#elif defined(HAVE_ATOQ)
-	return atoq(s);
-#else
-	return atoi(s);
-#endif
 }
 
 char *

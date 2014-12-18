@@ -119,10 +119,6 @@ typedef long long clen_t;
 #else
 typedef long clen_t;
 #endif
-#define HAVE_STRTOLL 1
-/* #undef HAVE_STROQ */
-#define HAVE_ATOLL 1
-/* #undef HAVE_ATOQ */
 #define HAVE_STRCASECMP 1
 #define HAVE_STRCASESTR 1
 #define HAVE_STRCHR 1
