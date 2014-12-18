@@ -352,9 +352,10 @@ calcPosition(char *l, Lineprop * pr, int len, int pos, int bpos,
 extern char *lastFileName(char *path);
 extern char *mybasename(char *s);
 extern char *mydirname(char *s);
-extern int next_status(char c, int *status);
-extern int read_token(Str buf, char **instr, int *status, int pre, int append);
-extern Str correct_irrtag(int status);
+extern int next_status(char c, enum RTstatus *status);
+extern int read_token(Str buf, char **instr, enum RTstatus *status,
+    int pre, int append);
+extern Str correct_irrtag(enum RTstatus status);
 #ifdef USE_MIGEMO
 extern void init_migemo(void);
 #endif

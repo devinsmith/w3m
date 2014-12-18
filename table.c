@@ -418,7 +418,7 @@ int
 visible_length(char *str)
 {
 	int len = 0, n, max_len = 0;
-	int status = R_ST_NORMAL;
+	enum RTstatus status = R_ST_NORMAL;
 	int prev_status = status;
 	Str tagbuf = Strnew();
 	char *t, *r2;
@@ -3206,7 +3206,7 @@ void
 feed_table1(struct table * tbl, Str tok, struct table_mode * mode, int width)
 {
 	Str tokbuf;
-	int status;
+	enum RTstatus status;
 	char *line;
 	if (!tok)
 		return;

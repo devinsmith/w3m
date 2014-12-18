@@ -65,7 +65,7 @@ loadcmdout(char *cmd,
 	static Str cur_option_value;
 	static Str cur_option_label;
 	static int cur_option_selected;
-	static int cur_status;
+	static enum RTstatus cur_status;
 #ifdef MENU_SELECT
 /* menu based <select>  */
 	FormSelectOption *select_option;
@@ -3749,7 +3749,7 @@ void
 feed_select(char *str)
 {
 	Str tmp = Strnew();
-	int prev_status = cur_status;
+	enum RTstatus prev_status = cur_status;
 	static int prev_spaces = -1;
 	char *p;
 

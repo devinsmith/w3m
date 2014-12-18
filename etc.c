@@ -614,7 +614,7 @@ prepare_sys_errlist()
 #endif				/* not HAVE_SYS_ERRLIST */
 
 int
-next_status(char c, int *status)
+next_status(char c, enum RTstatus *status)
 {
 	switch (*status) {
 		case R_ST_NORMAL:
@@ -752,10 +752,10 @@ next_status(char c, int *status)
 }
 
 int
-read_token(Str buf, char **instr, int *status, int pre, int append)
+read_token(Str buf, char **instr, enum RTstatus *status, int pre, int append)
 {
 	char *p;
-	int prev_status;
+	enum RTstatus prev_status;
 
 	if (!append)
 		Strclear(buf);
@@ -840,7 +840,7 @@ proc_end:
 }
 
 Str
-correct_irrtag(int status)
+correct_irrtag(enum RTstatus status)
 {
 	char c;
 	Str tmp = Strnew();
