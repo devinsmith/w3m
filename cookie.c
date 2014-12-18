@@ -344,7 +344,7 @@ add_cookie(ParsedURL * pu, Str name, Str value,
 					COOKIE_ERROR(COO_ESPECIAL);
 				}
 			} else if (n == 2) {
-				char **sdomain;
+				const char **sdomain;
 				int ok = 0;
 				for (sdomain = special_domain; !ok && *sdomain;
 				     sdomain++) {
