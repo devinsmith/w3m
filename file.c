@@ -12,6 +12,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <utime.h>
+#include <errno.h>
 /* foo */
 
 #include "html.h"
@@ -4223,14 +4224,17 @@ getMetaRefreshParam(char *q, Str * refresh_uri)
 	int refresh_interval;
 	char *r;
 	Str s_tmp = NULL;
-	const char *errstr;
+	long tmpnum;
 
 	if (q == NULL || refresh_uri == NULL)
 		return 0;
 
-	refresh_interval = strtonum(q, 0, INT_MAX, &errstr);
-	if (errstr != NULL)
+	errno = 0;
+	tmpnum = strtol(q, NULL, 10);
+	if (errno != 0 || tmpnum < INT_MIN || tmpnum > INT_MAX) {
 		return 0;
+	}
+	refresh_interval = (int) tmpnum;
 
 	while (*q) {
 		if (!strncasecmp(q, "url=", 4)) {
@@ -5851,9 +5855,9 @@ proc_again:
 					effect |= PC_SYMBOL;
 					if (parsedtag_get_value(tag,
 					    ATTR_TYPE, &p)) {
-						/* XXX: check range */
-						symbol = (char) strtonum(p,
-						    0, INT_MAX, NULL);
+						/* XXX: sloppy */
+						symbol = (char)
+						    strtol(p, NULL, 10);
 					}
 					break;
 				case HTML_N_SYMBOL:
