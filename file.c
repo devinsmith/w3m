@@ -3868,13 +3868,24 @@ process_textarea(struct parsed_tag * tag, int width)
 	cur_textarea = Strnew_charp(p);
 	cur_textarea_size = 20;
 	if (parsedtag_get_value(tag, ATTR_COLS, &p)) {
-		cur_textarea_size = strtonum(p, 0, INT_MAX, NULL);
-		if (p[strlen(p) - 1] == '%')
-			cur_textarea_size = width * cur_textarea_size / 100 - 2;
-		if (cur_textarea_size <= 0) {
-			cur_textarea_size = 20;
-		} else if (cur_textarea_size > TEXTAREA_ATTR_COL_MAX) {
-			cur_textarea_size = TEXTAREA_ATTR_COL_MAX;
+		size_t plen = strlen(p);
+		if (plen > 0) {
+			long tmpnum = strtol(p, NULL, 10);
+			if (tmpnum < INT_MIN) {
+				tmpnum = 20;
+			} else if (tmpnum > INT_MAX) {
+				tmpnum = TEXTAREA_ATTR_COL_MAX;
+			}
+			cur_textarea_size = (int) tmpnum;
+			if (p[plen - 1] == '%') {
+		 		cur_textarea_size = width *
+				    cur_textarea_size / 100 - 2;
+			}
+			if (cur_textarea_size <= 0) {
+				cur_textarea_size = 20;
+			} else if (cur_textarea_size > TEXTAREA_ATTR_COL_MAX) {
+				cur_textarea_size = TEXTAREA_ATTR_COL_MAX;
+			}
 		}
 	}
 	cur_textarea_rows = 1;
