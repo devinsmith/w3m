@@ -70,7 +70,7 @@ Strnew_charp(char *p)
 }
 
 Str
-Strnew_m_charp(char *p,...)
+Strnew_m_charp(char *p, ...)
 {
 	va_list ap;
 	Str r = Strnew();
@@ -80,6 +80,7 @@ Strnew_m_charp(char *p,...)
 		Strcat_charp(r, p);
 		p = va_arg(ap, char *);
 	}
+	va_end(ap);
 	return r;
 }
 
@@ -222,6 +223,7 @@ Strcat_m_charp(Str x,...)
 	va_start(ap, x);
 	while ((p = va_arg(ap, char *)) != NULL)
 		Strcat_charp_n(x, p, strlen(p));
+	va_end(ap);
 }
 
 void
