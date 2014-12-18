@@ -13,7 +13,7 @@
 static int noConv(char *, char **);
 static int toNumber(const char *, int *);
 static int toLength(const char *, int *);
-static int toAlign(const char *, int *);
+static int toAlign(const char *, enum Align *);
 static int toVAlign(const char *, int *);
 
 /* *INDENT-OFF* */
@@ -73,7 +73,7 @@ toLength(const char *oval, int *len)
 }
 
 static int
-toAlign(const char *str, int *out)
+toAlign(const char *str, enum Align *out)
 {
 	if (strcasecmp(str, "left") == 0)
 		*out = ALIGN_LEFT;

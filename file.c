@@ -3967,7 +3967,7 @@ process_hr(struct parsed_tag * tag, int width, int indent_width)
 {
 	Str tmp = Strnew_charp("<nobr>");
 	int w = 0;
-	int x = ALIGN_CENTER;
+	enum Align x = ALIGN_CENTER;
 #define HR_ATTR_WIDTH_MAX 65535
 
 	if (width > indent_width)
@@ -3991,6 +3991,10 @@ process_hr(struct parsed_tag * tag, int width, int indent_width)
 		break;
 	case ALIGN_LEFT:
 		Strcat_charp(tmp, "<div_int align=left>");
+		break;
+	case ALIGN_MIDDLE:
+	case ALIGN_TOP:
+	case ALIGN_BOTTOM:
 		break;
 	}
 	w /= symbol_width;

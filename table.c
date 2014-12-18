@@ -536,7 +536,7 @@ maximum_visible_length_plain(char *str, int offset)
 }
 
 void
-align(TextLine * lbuf, int width, int mode)
+align(TextLine * lbuf, int width, enum Align mode)
 {
 	int i, l, l1, l2;
 	Str buf, line = lbuf->line;
@@ -580,7 +580,7 @@ align(TextLine * lbuf, int width, int mode)
 void
 print_item(struct table * t, int row, int col, int width, Str buf)
 {
-	int alignment;
+	enum Align alignment;
 	TextLine *lbuf;
 
 	if (t->tabdata[row])
@@ -743,7 +743,7 @@ do_refill(struct table * tbl, int row, int col, int maxlimit)
 			if ((tag = parse_tag(&p, TRUE)) != NULL)
 				parsedtag_get_value(tag, ATTR_TID, &id);
 			if (id >= 0 && id < tbl->ntable) {
-				int alignment;
+				enum Align alignment;
 				TextLineListItem *ti;
 				struct table *t = tbl->tables[id].ptr;
 				int limit = tbl->tables[id].indent + t->total_width;
