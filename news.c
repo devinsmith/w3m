@@ -180,7 +180,7 @@ html_quote_s(char *str)
 }
 
 static void
-add_news_message(Str str, int index, char *date, char *name, char *subject,
+add_news_message(Str str, int number, char *date, char *name, char *subject,
 		 char *mid, char *scheme, char *group)
 {
 	time_t t;
@@ -190,14 +190,15 @@ add_news_message(Str str, int index, char *date, char *name, char *subject,
 	t = mymktime(date);
 	tm = localtime(&t);
 	Strcat(str,
-	 Sprintf("<tr valign=top><td>%d<td nowrap>(%02d/%02d)<td nowrap>%s",
-		 index, tm->tm_mon + 1, tm->tm_mday, html_quote_s(name)));
-	if (group)
-		Strcat(str, Sprintf("<td><a href=\"%s%s/%d\">%s</a>\n", scheme, group,
-				    index, html_quote(subject)));
-	else
-		Strcat(str, Sprintf("<td><a href=\"%s%s\">%s</a>\n", scheme,
-			 html_quote(file_quote(mid)), html_quote(subject)));
+	    Sprintf("<tr valign=top><td>%d<td nowrap>(%02d/%02d)<td nowrap>%s",
+		number, tm->tm_mon + 1, tm->tm_mday, html_quote_s(name)));
+	if (group) {
+		Strcat(str, Sprintf("<td><a href=\"%s%s/%d\">%s</a>\n",
+		    scheme, group, number, html_quote(subject)));
+	} else {
+		Strcat(str, Sprintf("<td><a href=\"%s%s\">%s</a>\n",
+		    scheme, html_quote(file_quote(mid)), html_quote(subject)));
+	}
 }
 
 /*
