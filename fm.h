@@ -759,17 +759,19 @@ enum VAlign {
 	VALIGN_BOTTOM	= 2
 };
 
+enum HTTPcommand {
+	HR_COMMAND_GET		= 0,
+	HR_COMMAND_POST		= 1,
+	HR_COMMAND_CONNECT	= 2,
+	HR_COMMAND_HEAD		= 3
+};
+
 typedef struct http_request {
-	char command;
 	char flag;
 	char *referer;
+	enum HTTPcommand command;
 	FormList *request;
 } HRequest;
-
-#define HR_COMMAND_GET		0
-#define HR_COMMAND_POST		1
-#define HR_COMMAND_CONNECT	2
-#define HR_COMMAND_HEAD		3
 
 #define HR_FLAG_LOCAL		1
 #define HR_FLAG_PROXY		2
