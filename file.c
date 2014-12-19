@@ -5334,10 +5334,10 @@ proc_again:
 			mode = get_mctype(str);
 			if ((effect | ex_efct(ex_effect)) & PC_SYMBOL && *str != '<') {
 #ifdef USE_M17N
-				char **buf = set_symbol(symbol_width0);
+				char **symbol_buf = set_symbol(symbol_width0);
 				int len;
 
-				p = buf[(int) symbol];
+				p = symbol_buf[(int) symbol];
 				len = get_mclen(p);
 				mode = get_mctype(p);
 				PPUSH(mode | effect | ex_efct(ex_effect), *(p++));
