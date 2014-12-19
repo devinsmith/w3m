@@ -135,11 +135,11 @@ ftp_login(FTP ftp)
 			struct sockaddr_storage sockname;
 #else
 			struct sockaddr_in sockname;
+			struct hostent *sockent;
 #endif
 			socklen_t socknamelen = sizeof(sockname);
 
 			if (!getsockname(sock, (struct sockaddr *) & sockname, &socknamelen)) {
-				struct hostent *sockent;
 				Str tmp = Strnew_charp(ftp->pass);
 #ifdef INET6
 				char hostbuf[NI_MAXHOST];
