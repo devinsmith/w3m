@@ -43,7 +43,7 @@ writeLocalCookie()
 	if (!f)
 		return;
 	localCookie();
-	fwrite(Local_cookie->ptr, sizeof(char), Local_cookie->length, f);
+	fwrite(Local_cookie->ptr, 1, Local_cookie->length, f);
 	fclose(f);
 	chmod(Local_cookie_file, S_IRUSR | S_IWUSR);
 }
@@ -352,7 +352,7 @@ localcgi_post(char *uri, char *qstr, FormList * request, char *referer)
 			freopen(request->body, "r", stdin);
 		} else {
 			set_environ("CONTENT_TYPE", "application/x-www-form-urlencoded");
-			fwrite(request->body, sizeof(char), request->length, fw);
+			fwrite(request->body, 1, request->length, fw);
 			fclose(fw);
 			freopen(tmpf, "r", stdin);
 		}

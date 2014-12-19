@@ -44,7 +44,7 @@ news_command(News * news, char *cmd, char *arg, int *status)
 			tmp = Sprintf("%s %s\r\n", cmd, arg);
 		else
 			tmp = Sprintf("%s\r\n", cmd);
-		fwrite(tmp->ptr, sizeof(char), tmp->length, news->wf);
+		fwrite(tmp->ptr, 1, tmp->length, news->wf);
 		fflush(news->wf);
 	}
 	if (!status)

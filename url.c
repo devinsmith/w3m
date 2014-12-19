@@ -1661,7 +1661,7 @@ retry:
 					fputs("HTTPS: request via SSL\n", ff);
 				else
 					fputs("HTTPS: request without SSL\n", ff);
-				fwrite(tmp->ptr, sizeof(char), tmp->length, ff);
+				fwrite(tmp->ptr, 1, tmp->length, ff);
 				fclose(ff);
 			}
 			if (hr->command == HR_COMMAND_POST &&
@@ -1678,7 +1678,7 @@ retry:
 			write(sock, tmp->ptr, tmp->length);
 			if (w3m_reqlog) {
 				FILE *ff = fopen(w3m_reqlog, "a");
-				fwrite(tmp->ptr, sizeof(char), tmp->length, ff);
+				fwrite(tmp->ptr, 1, tmp->length, ff);
 				fclose(ff);
 			}
 			if (hr->command == HR_COMMAND_POST &&
