@@ -305,30 +305,32 @@ getcntrl(void)
 #endif
 
 static void
-addPasswd(char *p, Lineprop * pr, int len, int offset, int limit)
+addPasswd(char *p, Lineprop * pr, int len, int col_offset, int limit)
 {
 	int rcol = 0, ncol;
 
 	ncol = calcPosition(p, pr, len, len, 0, CP_AUTO);
-	if (ncol > offset + limit)
-		ncol = offset + limit;
-	if (offset) {
+	if (ncol > col_offset + limit)
+		ncol = col_offset + limit;
+	if (col_offset) {
 		addChar('{', 0);
-		rcol = offset + 1;
+		rcol = col_offset + 1;
 	}
 	for (; rcol < ncol; rcol++)
 		addChar('*', 0);
 }
 
 static void
-addStr(char *p, Lineprop * pr, int len, int offset, int limit)
+addStr(char *p, Lineprop * pr, int len, int col_offset, int limit)
 {
 	int i = 0, rcol = 0, ncol, delta = 1;
 
-	if (offset) {
+	if (col_offset) {
 		for (i = 0; i < len; i++) {
-			if (calcPosition(p, pr, len, i, 0, CP_AUTO) > offset)
+			if (calcPosition(p, pr, len, i, 0, CP_AUTO) >
+			    col_offset) {
 				break;
+			}
 		}
 		if (i >= len)
 			return;
@@ -337,7 +339,7 @@ addStr(char *p, Lineprop * pr, int len, int offset, int limit)
 			i++;
 #endif
 		addChar('{', 0);
-		rcol = offset + 1;
+		rcol = col_offset + 1;
 		ncol = calcPosition(p, pr, len, i, 0, CP_AUTO);
 		for (; rcol < ncol; rcol++)
 			addChar(' ', 0);
@@ -347,7 +349,7 @@ addStr(char *p, Lineprop * pr, int len, int offset, int limit)
 		delta = wtf_len((wc_uchar *) & p[i]);
 #endif
 		ncol = calcPosition(p, pr, len, i + delta, 0, CP_AUTO);
-		if (ncol - offset > limit)
+		if (ncol - col_offset > limit)
 			break;
 		if (p[i] == '\t') {
 			for (; rcol < ncol; rcol++)
