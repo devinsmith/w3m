@@ -11,7 +11,7 @@ putAnchor(AnchorList * al, char *url, char *target, Anchor ** anchor_return,
 {
 	int n, i, j;
 	Anchor *a;
-	BufferPoint bp;
+	BufferPoint bp = { 0 };
 	if (al == NULL) {
 		al = New(AnchorList);
 		al->anchors = NULL;
@@ -559,7 +559,10 @@ addMultirowsImg(Buffer * buf, AnchorList * al)
 {
 	int i, j, k, col, ecol, pos;
 	Image *img;
-	Anchor a_img, a_href, a_form, *a;
+	Anchor a_img = {0};
+	Anchor a_href = {0};
+	Anchor a_form = {0};
+	Anchor *a;
 	Line *l, *ls;
 
 	if (al == NULL || al->nanchor == 0)
