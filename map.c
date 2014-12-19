@@ -428,17 +428,17 @@ append_map_info(Buffer * buf, Str tmp, FormItemList * fi)
 
 /* append links */
 static void
-append_link_info(Buffer * buf, Str html, LinkList * link)
+append_link_info(Buffer * buf, Str html, LinkList * first_link)
 {
 	LinkList *l;
 	ParsedURL pu;
 	char *url;
 
-	if (!link)
+	if (!first_link)
 		return;
 
 	Strcat_charp(html, "<hr width=50%><h1>Link information</h1><table>\n");
-	for (l = link; l; l = l->next) {
+	for (l = first_link; l; l = l->next) {
 		if (l->url) {
 			parseURL2(l->url, &pu, baseURL(buf));
 			url = html_quote(parsedURL2Str(&pu)->ptr);
