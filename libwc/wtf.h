@@ -55,13 +55,13 @@ extern wc_ccs wtf_gr_ccs;
 
 extern void wtf_init(wc_ces ces1, wc_ces ces2);
 
-/* extern int     wtf_width(wc_uchar *p); */
+/* extern int     wtf_width(const wc_uchar *p); */
 #define wtf_width(p) (WcOption.use_wide ? (int)WTF_WIDTH_MAP[(wc_uchar)*(p)] \
 		      : ((int)WTF_WIDTH_MAP[(wc_uchar)*(p)] ? 1 : 0))
-extern int wtf_strwidth(wc_uchar * p);
-/* extern size_t  wtf_len1(wc_uchar *p); */
+extern int wtf_strwidth(const wc_uchar * p);
+/* extern size_t  wtf_len1(const wc_uchar *p); */
 #define wtf_len1(p) ((int)WTF_LEN_MAP[(wc_uchar)*(p)])
-extern size_t wtf_len(wc_uchar * p);
+extern size_t wtf_len(const wc_uchar * p);
 /* extern int     wtf_type(wc_uchar *p); */
 #define wtf_type(p) WTF_TYPE_MAP[(wc_uchar)*(p)]
 

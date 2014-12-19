@@ -922,7 +922,7 @@ move(int line, int column)
 
 static int
 #ifdef USE_M17N
-need_redraw(char *c1, l_prop pr1, char *c2, l_prop pr2)
+need_redraw(const char *c1, l_prop pr1, const char *c2, l_prop pr2)
 {
 	if (!c1 || !c2 || strcmp(c1, c2))
 		return 1;
@@ -958,7 +958,7 @@ addch(char c)
 }
 
 void
-addmch(char *pc, size_t len)
+addmch(const char *pc, size_t len)
 #else
 void
 addch(char pc)
@@ -971,7 +971,7 @@ addch(char pc)
 	static Str tmp = NULL;
 	char **p;
 	char c = *pc;
-	int width = wtf_width((wc_uchar *) pc);
+	int width = wtf_width((const wc_uchar *) pc);
 
 	if (tmp == NULL)
 		tmp = Strnew();
@@ -1694,13 +1694,13 @@ no_clrtoeol(void)
 #endif				/* 0 */
 
 void
-addstr(char *s)
+addstr(const char *s)
 {
 #ifdef USE_M17N
 	int len;
 
 	while (*s != '\0') {
-		len = wtf_len((wc_uchar *) s);
+		len = wtf_len((const wc_uchar *) s);
 		addmch(s, len);
 		s += len;
 	}
@@ -1711,17 +1711,17 @@ addstr(char *s)
 }
 
 void
-addnstr(char *s, int n)
+addnstr(const char *s, int n)
 {
 	int i;
 #ifdef USE_M17N
 	int len, width;
 
 	for (i = 0; *s != '\0';) {
-		width = wtf_width((wc_uchar *) s);
+		width = wtf_width((const wc_uchar *) s);
 		if (i + width > n)
 			break;
-		len = wtf_len((wc_uchar *) s);
+		len = wtf_len((const wc_uchar *) s);
 		addmch(s, len);
 		s += len;
 		i += width;
@@ -1733,17 +1733,17 @@ addnstr(char *s, int n)
 }
 
 void
-addnstr_sup(char *s, int n)
+addnstr_sup(const char *s, int n)
 {
 	int i;
 #ifdef USE_M17N
 	int len, width;
 
 	for (i = 0; *s != '\0';) {
-		width = wtf_width((wc_uchar *) s);
+		width = wtf_width((const wc_uchar *) s);
 		if (i + width > n)
 			break;
-		len = wtf_len((wc_uchar *) s);
+		len = wtf_len((const wc_uchar *) s);
 		addmch(s, len);
 		s += len;
 		i += width;

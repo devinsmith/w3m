@@ -52,7 +52,7 @@ wc_uint8 WTF_TYPE_MAP[0x100] = {
 	2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
 };
 
-static wc_uint16 CCS_MAP[33] = {
+wc_uint16 CCS_MAP[33] = {
 	WC_CCS_A_CS94 >> 8, WC_CCS_A_CS94W >> 8,
 	WC_CCS_A_CS96 >> 8, WC_CCS_A_CS96W >> 8,
 	WC_CCS_A_CS942 >> 8, WC_CCS_A_UNKNOWN >> 8,
@@ -110,14 +110,14 @@ wtf_init(wc_ces ces1, wc_ces ces2)
 
 /*
 int
-wtf_width(wc_uchar *p)
+wtf_width(const wc_uchar *p)
 {
     return (int)WTF_WIDTH_MAP[*p];
 }
 */
 
 int
-wtf_strwidth(wc_uchar * p)
+wtf_strwidth(const wc_uchar * p)
 {
 	int w = 0;
 
@@ -130,16 +130,16 @@ wtf_strwidth(wc_uchar * p)
 
 /*
 size_t
-wtf_len1(wc_uchar *p)
+wtf_len1(const wc_uchar *p)
 {
     return (size_t)WTF_LEN_MAP[*p];
 }
 */
 
 size_t
-wtf_len(wc_uchar * p)
+wtf_len(const wc_uchar * p)
 {
-	wc_uchar *q = p;
+	const wc_uchar *q = p;
 
 	q += WTF_LEN_MAP[*q];
 	while (*q && !WTF_WIDTH_MAP[*q])
@@ -149,7 +149,7 @@ wtf_len(wc_uchar * p)
 
 /*
 int
-wtf_type(wc_uchar *p)
+wtf_type(const wc_uchar *p)
 {
     return (int)WTF_TYPE_MAP[*p];
 }

@@ -310,20 +310,20 @@ extern void addChar(char c, Lineprop mode);
 #ifdef USE_M17N
 extern void addMChar(char *c, Lineprop mode, size_t len);
 #endif
-extern void record_err_message(char *s);
+extern void record_err_message(const char *s);
 extern Buffer *message_list_panel(void);
-extern void message(char *s, int return_x, int return_y);
-extern void disp_err_message(char *s, int redraw_current);
+extern void message(const char *s, int return_x, int return_y);
+extern void disp_err_message(const char *s, int redraw_current);
 extern void 
-disp_message_nsec(char *s, int redraw_current, int sec, int purge,
+disp_message_nsec(const char *s, int redraw_current, int sec, int purge,
 		  int mouse);
-extern void disp_message(char *s, int redraw_current);
+extern void disp_message(const char *s, int redraw_current);
 #ifdef USE_MOUSE
-extern void disp_message_nomouse(char *s, int redraw_current);
+extern void disp_message_nomouse(const char *s, int redraw_current);
 #else
 #define disp_message_nomouse disp_message
 #endif
-extern void set_delayed_message(char *s);
+extern void set_delayed_message(const char *s);
 extern void cursorUp0(Buffer * buf, int n);
 extern void cursorUp(Buffer * buf, int n);
 extern void cursorDown0(Buffer * buf, int n);
@@ -468,7 +468,7 @@ inputLineHistSearch(char *prompt, char *def_str, int flag,
 	extern int initscr(void);
 	extern void move(int line, int column);
 #ifdef USE_M17N
-	extern void addmch(char *p, size_t len);
+	extern void addmch(const char *p, size_t len);
 #endif
 	extern void addch(char c);
 	extern void wrap(void);
@@ -502,9 +502,9 @@ inputLineHistSearch(char *prompt, char *def_str, int flag,
 	extern void clrtobot(void);
 	extern void clrtobotx(void);
 	extern void no_clrtoeol(void);
-	extern void addstr(char *s);
-	extern void addnstr(char *s, int n);
-	extern void addnstr_sup(char *s, int n);
+	extern void addstr(const char *s);
+	extern void addnstr(const char *s, int n);
+	extern void addnstr_sup(const char *s, int n);
 	extern void crmode(void);
 	extern void nocrmode(void);
 	extern void term_echo(void);
