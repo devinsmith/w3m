@@ -1655,17 +1655,17 @@ clrtoeolx(void)
 #endif				/* not USE_BG_COLOR */
 
 void
-clrtobot_eol(void (*clrtoeol) ())
+clrtobot_eol(void (*clrtoeol_func) ())
 {
 	int l, c;
 
 	l = CurLine;
 	c = CurColumn;
-	(*clrtoeol) ();
+	(*clrtoeol_func) ();
 	CurColumn = 0;
 	CurLine++;
 	for (; CurLine < LINES; CurLine++)
-		(*clrtoeol) ();
+		(*clrtoeol_func) ();
 	CurLine = l;
 	CurColumn = c;
 }
