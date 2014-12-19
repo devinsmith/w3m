@@ -569,7 +569,7 @@ drawAnchorCursor(Buffer * buf)
 static void
 redrawNLine(Buffer * buf, int n)
 {
-	Line *l;
+	Line *line;
 	int i;
 
 #ifdef USE_COLOR
@@ -624,10 +624,11 @@ redrawNLine(Buffer * buf, int n)
 		for (i = 0; i < COLS; i++)
 			addch('~');
 	}
-	for (i = 0, l = buf->topLine; i < buf->LINES; i++, l = l->next) {
+	for (i = 0, line = buf->topLine; i < buf->LINES;
+	    i++, line = line->next) {
 		if (i >= buf->LINES - n || i < -n)
-			l = redrawLine(buf, l, i + buf->rootY);
-		if (l == NULL)
+			line = redrawLine(buf, line, i + buf->rootY);
+		if (line == NULL)
 			break;
 	}
 	if (n > 0) {
@@ -638,9 +639,10 @@ redrawNLine(Buffer * buf, int n)
 	if (!(activeImage && displayImage && buf->img))
 		return;
 	move(buf->cursorY + buf->rootY, buf->cursorX + buf->rootX);
-	for (i = 0, l = buf->topLine; i < buf->LINES && l; i++, l = l->next) {
+	for (i = 0, line = buf->topLine; i < buf->LINES && line;
+	    i++, line = line->next) {
 		if (i >= buf->LINES - n || i < -n)
-			redrawLineImage(buf, l, i + buf->rootY);
+			redrawLineImage(buf, line, i + buf->rootY);
 	}
 	getAllImage(buf);
 #endif
