@@ -764,7 +764,7 @@ do_refill(struct table * tbl, int row, int col, int maxlimit)
 					     ti != NULL; ti = ti->next)
 						align(ti->ptr, h_env.limit, alignment);
 				}
-				appendTextLineList(h_env.buf, tbl->tables[id].buf);
+				(void)appendTextLineList(h_env.buf, tbl->tables[id].buf);
 				if (h_env.maxlimit < limit)
 					h_env.maxlimit = limit;
 				restore_fonteffect(&h_env, h_env.obuf);
