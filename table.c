@@ -2867,13 +2867,13 @@ feed_table_tag(struct table * tbl, char *line, struct table_mode * mode,
 		if (anchor) {
 			check_rowcol(tbl, mode);
 			if (i == 0) {
-				Str tmp = process_anchor(tag, line);
+				Str atmp = process_anchor(tag, line);
 				if (displayLinkNumber) {
 					Str t = getLinkNumberStr(-1);
 					feed_table_inline_tag(tbl, NULL, mode, t->length);
-					Strcat(tmp, t);
+					Strcat(atmp, t);
 				}
-				pushdata(tbl, tbl->row, tbl->col, tmp->ptr);
+				pushdata(tbl, tbl->row, tbl->col, atmp->ptr);
 			} else
 				pushdata(tbl, tbl->row, tbl->col, line);
 			if (i >= 0) {
