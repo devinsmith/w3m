@@ -6480,7 +6480,7 @@ DEFUN(ldDL, DOWNLOAD_LIST, "Display download list panel")
 	Buffer *buf;
 	int replace = FALSE, new_tab = FALSE;
 #ifdef USE_ALARM
-	int reload;
+	int do_reload;
 #endif
 
 	if (Currentbuf->bufferprop & BP_INTERNAL &&
@@ -6488,7 +6488,8 @@ DEFUN(ldDL, DOWNLOAD_LIST, "Display download list panel")
 		replace = TRUE;
 	if (!FirstDL) {
 		if (replace) {
-			if (Currentbuf == Firstbuf && Currentbuf->nextBuffer == NULL) {
+			if (Currentbuf == Firstbuf &&
+			    Currentbuf->nextBuffer == NULL) {
 				if (nTab > 1)
 					deleteTab(CurrentTab);
 			} else
@@ -6498,7 +6499,7 @@ DEFUN(ldDL, DOWNLOAD_LIST, "Display download list panel")
 		return;
 	}
 #ifdef USE_ALARM
-	reload = checkDownloadList();
+	do_reload = checkDownloadList();
 #endif
 	buf = DownloadListBuffer();
 	if (!buf) {
@@ -6518,9 +6519,10 @@ DEFUN(ldDL, DOWNLOAD_LIST, "Display download list panel")
 	if (replace || new_tab)
 		deletePrevBuf();
 #ifdef USE_ALARM
-	if (reload)
-		Currentbuf->event = setAlarmEvent(Currentbuf->event, 1, AL_IMPLICIT,
-						  FUNCNAME_reload, NULL);
+	if (do_reload) {
+		Currentbuf->event = setAlarmEvent(Currentbuf->event,
+		    1, AL_IMPLICIT, FUNCNAME_reload, NULL);
+	}
 #endif
 	displayBuffer(Currentbuf, B_FORCE_REDRAW);
 }
