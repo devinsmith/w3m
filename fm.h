@@ -1096,7 +1096,6 @@ global char *config_file init(NULL);
 
 #ifdef USE_MOUSE
 global int use_mouse init(TRUE);
-extern int mouseActive;
 global int reverse_mouse init(FALSE);
 global int relative_wheel_scroll init(FALSE);
 global int fixed_wheel_scroll_count init(5);

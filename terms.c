@@ -38,9 +38,9 @@ static int xpix, ypix, nbs, obs = 0;
 #endif				/* use_SYSMOUSE */
 
 static int is_xterm = 0;
+static int mouseActive = 0;
 
 void mouse_init(), mouse_end();
-int mouseActive = 0;
 #endif				/* USE_MOUSE */
 
 static char *title_str = NULL;
