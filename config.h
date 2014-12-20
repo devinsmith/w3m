@@ -199,7 +199,6 @@ typedef RETSIGTYPE MySignalHandler;
 
 #if defined(__EMX__)		/* use $extension? */
 #define GUNZIP_CMDNAME  "gzip"
-#define BUNZIP2_CMDNAME "bzip2"
 #define INFLATE_CMDNAME  "inflate.exe"
 #define W3MBOOKMARK_CMDNAME	"w3mbookmark.exe"
 #define W3MHELPERPANEL_CMDNAME	"w3mhelperpanel.exe"
@@ -209,7 +208,6 @@ typedef RETSIGTYPE MySignalHandler;
 #define USE_PATH_ENVVAR
 #else
 #define GUNZIP_CMDNAME  "gunzip"
-#define BUNZIP2_CMDNAME "bunzip2"
 #define INFLATE_CMDNAME	"inflate"
 #define W3MBOOKMARK_CMDNAME	"w3mbookmark"
 #define W3MHELPERPANEL_CMDNAME	"w3mhelperpanel"
@@ -220,7 +218,6 @@ typedef RETSIGTYPE MySignalHandler;
 
 #define PATH_SEPARATOR	':'
 #define GUNZIP_NAME  "gunzip"
-#define BUNZIP2_NAME "bunzip2"
 #define INFLATE_NAME "inflate"
 
 #ifdef __MINGW32_VERSION
