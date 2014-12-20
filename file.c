@@ -3181,7 +3181,7 @@ process_img(struct parsed_tag * tag, int width)
 	char *p, *q, *r, *r2 = NULL, *s, *t;
 #ifdef USE_IMAGE
 	int w, i, nw, ni = 1, n, w0 = -1, i0 = -1;
-	int align, xoffset, yoffset, top, bottom, ismap = 0;
+	int alignment, xoffset, yoffset, top, bottom, ismap = 0;
 	int use_image = activeImage && displayImage;
 #else
 	int w, i, nw, n;
@@ -3232,8 +3232,8 @@ process_img(struct parsed_tag * tag, int width)
 				i = -1;
 			}
 		}
-		align = -1;
-		parsedtag_get_value(tag, ATTR_ALIGN, &align);
+		alignment = -1;
+		parsedtag_get_value(tag, ATTR_ALIGN, &alignment);
 		ismap = 0;
 		if (parsedtag_exists(tag, ATTR_ISMAP))
 			ismap = 1;
@@ -3248,7 +3248,7 @@ process_img(struct parsed_tag * tag, int width)
 	tmp = Strnew_size(128);
 #ifdef USE_IMAGE
 	if (use_image) {
-		switch (align) {
+		switch (alignment) {
 		case ALIGN_LEFT:
 			Strcat_charp(tmp, "<div_int align=left>");
 			break;
@@ -3337,7 +3337,7 @@ process_img(struct parsed_tag * tag, int width)
 			Strcat(tmp, Sprintf(" width=%d", w0));
 		if (i0 >= 0)
 			Strcat(tmp, Sprintf(" height=%d", i0));
-		switch (align) {
+		switch (alignment) {
 		case ALIGN_TOP:
 			top = 0;
 			bottom = ni - 1;
@@ -3477,7 +3477,7 @@ img_end:
 	}
 #ifdef USE_IMAGE
 	if (use_image) {
-		switch (align) {
+		switch (alignment) {
 		case ALIGN_RIGHT:
 		case ALIGN_CENTER:
 		case ALIGN_LEFT:
