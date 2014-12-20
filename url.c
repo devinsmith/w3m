@@ -320,16 +320,19 @@ TLS_write_from_file(struct tls *tls, const char *file)
 static void
 write_from_file(int sock, char *file)
 {
-	FILE *fd;
-	int c;
-	char buf[1];
-	fd = fopen(file, "r");
-	if (fd != NULL) {
-		while ((c = fgetc(fd)) != EOF) {
-			buf[0] = c;
-			write(sock, buf, 1);
+	FILE *f = fopen(file, "r");
+	unsigned char buf[1024];
+	size_t read_count;
+
+	if (f != NULL) {
+		for (;;) {
+			read_count = fread(buf, 1, sizeof(buf), f);
+			if (read_count == 0) {
+				break;
+			}
+			write(sock, buf, read_count);
 		}
-		fclose(fd);
+		fclose(f);
 	}
 }
 
