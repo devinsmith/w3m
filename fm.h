@@ -195,27 +195,28 @@ enum DBmode {
 #define BP_REDIRECTED   0x20
 #define BP_CLOSE        0x40
 
-/* Link Buffer */
-#define LB_NOLINK	-1
-#define LB_FRAME	0	/* rFrame() */
-#define LB_N_FRAME	1
-#define LB_INFO		2	/* pginfo() */
-#define LB_N_INFO	3
-#define LB_SOURCE	4	/* vwSrc() */
-#define LB_N_SOURCE	LB_SOURCE
-#define MAX_LB		5
-
 /* Search Result */
 #define SR_FOUND       0x1
 #define SR_NOTFOUND    0x2
 #define SR_WRAPPED     0x4
 
+enum LinkBuffer {
+	LB_NOLINK	= -1,
+	LB_FRAME	= 0,	/* rFrame() */
+	LB_N_FRAME	= 1,
+	LB_INFO		= 2,	/* pginfo() */
+	LB_N_INFO	= 3,
+	LB_SOURCE	= 4,	/* vwSrc() */
+	LB_N_SOURCE	= LB_SOURCE,
+	MAX_LB		= 5
+};
+
 #ifdef MAINPROGRAM
-int REV_LB[MAX_LB] = {
+enum LinkBuffer REV_LB[MAX_LB] = {
 	LB_N_FRAME, LB_FRAME, LB_N_INFO, LB_INFO, LB_N_SOURCE,
 };
 #else				/* not MAINPROGRAM */
-extern int REV_LB[];
+extern enum LinkBuffer REV_LB[];
 #endif				/* not MAINPROGRAM */
 
 /* mark URL, Message-ID */

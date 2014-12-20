@@ -88,7 +88,7 @@ static void cmd_loadfile(char *path);
 static void 
 cmd_loadURL(char *url, ParsedURL * current, char *referer,
 	    FormList * request);
-static void cmd_loadBuffer(Buffer * buf, int prop, int linkid);
+static void cmd_loadBuffer(Buffer * buf, int prop, enum LinkBuffer linkid);
 static void keyPressEventProc(int c);
 int show_params_p = 0;
 void show_params(FILE * fp);
@@ -4086,7 +4086,7 @@ DEFUN(gorURL, GOTO_RELATIVE, "Go to relative URL")
 }
 
 static void
-cmd_loadBuffer(Buffer * buf, int prop, int linkid)
+cmd_loadBuffer(Buffer * buf, int prop, enum LinkBuffer linkid)
 {
 	if (buf == NULL) {
 		disp_err_message("Can't load string", FALSE);
