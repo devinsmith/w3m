@@ -1807,6 +1807,9 @@ load_doc:
 		}
 		if (t_buf == NULL)
 			t_buf = newBuffer(INIT_BUFFER_WIDTH);
+		if (IStype(f.stream) == IST_TLS) {
+			t_buf->using_tls = TRUE;
+		}
 		readHeader(&f, t_buf, FALSE, &pu);
 		if (((http_response_code >= 301 && http_response_code <= 303)
 		     || http_response_code == 307)

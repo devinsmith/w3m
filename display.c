@@ -330,11 +330,8 @@ make_lastline_message(Buffer * buf)
 	} else
 		/* FIXME: gettextize? */
 		Strcat_charp(msg, "Viewing");
-#if 0
-	/* FIXME: this needs to be updated for libtls compat */
-	if (buf->ssl_certificate)
+	if (buf->using_tls)
 		Strcat_charp(msg, "[TLS]");
-#endif
 	Strcat_charp(msg, " <");
 	Strcat_charp(msg, buf->buffername);
 

@@ -466,6 +466,7 @@ typedef struct _Buffer {
 	int *clone;
 	size_t trbyte;
 	char check_url;
+	unsigned char using_tls;
 #ifdef USE_M17N
 	wc_ces document_charset;
 	wc_uint8 auto_detect;
