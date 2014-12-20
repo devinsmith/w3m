@@ -78,11 +78,11 @@ typedef struct {
 	time_t modtime;
 } URLFile;
 
-#define CMP_NOCOMPRESS   0
-#define CMP_COMPRESS     1
-#define CMP_GZIP         2
-#define CMP_BZIP2        3
-#define CMP_DEFLATE      4
+enum CompressType {
+	CMP_NOCOMPRESS	= 0,
+	CMP_GZIP	= 1,
+	CMP_DEFLATE	= 2
+};
 
 #define ENC_7BIT	0
 #define ENC_BASE64	1

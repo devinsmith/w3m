@@ -152,7 +152,7 @@ loadcmdout(char *cmd,
 
 /* *INDENT-OFF* */
 	static struct compression_decoder {
-		int type;
+		enum CompressType type;
 		char *ext;
 		char *mime_type;
 		int auxbin_p;
@@ -163,7 +163,7 @@ loadcmdout(char *cmd,
 	} compression_decoders[] =
 {
 	{
-		CMP_COMPRESS, ".gz", "application/x-gzip",
+		CMP_GZIP, ".gz", "application/x-gzip",
 		0, GUNZIP_CMDNAME, GUNZIP_NAME, "gzip",
 		{
 			"gzip", "x-gzip", NULL
