@@ -170,20 +170,6 @@ loadcmdout(char *cmd,
 		}
 	},
 	{
-		CMP_COMPRESS, ".Z", "application/x-compress",
-		0, GUNZIP_CMDNAME, GUNZIP_NAME, "compress",
-		{
-			"compress", "x-compress", NULL
-		}
-	},
-	{
-		CMP_BZIP2, ".bz2", "application/x-bzip",
-		0, BUNZIP2_CMDNAME, BUNZIP2_NAME, "bzip, bzip2",
-		{
-			"x-bzip", "bzip", "bzip2", NULL
-		}
-	},
-	{
 		CMP_DEFLATE, ".deflate", "application/x-deflate",
 		1, INFLATE_CMDNAME, INFLATE_NAME, "deflate",
 		{
