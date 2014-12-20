@@ -156,12 +156,8 @@ fversion(FILE * f)
 #ifdef USE_COOKIE
 		",cookie"
 #endif
-#ifdef USE_SSL
 		",ssl"
-#ifdef USE_SSL_VERIFY
 		",ssl-verify"
-#endif
-#endif
 #ifdef USE_EXTERNAL_URI_LOADER
 		",external-uri-loader"
 #endif
@@ -476,14 +472,12 @@ main(int argc, char **argv, char **envp)
 	    ((p = getenv("HTTP_PROXY")) ||
 	     (p = getenv("http_proxy")) || (p = getenv("HTTP_proxy"))))
 		HTTP_proxy = p;
-#ifdef USE_SSL
 	if (!non_null(HTTPS_proxy) &&
 	    ((p = getenv("HTTPS_PROXY")) ||
 	     (p = getenv("https_proxy")) || (p = getenv("HTTPS_proxy"))))
 		HTTPS_proxy = p;
 	if (HTTPS_proxy == NULL && non_null(HTTP_proxy))
 		HTTPS_proxy = HTTP_proxy;
-#endif				/* USE_SSL */
 #ifdef USE_GOPHER
 	if (!non_null(GOPHER_proxy) &&
 	    ((p = getenv("GOPHER_PROXY")) ||
@@ -1208,23 +1202,6 @@ dump_extra(Buffer * buf)
 #ifdef USE_M17N
 	printf("W3m-document-charset: %s\n",
 	       wc_ces_to_charset(buf->document_charset));
-#endif
-#ifdef USE_SSL
-	if (buf->ssl_certificate) {
-		Str tmp = Strnew();
-		char *p;
-		for (p = buf->ssl_certificate; *p; p++) {
-			Strcat_char(tmp, *p);
-			if (*p == '\n') {
-				for (; *(p + 1) == '\n'; p++);
-				if (*(p + 1))
-					Strcat_char(tmp, '\t');
-			}
-		}
-		if (Strlastchar(tmp) != '\n')
-			Strcat_char(tmp, '\n');
-		printf("W3m-ssl-certificate: %s", tmp->ptr);
-	}
 #endif
 }
 
@@ -5688,9 +5665,6 @@ w3m_exit(int i)
 #endif
 	stopDownload();
 	deleteFiles();
-#ifdef USE_SSL
-	free_ssl_ctx();
-#endif
 	disconnectFTP();
 #ifdef USE_NNTP
 	disconnectNews();

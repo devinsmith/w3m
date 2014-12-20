@@ -38,9 +38,6 @@ static int RC_table_size;
 #define P_CHARINT  2
 #define P_CHAR     3
 #define P_STRING   4
-#if defined(USE_SSL) && defined(USE_SSL_VERIFY)
-#define P_SSLPATH  5
-#endif
 #ifdef USE_COLOR
 #define P_COLOR    6
 #endif
@@ -104,9 +101,7 @@ static int OptionEncode = FALSE;
 #define CMT_MARK_COLOR   N_("Color of mark")
 #define CMT_USE_PROXY    N_("Use proxy")
 #define CMT_HTTP_PROXY   N_("URL of HTTP proxy host")
-#ifdef USE_SSL
 #define CMT_HTTPS_PROXY  N_("URL of HTTPS proxy host")
-#endif				/* USE_SSL */
 #ifdef USE_GOPHER
 #define CMT_GOPHER_PROXY N_("URL of GOPHER proxy host")
 #endif				/* USE_GOPHER */
@@ -185,16 +180,6 @@ static int OptionEncode = FALSE;
 #define CMT_NOSENDREFERER N_("Suppress `Referer:' header")
 #define CMT_IGNORE_CASE N_("Search case-insensitively")
 #define CMT_USE_LESSOPEN N_("Use LESSOPEN")
-#ifdef USE_SSL
-#ifdef USE_SSL_VERIFY
-#define CMT_SSL_VERIFY_SERVER N_("Perform SSL server verification")
-#define CMT_SSL_CERT_FILE N_("PEM encoded certificate file of client")
-#define CMT_SSL_KEY_FILE N_("PEM encoded private key file of client")
-#define CMT_SSL_CA_PATH N_("Path to directory for PEM encoded certificates of CAs")
-#define CMT_SSL_CA_FILE N_("File consisting of PEM encoded certificates of CAs")
-#endif				/* USE_SSL_VERIFY */
-#define CMT_SSL_FORBID_METHOD N_("List of forbidden SSL methods (2: SSLv2, 3: SSLv3, t:TLSv1)")
-#endif				/* USE_SSL */
 #ifdef USE_COOKIE
 #define CMT_USECOOKIE   N_("Enable cookie processing")
 #define CMT_SHOWCOOKIE  N_("Print a message when receiving a cookie")
@@ -521,10 +506,8 @@ struct param_ptr params4[] = {
 	NULL},
 	{"http_proxy", P_STRING, PI_TEXT, (void *) &HTTP_proxy, CMT_HTTP_PROXY,
 	NULL},
-#ifdef USE_SSL
 	{"https_proxy", P_STRING, PI_TEXT, (void *) &HTTPS_proxy, CMT_HTTPS_PROXY,
 	NULL},
-#endif				/* USE_SSL */
 #ifdef USE_GOPHER
 	{"gopher_proxy", P_STRING, PI_TEXT, (void *) &GOPHER_proxy,
 	CMT_GOPHER_PROXY, NULL},
@@ -571,26 +554,6 @@ struct param_ptr params6[] = {
 	NULL},
 	{NULL, 0, 0, NULL, NULL, NULL},
 };
-
-#ifdef USE_SSL
-struct param_ptr params7[] = {
-	{"ssl_forbid_method", P_STRING, PI_TEXT, (void *) &ssl_forbid_method,
-	CMT_SSL_FORBID_METHOD, NULL},
-#ifdef USE_SSL_VERIFY
-	{"ssl_verify_server", P_INT, PI_ONOFF, (void *) &ssl_verify_server,
-	CMT_SSL_VERIFY_SERVER, NULL},
-	{"ssl_cert_file", P_SSLPATH, PI_TEXT, (void *) &ssl_cert_file,
-	CMT_SSL_CERT_FILE, NULL},
-	{"ssl_key_file", P_SSLPATH, PI_TEXT, (void *) &ssl_key_file,
-	CMT_SSL_KEY_FILE, NULL},
-	{"ssl_ca_path", P_SSLPATH, PI_TEXT, (void *) &ssl_ca_path, CMT_SSL_CA_PATH,
-	NULL},
-	{"ssl_ca_file", P_SSLPATH, PI_TEXT, (void *) &ssl_ca_file, CMT_SSL_CA_FILE,
-	NULL},
-#endif				/* USE_SSL_VERIFY */
-	{NULL, 0, 0, NULL, NULL, NULL},
-};
-#endif				/* USE_SSL */
 
 #ifdef USE_COOKIE
 struct param_ptr params8[] = {
@@ -724,9 +687,6 @@ struct param_section sections[] = {
 	{N_("External Program Settings"), params6},
 	{N_("Network Settings"), params9},
 	{N_("Proxy Settings"), params4},
-#ifdef USE_SSL
-	{N_("SSL Settings"), params7},
-#endif
 #ifdef USE_COOKIE
 	{N_("Cookie Settings"), params8},
 #endif
@@ -866,11 +826,6 @@ show_params(FILE * fp)
 			case P_STRING:
 				t = "string";
 				break;
-#if defined(USE_SSL) && defined(USE_SSL_VERIFY)
-			case P_SSLPATH:
-				t = "path";
-				break;
-#endif
 #ifdef USE_COLOR
 			case P_COLOR:
 				t = "color";
@@ -1023,15 +978,6 @@ set_param(char *name, char *value)
 	case P_STRING:
 		*(char **) p->varptr = value;
 		break;
-#if defined(USE_SSL) && defined(USE_SSL_VERIFY)
-	case P_SSLPATH:
-		if (value != NULL && value[0] != '\0')
-			*(char **) p->varptr = rcFile(value);
-		else
-			*(char **) p->varptr = NULL;
-		ssl_path_modified = 1;
-		break;
-#endif
 #ifdef USE_COLOR
 	case P_COLOR:
 		*(int *) p->varptr = str_to_color(value);
@@ -1133,10 +1079,8 @@ parse_proxy()
 {
 	if (non_null(HTTP_proxy))
 		parseURL(HTTP_proxy, &HTTP_proxy_parsed, NULL);
-#ifdef USE_SSL
 	if (non_null(HTTPS_proxy))
 		parseURL(HTTPS_proxy, &HTTPS_proxy_parsed, NULL);
-#endif				/* USE_SSL */
 #ifdef USE_GOPHER
 	if (non_null(GOPHER_proxy))
 		parseURL(GOPHER_proxy, &GOPHER_proxy_parsed, NULL);
@@ -1350,11 +1294,6 @@ to_str(struct param_ptr * p)
 	case P_CHAR:
 		return Sprintf("%c", *(char *) p->varptr);
 	case P_STRING:
-#if defined(USE_SSL) && defined(USE_SSL_VERIFY)
-	case P_SSLPATH:
-#endif
-		/* SystemCharset -> InnerCharset */
-		return Strnew_charp(conv_from_system(*(char **) p->varptr));
 	case P_PIXELS:
 	case P_SCALE:
 		return Sprintf("%g", *(double *) p->varptr);

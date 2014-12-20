@@ -522,7 +522,6 @@ inputLineHistSearch(char *prompt, char *def_str, int flag,
 	extern void touch_cursor();
 #endif
 	extern void initMimeTypes();
-	extern void free_ssl_ctx();
 	extern ParsedURL *baseURL(Buffer * buf);
 	extern int openSocket(char *hostname, char *remoteport_name,
 			       unsigned short remoteport_num);

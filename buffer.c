@@ -41,9 +41,6 @@ newBuffer(int width)
 	n->clone = New(int);
 	*n->clone = 1;
 	n->trbyte = 0;
-#ifdef USE_SSL
-	n->ssl_certificate = NULL;
-#endif
 #ifdef USE_M17N
 	n->auto_detect = WcOption.auto_detect;
 #endif

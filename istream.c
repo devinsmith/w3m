@@ -3,17 +3,16 @@
 #include "myctype.h"
 #include "istream.h"
 #include <signal.h>
-#ifdef USE_SSL
-#include <openssl/x509v3.h>
-#endif
 #ifdef __MINGW32_VERSION
 #include <winsock.h>
 #endif
 
+#include <tls.h>
+
 #define	uchar		unsigned char
 
 #define STREAM_BUF_SIZE 8192
-#define SSL_BUF_SIZE	1536
+#define TLS_BUF_SIZE	1536
 
 #define MUST_BE_UPDATED(bs) ((bs)->stream.cur==(bs)->stream.next)
 
@@ -26,11 +25,6 @@ static void file_close(struct file_handle * handle);
 static int file_read(struct file_handle * handle, char *buf, int len);
 
 static int str_read(Str handle, char *buf, int len);
-
-#ifdef USE_SSL
-static void ssl_close(struct ssl_handle * handle);
-static int ssl_read(struct ssl_handle * handle, char *buf, int len);
-#endif
 
 static int ens_read(struct ens_handle * handle, char *buf, int len);
 static void ens_close(struct ens_handle * handle);
@@ -139,24 +133,38 @@ newStrStream(Str s)
 	return stream;
 }
 
-#ifdef USE_SSL
+static int 
+tls_read_is(struct tls_handle *tls, char *buf, int len)
+{
+	size_t outlen;
+	if (tls_read(tls->tls, buf, len, &outlen) == -1 || outlen > INT_MAX) {
+		return -1;
+	}
+	return (int) outlen;
+}
+
+static void
+tls_close_is(struct tls_handle *tls)
+{
+	(void)tls_close(tls->tls);
+}
+
 InputStream
-newSSLStream(SSL * ssl, int sock)
+newTLSStream(struct tls *tls, int sock)
 {
 	InputStream stream;
 	if (sock < 0)
 		return NULL;
 	stream = New(union input_stream);
-	init_base_stream(&stream->base, SSL_BUF_SIZE);
-	stream->ssl.type = IST_SSL;
-	stream->ssl.handle = New(struct ssl_handle);
-	stream->ssl.handle->ssl = ssl;
-	stream->ssl.handle->sock = sock;
-	stream->ssl.read = (int (*) ()) ssl_read;
-	stream->ssl.close = (void (*) ()) ssl_close;
+	init_base_stream(&stream->base, TLS_BUF_SIZE);
+	stream->tls.type = IST_TLS;
+	stream->tls.handle = New(struct tls_handle);
+	stream->tls.handle->tls = tls;
+	stream->tls.handle->sock = sock;
+	stream->tls.read = (int (*) ()) tls_read_is;
+	stream->tls.close = (void (*) ()) tls_close_is;
 	return stream;
 }
-#endif
 
 InputStream
 newEncodedStream(InputStream is, char encoding)
@@ -341,10 +349,8 @@ ISfileno(InputStream stream)
 		return *(int *) stream->base.handle;
 	case IST_FILE:
 		return fileno(stream->file.handle->f);
-#ifdef USE_SSL
-	case IST_SSL:
-		return stream->ssl.handle->sock;
-#endif
+	case IST_TLS:
+		return stream->tls.handle->tls;
 	case IST_ENCODED:
 		return ISfileno(stream->ens.handle->is);
 	default:
@@ -361,275 +367,6 @@ ISeos(InputStream stream)
 	return base->iseos;
 }
 
-#ifdef USE_SSL
-static Str accept_this_site;
-
-void
-ssl_accept_this_site(char *hostname)
-{
-	if (hostname)
-		accept_this_site = Strnew_charp(hostname);
-	else
-		accept_this_site = NULL;
-}
-
-static int
-ssl_match_cert_ident(char *ident, int ilen, char *hostname)
-{
-	/*
-	 * RFC2818 3.1.  Server Identity Names may contain the wildcard
-	 * character * which is considered to match any single domain name
-	 * component or component fragment. E.g., *.a.com matches foo.a.com
-	 * but not bar.foo.a.com. f*.com matches foo.com but not bar.com.
-	 */
-	int hlen = strlen(hostname);
-	int i, c;
-
-	/* Is this an exact match? */
-	if ((ilen == hlen) && strncasecmp(ident, hostname, hlen) == 0)
-		return TRUE;
-
-	for (i = 0; i < ilen; i++) {
-		if (ident[i] == '*' && ident[i + 1] == '.') {
-			while ((c = *hostname++) != '\0')
-				if (c == '.')
-					break;
-			i++;
-		} else {
-			if (ident[i] != *hostname++)
-				return FALSE;
-		}
-	}
-	return *hostname == '\0';
-}
-
-static void
-replace_char(char *str, char old, char new, int len)
-{
-	int i;
-	for (i = 0; i < len; ++i) {
-		if (str[i] == old) {
-			str[i] = new;
-		}
-	}
-}
-
-static Str
-ssl_check_cert_ident(X509 * x, char *hostname)
-{
-	int i;
-	Str ret = NULL;
-	int match_ident = FALSE;
-	/*
-         * All we need to do here is check that the CN matches.
-         *
-         * From RFC2818 3.1 Server Identity:
-         * If a subjectAltName extension of type dNSName is present, that MUST
-         * be used as the identity. Otherwise, the (most specific) Common Name
-         * field in the Subject field of the certificate MUST be used. Although
-         * the use of the Common Name is existing practice, it is deprecated and
-         * Certification Authorities are encouraged to use the dNSName instead.
-         */
-	i = X509_get_ext_by_NID(x, NID_subject_alt_name, -1);
-	if (i >= 0) {
-		X509_EXTENSION *ex;
-		STACK_OF(GENERAL_NAME) * alt;
-
-		ex = X509_get_ext(x, i);
-		alt = X509V3_EXT_d2i(ex);
-		if (alt) {
-			int n;
-			GENERAL_NAME *gn;
-			X509V3_EXT_METHOD *method;
-			Str seen_dnsname = NULL;
-
-			n = sk_GENERAL_NAME_num(alt);
-			for (i = 0; i < n; i++) {
-				gn = sk_GENERAL_NAME_value(alt, i);
-				if (gn->type == GEN_DNS) {
-					char *sn = ASN1_STRING_data(gn->d.ia5);
-					int sl = ASN1_STRING_length(gn->d.ia5);
-
-					if (!seen_dnsname)
-						seen_dnsname = Strnew();
-					/*
-					 * replace \0 to make full string
-					 * visible to user
-					 */
-					if (sl != strlen(sn)) {
-						replace_char(sn, '\0', '!', sl);
-					}
-					Strcat_m_charp(seen_dnsname, sn, " ", NULL);
-					if (sl == strlen(sn)	/* catch \0 in SAN */
-					    &&ssl_match_cert_ident(sn, sl, hostname))
-						break;
-				}
-			}
-			method = X509V3_EXT_get(ex);
-			sk_GENERAL_NAME_free(alt);
-			if (i < n)	/* Found a match */
-				match_ident = TRUE;
-			else if (seen_dnsname)
-				/* FIXME: gettextize? */
-				ret = Sprintf("Bad cert ident from %s: dNSName=%s", hostname,
-					      seen_dnsname->ptr);
-		}
-	}
-	if (match_ident == FALSE && ret == NULL) {
-		X509_NAME *xn;
-		char buf[2048];
-		int slen;
-
-		xn = X509_get_subject_name(x);
-
-		slen = X509_NAME_get_text_by_NID(xn, NID_commonName, buf, sizeof(buf));
-		if (slen == -1)
-			/* FIXME: gettextize? */
-			ret = Strnew_charp("Unable to get common name from peer cert");
-		else if (slen != strlen(buf)
-		     || !ssl_match_cert_ident(buf, strlen(buf), hostname)) {
-			/* replace \0 to make full string visible to user */
-			if (slen != strlen(buf)) {
-				replace_char(buf, '\0', '!', slen);
-			}
-			/* FIXME: gettextize? */
-			ret = Sprintf("Bad cert ident %s from %s", buf, hostname);
-		} else
-			match_ident = TRUE;
-	}
-	return ret;
-}
-
-Str
-ssl_get_certificate(SSL * ssl, char *hostname)
-{
-	BIO *bp;
-	X509 *x;
-	X509_NAME *xn;
-	char *p;
-	int len;
-	Str s;
-	char buf[2048];
-	Str amsg = NULL;
-	Str emsg;
-	char *ans;
-
-	if (ssl == NULL)
-		return NULL;
-	x = SSL_get_peer_certificate(ssl);
-	if (x == NULL) {
-		if (accept_this_site
-		    && strcasecmp(accept_this_site->ptr, hostname) == 0)
-			ans = "y";
-		else {
-			/* FIXME: gettextize? */
-			emsg = Strnew_charp("No SSL peer certificate: accept? (y/n)");
-			ans = inputAnswer(emsg->ptr);
-		}
-		if (ans && TOLOWER(*ans) == 'y')
-			/* FIXME: gettextize? */
-			amsg = Strnew_charp
-				("Accept SSL session without any peer certificate");
-		else {
-			/* FIXME: gettextize? */
-			char *e = "This SSL session was rejected "
-			"to prevent security violation: no peer certificate";
-			disp_err_message(e, FALSE);
-			free_ssl_ctx();
-			return NULL;
-		}
-		if (amsg)
-			disp_err_message(amsg->ptr, FALSE);
-		ssl_accept_this_site(hostname);
-		/* FIXME: gettextize? */
-		s = amsg ? amsg : Strnew_charp("valid certificate");
-		return s;
-	}
-#ifdef USE_SSL_VERIFY
-	/*
-	 * check the cert chain. The chain length is automatically checked by
-	 * OpenSSL when we set the verify depth in the ctx.
-	 */
-	if (ssl_verify_server) {
-		long verr;
-		if ((verr = SSL_get_verify_result(ssl))
-		    != X509_V_OK) {
-			const char *em = X509_verify_cert_error_string(verr);
-			if (accept_this_site
-			&& strcasecmp(accept_this_site->ptr, hostname) == 0)
-				ans = "y";
-			else {
-				/* FIXME: gettextize? */
-				emsg = Sprintf("%s: accept? (y/n)", em);
-				ans = inputAnswer(emsg->ptr);
-			}
-			if (ans && TOLOWER(*ans) == 'y') {
-				/* FIXME: gettextize? */
-				amsg = Sprintf("Accept unsecure SSL session: "
-					       "unverified: %s", em);
-			} else {
-				/* FIXME: gettextize? */
-				char *e =
-				Sprintf("This SSL session was rejected: %s", em)->ptr;
-				disp_err_message(e, FALSE);
-				free_ssl_ctx();
-				return NULL;
-			}
-		}
-	}
-#endif
-	emsg = ssl_check_cert_ident(x, hostname);
-	if (emsg != NULL) {
-		if (accept_this_site
-		    && strcasecmp(accept_this_site->ptr, hostname) == 0)
-			ans = "y";
-		else {
-			Str ep = Strdup(emsg);
-			if (ep->length > COLS - 16)
-				Strshrink(ep, ep->length - (COLS - 16));
-			Strcat_charp(ep, ": accept? (y/n)");
-			ans = inputAnswer(ep->ptr);
-		}
-		if (ans && TOLOWER(*ans) == 'y') {
-			/* FIXME: gettextize? */
-			amsg = Strnew_charp("Accept unsecure SSL session:");
-			Strcat(amsg, emsg);
-		} else {
-			/* FIXME: gettextize? */
-			char *e = "This SSL session was rejected "
-			"to prevent security violation";
-			disp_err_message(e, FALSE);
-			free_ssl_ctx();
-			return NULL;
-		}
-	}
-	if (amsg)
-		disp_err_message(amsg->ptr, FALSE);
-	ssl_accept_this_site(hostname);
-	/* FIXME: gettextize? */
-	s = amsg ? amsg : Strnew_charp("valid certificate");
-	Strcat_charp(s, "\n");
-	xn = X509_get_subject_name(x);
-	if (X509_NAME_get_text_by_NID(xn, NID_commonName, buf, sizeof(buf)) == -1)
-		Strcat_charp(s, " subject=<unknown>");
-	else
-		Strcat_m_charp(s, " subject=", buf, NULL);
-	xn = X509_get_issuer_name(x);
-	if (X509_NAME_get_text_by_NID(xn, NID_commonName, buf, sizeof(buf)) == -1)
-		Strcat_charp(s, ": issuer=<unknown>");
-	else
-		Strcat_m_charp(s, ": issuer=", buf, NULL);
-	Strcat_charp(s, "\n\n");
-
-	bp = BIO_new(BIO_s_mem());
-	X509_print(bp, x);
-	len = (int) BIO_ctrl(bp, BIO_CTRL_INFO, 0, (char *) &p);
-	Strcat_charp_n(s, p, len);
-	BIO_free_all(bp);
-	X509_free(x);
-	return s;
-}
-#endif
 
 /* Raw level input stream functions */
 
@@ -670,45 +407,6 @@ str_read(Str handle, char *buf, int len)
 {
 	return 0;
 }
-
-#ifdef USE_SSL
-static void
-ssl_close(struct ssl_handle * handle)
-{
-	close(handle->sock);
-	if (handle->ssl)
-		SSL_free(handle->ssl);
-}
-
-static int
-ssl_read(struct ssl_handle * handle, char *buf, int len)
-{
-	int status;
-	if (handle->ssl) {
-#ifdef USE_SSL_VERIFY
-		for (;;) {
-			status = SSL_read(handle->ssl, buf, len);
-			if (status > 0)
-				break;
-			switch (SSL_get_error(handle->ssl, status)) {
-			case SSL_ERROR_WANT_READ:
-			case SSL_ERROR_WANT_WRITE:	/* reads can trigger
-							 * write errors; see
-							 * SSL_get_error(3) */
-				continue;
-			default:
-				break;
-			}
-			break;
-		}
-#else				/* if !defined(USE_SSL_VERIFY) */
-		status = SSL_read(handle->ssl, buf, len);
-#endif				/* !defined(USE_SSL_VERIFY) */
-	} else
-		status = read(handle->sock, buf, len);
-	return status;
-}
-#endif				/* USE_SSL */
 
 static void
 ens_close(struct ens_handle * handle)

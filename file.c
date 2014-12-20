@@ -604,11 +604,7 @@ readHeader(URLFile * uf, Buffer * newBuf, int thru, ParsedURL * pu)
 	Lineprop *propBuffer;
 
 	headerlist = newBuf->document_header = newTextList();
-	if (uf->scheme == SCM_HTTP
-#ifdef USE_SSL
-	    || uf->scheme == SCM_HTTPS
-#endif				/* USE_SSL */
-		)
+	if (uf->scheme == SCM_HTTP || uf->scheme == SCM_HTTPS)
 		http_response_code = -1;
 	else
 		http_response_code = 0;
@@ -718,11 +714,8 @@ readHeader(URLFile * uf, Buffer * newBuf, int thru, ParsedURL * pu)
 		} else {
 			lineBuf2 = tmp;
 		}
-		if ((uf->scheme == SCM_HTTP
-#ifdef USE_SSL
-		     || uf->scheme == SCM_HTTPS
-#endif				/* USE_SSL */
-		     ) && http_response_code == -1) {
+		if ((uf->scheme == SCM_HTTP || uf->scheme == SCM_HTTPS)
+		    && http_response_code == -1) {
 			p = lineBuf2->ptr;
 			while (*p && !IS_SPACE(*p))
 				p++;
@@ -1797,10 +1790,7 @@ load_doc:
 	if (header_string)
 		header_string = NULL;
 	TRAP_ON;
-	if (pu.scheme == SCM_HTTP ||
-#ifdef USE_SSL
-	    pu.scheme == SCM_HTTPS ||
-#endif				/* USE_SSL */
+	if (pu.scheme == SCM_HTTP || pu.scheme == SCM_HTTPS ||
 	    ((
 #ifdef USE_GOPHER
 	      (pu.scheme == SCM_GOPHER && non_null(GOPHER_proxy)) ||
@@ -1817,15 +1807,6 @@ load_doc:
 		}
 		if (t_buf == NULL)
 			t_buf = newBuffer(INIT_BUFFER_WIDTH);
-#if 0				/* USE_SSL */
-		if (IStype(f.stream) == IST_SSL) {
-			Str s = ssl_get_certificate(f.stream, pu.host);
-			if (s == NULL)
-				return NULL;
-			else
-				t_buf->ssl_certificate = s->ptr;
-		}
-#endif
 		readHeader(&f, t_buf, FALSE, &pu);
 		if (((http_response_code >= 301 && http_response_code <= 303)
 		     || http_response_code == 307)
@@ -2197,10 +2178,6 @@ page_loaded:
 			t_buf = newBuffer(INIT_BUFFER_WIDTH);
 		t_buf->bufferprop |= BP_FRAME;
 	}
-#ifdef USE_SSL
-	if (t_buf)
-		t_buf->ssl_certificate = f.ssl_certificate;
-#endif
 	frame_source = flag & RG_FRAME_SRC;
 	b = loadSomething(&f, pu.real_file ? pu.real_file : pu.file, proc, t_buf);
 	UFclose(&f);

@@ -13,6 +13,7 @@
 #include <signal.h>
 #include <setjmp.h>
 #include <errno.h>
+#include <tls.h>
 
 #include <sys/stat.h>
 #ifdef __EMX__
@@ -24,12 +25,12 @@
 #include "myctype.h"
 #include "regex.h"
 
-#ifdef USE_SSL
-#ifndef SSLEAY_VERSION_NUMBER
-#include <openssl/crypto.h>	/* SSLEAY_VERSION_NUMBER may be here */
-#endif
-#include <openssl/err.h>
-#endif
+enum TLSinit {
+	STATE_PREINIT	= 0,
+	STATE_INIT	= 1,
+	STATE_BROKEN	= 2
+};
+enum TLSinit tls_state = STATE_PREINIT;
 
 #ifdef	__WATT32__
 #define	write(a,b,c)	write_s(a,b,c)
@@ -71,9 +72,7 @@ static int
 	119,			/* news group */
 	0,			/* data - not defined */
 	0,			/* mailto - not defined */
-#ifdef USE_SSL
 	443,			/* https */
-#endif				/* USE_SSL */
 };
 
 struct cmdtable schemetable[] = {
@@ -91,9 +90,7 @@ struct cmdtable schemetable[] = {
 #ifndef USE_W3MMAILER
 	{"mailto", SCM_MAILTO},
 #endif
-#ifdef USE_SSL
 	{"https", SCM_HTTPS},
-#endif				/* USE_SSL */
 	{NULL, SCM_UNKNOWN},
 };
 
@@ -221,9 +218,7 @@ DefaultFile(int scheme)
 {
 	switch (scheme) {
 		case SCM_HTTP:
-#ifdef USE_SSL
 		case SCM_HTTPS:
-#endif				/* USE_SSL */
 		return allocStr(HTTP_DEFAULT_FILE, -1);
 #ifdef USE_GOPHER
 	case SCM_GOPHER:
@@ -245,145 +240,75 @@ KeyAbort(SIGNAL_ARG)
 	SIGNAL_RETURN;
 }
 
-#ifdef USE_SSL
-SSL_CTX *ssl_ctx = NULL;
-
-void
-free_ssl_ctx()
+static int
+openTLSHandle(int sock, const char *hostname,
+    struct tls **out_tls, struct tls_config **out_config)
 {
-	if (ssl_ctx != NULL)
-		SSL_CTX_free(ssl_ctx);
-	ssl_ctx = NULL;
-	ssl_accept_this_site(NULL);
-}
+	struct tls_config *config = NULL;
+	struct tls *client = NULL;
 
-static SSL *
-openSSLHandle(int sock, char *hostname, char **p_cert)
-{
-	SSL *handle = NULL;
-	static char *old_ssl_forbid_method = NULL;
-#ifdef USE_SSL_VERIFY
-	static int old_ssl_verify_server = -1;
-#endif
+	if (tls_state == STATE_PREINIT && tls_init() == -1) {
+		tls_state = STATE_BROKEN;
+		disp_err_message(Strnew_charp(
+		    "TLS error: tls_init() failed")->ptr, FALSE);
+		return -1;
+	}
 
-	if (old_ssl_forbid_method != ssl_forbid_method
-	    && (!old_ssl_forbid_method || !ssl_forbid_method ||
-		strcmp(old_ssl_forbid_method, ssl_forbid_method))) {
-		old_ssl_forbid_method = ssl_forbid_method;
-#ifdef USE_SSL_VERIFY
-		ssl_path_modified = 1;
-#else
-		free_ssl_ctx();
-#endif
+	tls_state = STATE_INIT;
+
+	config = tls_config_new();
+	if (config == NULL) {
+		disp_err_message(Strnew_charp(
+		    "TLS error: tls_config_new() failed")->ptr, FALSE);
+		return -1;
 	}
-#ifdef USE_SSL_VERIFY
-	if (old_ssl_verify_server != ssl_verify_server) {
-		old_ssl_verify_server = ssl_verify_server;
-		ssl_path_modified = 1;
+
+	client = tls_client();
+	if (client == NULL) {
+		disp_err_message(Strnew_charp(
+		    "TLS error: tls_client() failed")->ptr, FALSE);
+		tls_config_free(config);
+		return -1;
 	}
-	if (ssl_path_modified) {
-		free_ssl_ctx();
-		ssl_path_modified = 0;
+
+	if (tls_configure(client, config) == -1) {
+		goto error;
 	}
-#endif				/* defined(USE_SSL_VERIFY) */
-	if (ssl_ctx == NULL) {
-		int option;
-#if SSLEAY_VERSION_NUMBER < 0x0800
-		ssl_ctx = SSL_CTX_new();
-		X509_set_default_verify_paths(ssl_ctx->cert);
-#else				/* SSLEAY_VERSION_NUMBER >= 0x0800 */
-		SSLeay_add_ssl_algorithms();
-		SSL_load_error_strings();
-		if (!(ssl_ctx = SSL_CTX_new(SSLv23_client_method())))
-			goto eend;
-		option = SSL_OP_ALL;
-		if (ssl_forbid_method) {
-			if (strchr(ssl_forbid_method, '2'))
-				option |= SSL_OP_NO_SSLv2;
-			if (strchr(ssl_forbid_method, '3'))
-				option |= SSL_OP_NO_SSLv3;
-			if (strchr(ssl_forbid_method, 't'))
-				option |= SSL_OP_NO_TLSv1;
-			if (strchr(ssl_forbid_method, 'T'))
-				option |= SSL_OP_NO_TLSv1;
-		}
-		SSL_CTX_set_options(ssl_ctx, option);
-#ifdef USE_SSL_VERIFY
-		/* derived from openssl-0.9.5/apps/s_{client,cb}.c */
-#if 1				/* use SSL_get_verify_result() to verify cert */
-		SSL_CTX_set_verify(ssl_ctx, SSL_VERIFY_NONE, NULL);
-#else
-		SSL_CTX_set_verify(ssl_ctx,
-				   ssl_verify_server ? SSL_VERIFY_PEER :
-				   SSL_VERIFY_NONE, NULL);
-#endif
-		if (ssl_cert_file != NULL && *ssl_cert_file != '\0') {
-			int ng = 1;
-			if (SSL_CTX_use_certificate_file
-			    (ssl_ctx, ssl_cert_file, SSL_FILETYPE_PEM) > 0) {
-				char *key_file = (ssl_key_file == NULL
-						  || *ssl_key_file ==
-				       '\0') ? ssl_cert_file : ssl_key_file;
-				if (SSL_CTX_use_PrivateKey_file
-				  (ssl_ctx, key_file, SSL_FILETYPE_PEM) > 0)
-					if (SSL_CTX_check_private_key(ssl_ctx))
-						ng = 0;
-			}
-			if (ng) {
-				free_ssl_ctx();
-				goto eend;
-			}
-		}
-		if ((!ssl_ca_file && !ssl_ca_path)
-		    || SSL_CTX_load_verify_locations(ssl_ctx, ssl_ca_file, ssl_ca_path))
-#endif				/* defined(USE_SSL_VERIFY) */
-			SSL_CTX_set_default_verify_paths(ssl_ctx);
-#endif				/* SSLEAY_VERSION_NUMBER >= 0x0800 */
+
+	if (tls_connect_socket(client, sock, hostname) == -1) {
+		goto error;
 	}
-	handle = SSL_new(ssl_ctx);
-	SSL_set_fd(handle, sock);
-#if (SSLEAY_VERSION_NUMBER >= 0x00908070) && !defined(OPENSSL_NO_TLSEXT)
-	SSL_set_tlsext_host_name(handle, hostname);
-#endif				/* (SSLEAY_VERSION_NUMBER >= 0x00908070) &&
-				 * !defined(OPENSSL_NO_TLSEXT) */
-	if (SSL_connect(handle) > 0) {
-		Str serv_cert = ssl_get_certificate(handle, hostname);
-		if (serv_cert) {
-			*p_cert = serv_cert->ptr;
-			return handle;
-		}
-		close(sock);
-		SSL_free(handle);
-		return NULL;
-	}
-eend:
-	close(sock);
-	if (handle)
-		SSL_free(handle);
-	/* FIXME: gettextize? */
-	disp_err_message(Sprintf
-			 ("SSL error: %s",
-		      ERR_error_string(ERR_get_error(), NULL))->ptr, FALSE);
-	return NULL;
+
+	*out_tls = client;
+	*out_config = config;
+	return 0;
+error:
+	disp_err_message(Sprintf(
+	    "TLS error: %s", tls_error(client))->ptr, FALSE);
+	tls_config_free(config);
+	tls_free(client);
+	return -1;
 }
 
 static void
-SSL_write_from_file(SSL * ssl, char *file)
+TLS_write_from_file(struct tls *tls, const char *file)
 {
-	FILE *fd;
-	int c;
-	char buf[1];
-	fd = fopen(file, "r");
-	if (fd != NULL) {
-		while ((c = fgetc(fd)) != EOF) {
-			buf[0] = c;
-			SSL_write(ssl, buf, 1);
+	FILE *f = fopen(file, "r");
+	unsigned char buf[1024];
+	size_t read_count;
+	size_t outlen;
+
+	if (f != NULL) {
+		for (;;) {
+			read_count = fread(buf, 1, sizeof(buf), f);
+			if (read_count == 0) {
+				break;
+			}
+			(void)tls_write(tls, buf, read_count, &outlen);
 		}
-		fclose(fd);
+		fclose(f);
 	}
 }
-
-#endif				/* USE_SSL */
 
 static void
 write_from_file(int sock, char *file)
@@ -1073,11 +998,7 @@ parseURL2(char *url, ParsedURL * pu, ParsedURL * current)
 			pu->file = file_quote(cleanupName(tmp->ptr));
 		}
 #endif
-		else if (pu->scheme == SCM_HTTP
-#ifdef USE_SSL
-			 || pu->scheme == SCM_HTTPS
-#endif
-			) {
+		else if (pu->scheme == SCM_HTTP || pu->scheme == SCM_HTTPS) {
 			if (relative_uri) {
 				/*
 				 * In this case, pu->file is created by
@@ -1126,9 +1047,7 @@ _parsedURL2Str(ParsedURL * pu, int pass)
 	static char *scheme_str[] = {
 		"http", "gopher", "ftp", "ftp", "file", "file", "exec", "nntp", "nntp",
 		"news", "news", "data", "mailto",
-#ifdef USE_SSL
-		"https",
-#endif				/* USE_SSL */
+		"https"
 	};
 
 	if (pu->scheme == SCM_MISSING) {
@@ -1268,12 +1187,9 @@ otherinfo(ParsedURL * target, ParsedURL * current, char *referer)
 		Strcat_charp(s, "Cache-control: no-cache\r\n");
 	}
 	if (!NoSendReferer) {
-#ifdef USE_SSL
 		if (current && current->scheme == SCM_HTTPS && target->scheme != SCM_HTTPS) {
 			/* Don't send Referer: if https:// -> http:// */
-		} else
-#endif
-			if (referer == NULL && current && current->scheme != SCM_LOCAL &&
+		} else if (referer == NULL && current && current->scheme != SCM_LOCAL &&
 			    (current->scheme != SCM_FTP ||
 			(current->user == NULL && current->pass == NULL))) {
 			char *p = current->label;
@@ -1358,18 +1274,14 @@ HTTPrequest(ParsedURL * pu, ParsedURL * current, HRequest * hr, TextList * extra
 			if (strncasecmp(i->ptr, "Authorization:",
 					sizeof("Authorization:") - 1) == 0) {
 				seen_www_auth = 1;
-#ifdef USE_SSL
 				if (hr->command == HR_COMMAND_CONNECT)
 					continue;
-#endif
 			}
 			if (strncasecmp(i->ptr, "Proxy-Authorization:",
 				 sizeof("Proxy-Authorization:") - 1) == 0) {
-#ifdef USE_SSL
 				if (pu->scheme == SCM_HTTPS
 				    && hr->command != HR_COMMAND_CONNECT)
 					continue;
-#endif
 			}
 			Strcat_charp(tmp, i->ptr);
 		}
@@ -1442,9 +1354,8 @@ openURL(char *url, ParsedURL * pu, ParsedURL * current,
 	char *p, *q, *u;
 	URLFile uf;
 	HRequest hr0;
-#ifdef USE_SSL
-	SSL *sslh = NULL;
-#endif				/* USE_SSL */
+	struct tls *tls = NULL;
+	struct tls_config *tls_cfg = NULL;
 
 	if (hr == NULL)
 		hr = &hr0;
@@ -1567,27 +1478,21 @@ retry:
 		}
 		break;
 	case SCM_HTTP:
-#ifdef USE_SSL
 	case SCM_HTTPS:
-#endif				/* USE_SSL */
 		if (pu->file == NULL)
 			pu->file = allocStr("/", -1);
 		if (request && request->method == FORM_METHOD_POST && request->body)
 			hr->command = HR_COMMAND_POST;
 		if (request && request->method == FORM_METHOD_HEAD)
 			hr->command = HR_COMMAND_HEAD;
-		if ((
-#ifdef USE_SSL
-		     (pu->scheme == SCM_HTTPS) ? non_null(HTTPS_proxy) :
-#endif				/* USE_SSL */
+		if (((pu->scheme == SCM_HTTPS) ? non_null(HTTPS_proxy) :
 		     non_null(HTTP_proxy)) && !Do_not_use_proxy &&
 		    pu->host != NULL && !check_no_proxy(pu->host)) {
 			hr->flag |= HR_FLAG_PROXY;
-#ifdef USE_SSL
 			if (pu->scheme == SCM_HTTPS && *status == HTST_CONNECT) {
-				sock = ssl_socket_of(ouf->stream);
-				if (!(sslh = openSSLHandle(sock, pu->host,
-						    &uf.ssl_certificate))) {
+				sock = tls_socket_of(ouf->stream);
+				if (openTLSHandle(sock, pu->host,
+				    &tls, &tls_cfg) == -1) {
 					*status = HTST_MISSING;
 					return uf;
 				}
@@ -1595,23 +1500,21 @@ retry:
 				sock = openSocket(HTTPS_proxy_parsed.host,
 				     schemetable[HTTPS_proxy_parsed.scheme].
 					  cmdname, HTTPS_proxy_parsed.port);
-				sslh = NULL;
+				tls = NULL;
+				tls_cfg = NULL;
 			} else {
-#endif				/* USE_SSL */
 				sock = openSocket(HTTP_proxy_parsed.host,
 				      schemetable[HTTP_proxy_parsed.scheme].
 					   cmdname, HTTP_proxy_parsed.port);
-#ifdef USE_SSL
-				sslh = NULL;
+				tls = NULL;
+				tls_cfg = NULL;
 			}
-#endif				/* USE_SSL */
 			if (sock < 0) {
 #ifdef SOCK_DEBUG
 				sock_log("Can't open socket\n");
 #endif
 				return uf;
 			}
-#ifdef USE_SSL
 			if (pu->scheme == SCM_HTTPS) {
 				if (*status == HTST_NORMAL) {
 					hr->command = HR_COMMAND_CONNECT;
@@ -1622,9 +1525,7 @@ retry:
 					tmp = HTTPrequest(pu, current, hr, extra_header);
 					*status = HTST_NORMAL;
 				}
-			} else
-#endif				/* USE_SSL */
-			{
+			} else {
 				tmp = HTTPrequest(pu, current, hr, extra_header);
 				*status = HTST_NORMAL;
 			}
@@ -1635,46 +1536,44 @@ retry:
 				*status = HTST_MISSING;
 				return uf;
 			}
-#ifdef USE_SSL
 			if (pu->scheme == SCM_HTTPS) {
-				if (!(sslh = openSSLHandle(sock, pu->host,
-						    &uf.ssl_certificate))) {
+				if (openTLSHandle(sock, pu->host,
+				    &tls, &tls_cfg) == -1) {
 					*status = HTST_MISSING;
 					return uf;
 				}
 			}
-#endif				/* USE_SSL */
 			hr->flag |= HR_FLAG_LOCAL;
 			tmp = HTTPrequest(pu, current, hr, extra_header);
 			*status = HTST_NORMAL;
 		}
-#ifdef USE_SSL
 		if (pu->scheme == SCM_HTTPS) {
-			uf.stream = newSSLStream(sslh, sock);
-			if (sslh)
-				SSL_write(sslh, tmp->ptr, tmp->length);
+			size_t outlen;
+			uf.stream = newTLSStream(tls, sock);
+			if (tls)
+				tls_write(tls, tmp->ptr, tmp->length, &outlen);
 			else
 				write(sock, tmp->ptr, tmp->length);
 			if (w3m_reqlog) {
 				FILE *ff = fopen(w3m_reqlog, "a");
-				if (sslh)
-					fputs("HTTPS: request via SSL\n", ff);
-				else
-					fputs("HTTPS: request without SSL\n", ff);
+				if (tls) {
+					fputs("HTTPS: request via TLS\n", ff);
+				} else {
+					fputs("HTTPS: request without TLS\n",
+					    ff);
+				}
 				fwrite(tmp->ptr, 1, tmp->length, ff);
 				fclose(ff);
 			}
 			if (hr->command == HR_COMMAND_POST &&
 			    request->enctype == FORM_ENCTYPE_MULTIPART) {
-				if (sslh)
-					SSL_write_from_file(sslh, request->body);
+				if (tls)
+					TLS_write_from_file(tls, request->body);
 				else
 					write_from_file(sock, request->body);
 			}
 			return uf;
-		} else
-#endif				/* USE_SSL */
-		{
+		} else {
 			write(sock, tmp->ptr, tmp->length);
 			if (w3m_reqlog) {
 				FILE *ff = fopen(w3m_reqlog, "a");
@@ -2154,11 +2053,9 @@ schemeToProxy(int scheme)
 	case SCM_HTTP:
 		pu = &HTTP_proxy_parsed;
 		break;
-#ifdef USE_SSL
 	case SCM_HTTPS:
 		pu = &HTTPS_proxy_parsed;
 		break;
-#endif
 	case SCM_FTP:
 		pu = &FTP_proxy_parsed;
 		break;

@@ -30,7 +30,7 @@ CFLAGS+=	-Wall
 CFLAGS+=	-Wshadow -Wpointer-arith -Wcast-qual
 CFLAGS+=	-Wsign-compare
 
-LDADD+=		-L${PREFIX}/lib -lssl -lcrypto -lgc -lm -lintl \
+LDADD+=		-L${PREFIX}/lib -ltls -lssl -lcrypto -lgc -lm -lintl \
 		-ltermcap ./libwc/libwc.a
 
 .include <bsd.prog.mk>

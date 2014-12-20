@@ -478,9 +478,6 @@ typedef struct _Buffer {
 	char *mailcap_source;
 	char *header_source;
 	char search_header;
-#ifdef USE_SSL
-	char *ssl_certificate;
-#endif
 	char image_flag;
 	char image_loaded;
 	char need_reshape;
@@ -843,17 +840,13 @@ extern unsigned char PcKeymap[];
 extern FuncList w3mFuncList[];
 
 global char *HTTP_proxy init(NULL);
-#ifdef USE_SSL
 global char *HTTPS_proxy init(NULL);
-#endif				/* USE_SSL */
 #ifdef USE_GOPHER
 global char *GOPHER_proxy init(NULL);
 #endif				/* USE_GOPHER */
 global char *FTP_proxy init(NULL);
 global ParsedURL HTTP_proxy_parsed;
-#ifdef USE_SSL
 global ParsedURL HTTPS_proxy_parsed;
-#endif				/* USE_SSL */
 #ifdef USE_GOPHER
 global ParsedURL GOPHER_proxy_parsed;
 #endif				/* USE_GOPHER */
@@ -1145,19 +1138,6 @@ global TextList *Cookie_avoid_wrong_number_of_dots_domains;
 global int view_unseenobject init(FALSE);
 #else
 global int view_unseenobject init(TRUE);
-#endif
-
-#if defined(USE_SSL) && defined(USE_SSL_VERIFY)
-global int ssl_verify_server init(FALSE);
-global char *ssl_cert_file init(NULL);
-global char *ssl_key_file init(NULL);
-global char *ssl_ca_path init(NULL);
-global char *ssl_ca_file init(NULL);
-global int ssl_path_modified init(FALSE);
-#endif				/* defined(USE_SSL) &&
-				 * defined(USE_SSL_VERIFY) */
-#ifdef USE_SSL
-global char *ssl_forbid_method init(NULL);
 #endif
 
 global int is_redisplay init(FALSE);

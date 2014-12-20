@@ -61,8 +61,6 @@
 #define USE_MENU 1
 #define USE_COOKIE 1
 #define USE_DIGEST_AUTH 1
-#define USE_SSL 1
-#define USE_SSL_VERIFY 1
 #define USE_HELP_CGI 1
 #define USE_EXTERNAL_URI_LOADER 1
 #define USE_W3MMAILER 1
