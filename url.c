@@ -1182,7 +1182,12 @@ otherinfo(ParsedURL * target, ParsedURL * current, char *referer)
 	Strcat_charp(s, "\r\n");
 
 	Strcat_m_charp(s, "Accept: ", AcceptMedia, "\r\n", NULL);
-	Strcat_m_charp(s, "Accept-Encoding: ", AcceptEncoding, "\r\n", NULL);
+	if (target->scheme == SCM_HTTPS) {
+		Strcat_charp(s, "Accept-Encoding:");
+	} else {
+		Strcat_m_charp(s, "Accept-Encoding: ",
+		    AcceptEncoding, "\r\n", NULL);
+	}
 	Strcat_m_charp(s, "Accept-Language: ", AcceptLang, "\r\n", NULL);
 
 	if (target->host) {
