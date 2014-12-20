@@ -2377,7 +2377,7 @@ feed_table_tag(struct table * tbl, char *line, struct table_mode * mode,
 	int col, prev_col;
 	int i, j, k, v, v0, w, id;
 	Str tok, tmp, anchor;
-	table_attr align, valign;
+	table_attr halign, valign;
 
 	cmd = tag->tagid;
 
@@ -2471,18 +2471,18 @@ feed_table_tag(struct table * tbl, char *line, struct table_mode * mode,
 		tbl->row++;
 		tbl->flag |= TBL_IN_ROW;
 		tbl->flag &= ~TBL_IN_COL;
-		align = 0;
+		halign = 0;
 		valign = 0;
 		if (parsedtag_get_value(tag, ATTR_ALIGN, &i)) {
 			switch (i) {
 			case ALIGN_LEFT:
-				align = (HTT_LEFT | HTT_TRSET);
+				halign = (HTT_LEFT | HTT_TRSET);
 				break;
 			case ALIGN_RIGHT:
-				align = (HTT_RIGHT | HTT_TRSET);
+				halign = (HTT_RIGHT | HTT_TRSET);
 				break;
 			case ALIGN_CENTER:
-				align = (HTT_CENTER | HTT_TRSET);
+				halign = (HTT_CENTER | HTT_TRSET);
 				break;
 			}
 		}
@@ -2503,7 +2503,7 @@ feed_table_tag(struct table * tbl, char *line, struct table_mode * mode,
 		if (parsedtag_get_value(tag, ATTR_ID, &p))
 			tbl->tridvalue[tbl->row] = Strnew_charp(p);
 #endif				/* ID_EXT */
-		tbl->trattr = align | valign;
+		tbl->trattr = halign | valign;
 		break;
 	case HTML_TH:
 	case HTML_TD:
@@ -2538,11 +2538,11 @@ feed_table_tag(struct table * tbl, char *line, struct table_mode * mode,
 		}
 		colspan = rowspan = 1;
 		if (tbl->trattr & HTT_TRSET)
-			align = (tbl->trattr & HTT_ALIGN);
+			halign = (tbl->trattr & HTT_ALIGN);
 		else if (cmd == HTML_TH)
-			align = HTT_CENTER;
+			halign = HTT_CENTER;
 		else
-			align = HTT_LEFT;
+			halign = HTT_LEFT;
 		if (tbl->trattr & HTT_VTRSET)
 			valign = (tbl->trattr & HTT_VALIGN);
 		else
@@ -2563,13 +2563,13 @@ feed_table_tag(struct table * tbl, char *line, struct table_mode * mode,
 		if (parsedtag_get_value(tag, ATTR_ALIGN, &i)) {
 			switch (i) {
 			case ALIGN_LEFT:
-				align = HTT_LEFT;
+				halign = HTT_LEFT;
 				break;
 			case ALIGN_RIGHT:
-				align = HTT_RIGHT;
+				halign = HTT_RIGHT;
 				break;
 			case ALIGN_CENTER:
-				align = HTT_CENTER;
+				halign = HTT_CENTER;
 				break;
 			}
 		}
@@ -2614,7 +2614,7 @@ feed_table_tag(struct table * tbl, char *line, struct table_mode * mode,
 		}
 #endif				/* NOWRAP */
 		tbl->tabattr[tbl->row][tbl->col] &= ~(HTT_ALIGN | HTT_VALIGN);
-		tbl->tabattr[tbl->row][tbl->col] |= (align | valign);
+		tbl->tabattr[tbl->row][tbl->col] |= (halign | valign);
 		if (colspan > 1) {
 			col = tbl->col;
 
