@@ -263,6 +263,13 @@ openTLSHandle(int sock, const char *hostname,
 		return -1;
 	}
 
+	if (tls_config_set_ciphers(config, "HIGH:!aNULL") == -1) {
+		disp_err_message(Strnew_charp(
+		    "TLS error: tls_config_set_ciphers() failed")->ptr, FALSE);
+		tls_config_free(config);
+		return -1;
+	}
+
 	client = tls_client();
 	if (client == NULL) {
 		disp_err_message(Strnew_charp(
