@@ -150,18 +150,16 @@ loadcmdout(char *cmd,
 	};
 #endif
 
-/* *INDENT-OFF* */
-	static struct compression_decoder {
-		enum CompressType type;
-		char *ext;
-		char *mime_type;
-		int auxbin_p;
-		char *cmd;
-		char *name;
-		char *encoding;
-		char *encodings[4];
-	} compression_decoders[] =
-{
+static struct compression_decoder {
+	enum CompressType type;
+	char *ext;
+	char *mime_type;
+	int auxbin_p;
+	char *cmd;
+	char *name;
+	char *encoding;
+	char *encodings[4];
+} compression_decoders[] = {
 	{
 		CMP_GZIP, ".gz", "application/x-gzip",
 		0, GUNZIP_CMDNAME, GUNZIP_NAME, "gzip",
@@ -182,7 +180,6 @@ loadcmdout(char *cmd,
 		}
 	},
 };
-/* *INDENT-ON* */
 
 #define SAVE_BUF_SIZE 1536
 
