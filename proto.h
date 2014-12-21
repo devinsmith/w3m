@@ -162,7 +162,7 @@ extern void initURIMethods();
 extern Str searchURIMethods(ParsedURL * pu);
 extern void chkExternalURIBuffer(Buffer * buf);
 #endif
-extern ParsedURL *schemeToProxy(int scheme);
+extern ParsedURL *schemeToProxy(enum Scheme scheme);
 extern void examineFile(char *path, URLFile * uf);
 extern char *acceptableEncoding();
 extern int dir_exist(char *path);
@@ -529,8 +529,9 @@ inputLineHistSearch(char *prompt, char *def_str, int flag,
 	extern void copyParsedURL(ParsedURL * p, ParsedURL * q);
 	extern void parseURL2(char *url, ParsedURL * pu, ParsedURL * current);
 	extern Str parsedURL2Str(ParsedURL * pu);
-	extern int getURLScheme(char **url);
-	extern void init_stream(URLFile * uf, int scheme, InputStream stream);
+	extern enum Scheme getURLScheme(char **url);
+	extern void init_stream(URLFile * uf, enum Scheme scheme,
+	    InputStream stream);
 	Str HTTPrequestMethod(HRequest * hr);
 	Str HTTPrequestURI(ParsedURL * pu, HRequest * hr);
 	extern URLFile openURL(char *url, ParsedURL * pu, ParsedURL * current,

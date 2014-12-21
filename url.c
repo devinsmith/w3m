@@ -10,6 +10,7 @@
 #include <winsock.h>
 #endif				/* __MINGW32_VERSION */
 
+#include <assert.h>
 #include <signal.h>
 #include <setjmp.h>
 #include <errno.h>
@@ -214,11 +215,11 @@ initMimeTypes()
 }
 
 static char *
-DefaultFile(int scheme)
+DefaultFile(enum Scheme scheme)
 {
 	switch (scheme) {
-		case SCM_HTTP:
-		case SCM_HTTPS:
+	case SCM_HTTP:
+	case SCM_HTTPS:
 		return allocStr(HTTP_DEFAULT_FILE, -1);
 #ifdef USE_GOPHER
 	case SCM_GOPHER:
@@ -229,8 +230,9 @@ DefaultFile(int scheme)
 	case SCM_FTP:
 	case SCM_FTPDIR:
 		return allocStr("/", -1);
+	default:
+		return NULL;
 	}
-	return NULL;
 }
 
 static MySignalHandler
@@ -1146,12 +1148,12 @@ parsedURL2Str(ParsedURL * pu)
 	return _parsedURL2Str(pu, FALSE);
 }
 
-int
+enum Scheme
 getURLScheme(char **url)
 {
 	char *p = *url, *q;
 	int i;
-	int scheme = SCM_MISSING;
+	enum Scheme scheme = SCM_MISSING;
 
 	while (*p && (IS_ALNUM(*p) || *p == '.' || *p == '+' || *p == '-'))
 		p++;
@@ -1345,7 +1347,7 @@ HTTPrequest(ParsedURL * pu, ParsedURL * current, HRequest * hr, TextList * extra
 }
 
 void
-init_stream(URLFile * uf, int scheme, InputStream stream)
+init_stream(URLFile * uf, enum Scheme scheme, InputStream stream)
 {
 	memset(uf, 0, sizeof(URLFile));
 	uf->stream = stream;
@@ -1365,7 +1367,8 @@ openURL(char *url, ParsedURL * pu, ParsedURL * current,
 	URLFile * ouf, HRequest * hr, unsigned char *status)
 {
 	Str tmp;
-	int sock, scheme;
+	int sock;
+	enum Scheme scheme;
 	char *p, *q, *u;
 	URLFile uf;
 	HRequest hr0;
@@ -2061,28 +2064,23 @@ chkExternalURIBuffer(Buffer * buf)
 #endif
 
 ParsedURL *
-schemeToProxy(int scheme)
+schemeToProxy(enum Scheme scheme)
 {
-	ParsedURL *pu = NULL;	/* for gcc */
 	switch (scheme) {
 	case SCM_HTTP:
-		pu = &HTTP_proxy_parsed;
-		break;
+		return &HTTP_proxy_parsed;
 	case SCM_HTTPS:
-		pu = &HTTPS_proxy_parsed;
-		break;
+		return &HTTPS_proxy_parsed;
 	case SCM_FTP:
-		pu = &FTP_proxy_parsed;
-		break;
+		return &FTP_proxy_parsed;
 #ifdef USE_GOPHER
 	case SCM_GOPHER:
-		pu = &GOPHER_proxy_parsed;
-		break;
+		return &GOPHER_proxy_parsed;
 #endif
-#ifdef DEBUG
 	default:
+#ifdef DEBUG
 		abort();
 #endif
+		return NULL;
 	}
-	return pu;
 }
