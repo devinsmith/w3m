@@ -339,23 +339,25 @@ typedef struct html_tag_info {
 
 typedef struct tag_attribute_info {
 	char *name;
-	unsigned char vtype;
+	char vtype;
 	unsigned char flag;
 } TagAttrInfo;
 
 #define AFLG_INT	1
 
-#define VTYPE_NONE	0
-#define VTYPE_STR	1
-#define VTYPE_NUMBER	2
-#define VTYPE_LENGTH	3
-#define VTYPE_ALIGN     4
-#define VTYPE_VALIGN    5
-#define VTYPE_ACTION    6
-#define VTYPE_ENCTYPE   7
-#define VTYPE_METHOD    8
-#define VTYPE_MLENGTH   9
-#define VTYPE_TYPE      10
+enum VType {
+	VTYPE_NONE	= 0,
+	VTYPE_STR	= 1,
+	VTYPE_NUMBER	= 2,
+	VTYPE_LENGTH	= 3,
+	VTYPE_ALIGN     = 4,
+	VTYPE_VALIGN    = 5,
+	VTYPE_ACTION    = 6,
+	VTYPE_ENCTYPE   = 7,
+	VTYPE_METHOD    = 8,
+	VTYPE_MLENGTH   = 9,
+	VTYPE_TYPE      = 10
+};
 
 enum Shape {
 	SHAPE_UNKNOWN	= 0,
