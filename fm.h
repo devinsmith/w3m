@@ -308,7 +308,7 @@ typedef struct _MapArea {
 	char *target;
 	char *alt;
 #ifdef USE_IMAGE
-	char shape;
+	enum Shape shape;
 	short *coords;
 	int ncoords;
 	short center_x;
