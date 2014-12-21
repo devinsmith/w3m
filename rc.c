@@ -1294,6 +1294,7 @@ to_str(struct param_ptr * p)
 	case P_CHAR:
 		return Sprintf("%c", *(char *) p->varptr);
 	case P_STRING:
+		return Strnew_charp(conv_from_system(*(char **)p->varptr));
 	case P_PIXELS:
 	case P_SCALE:
 		return Sprintf("%g", *(double *) p->varptr);
