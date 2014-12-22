@@ -1,3 +1,3 @@
-SUBDIR=		libwc w3m
+SUBDIR=		libindep libwc libexec src
 
 .include <bsd.subdir.mk>
