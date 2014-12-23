@@ -19,7 +19,7 @@ CFLAGS+=	-Wall
 CFLAGS+=	-Wshadow -Wpointer-arith -Wcast-qual
 CFLAGS+=	-Wsign-compare
 
-LDADD+=		-L${PREFIX}/lib -ltls -lssl -lcrypto -lgc -lm -lintl \
+LDADD+=		-L${PREFIX}/lib -ltls -lssl -lcrypto -lgc -lm \
 		-ltermcap ../libwc/libwc.a ../libindep/libindep.a
 
 BINDIR=		${PREFIX}/bin

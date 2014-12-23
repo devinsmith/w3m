@@ -48,7 +48,7 @@
  * Define to 1 if translation of program messages to the user's native
  * language is requested.
  */
-#define ENABLE_NLS 1
+/* #define ENABLE_NLS 0 */
 
 #define USE_COLOR 1
 #define USE_ANSI_COLOR 1
