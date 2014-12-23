@@ -75,7 +75,7 @@ wc_get_ucs_table(wc_ccs ccs)
 wc_wchar_t
 wc_ucs_to_any(wc_uint32 ucs, wc_table * t)
 {
-	wc_wchar_t cc;
+	wc_wchar_t cc = {0};
 	wc_map *map;
 
 	if (t && t->map && ucs && ucs <= WC_C_UCS2_END) {
@@ -300,7 +300,7 @@ wc_any_to_any(wc_wchar_t cc, wc_table * t)
 wc_wchar_t
 wc_ucs_to_any_list(wc_uint32 ucs, wc_table ** tlist)
 {
-	wc_wchar_t cc;
+	wc_wchar_t cc = {0};
 	wc_table **t;
 
 	if (tlist != NULL) {
@@ -449,7 +449,7 @@ wc_wchar_t
 wc_ucs_to_iso2022(wc_uint32 ucs)
 {
 	wc_table *t;
-	wc_wchar_t cc;
+	wc_wchar_t cc = {0};
 	int f;
 
 	if (ucs <= WC_C_UCS2_END) {
@@ -486,7 +486,7 @@ wc_wchar_t
 wc_ucs_to_iso2022w(wc_uint32 ucs)
 {
 	wc_table *t;
-	wc_wchar_t cc;
+	wc_wchar_t cc = {0};
 	int f;
 
 	if (ucs <= WC_C_UCS2_END) {
