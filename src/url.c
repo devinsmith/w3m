@@ -591,13 +591,6 @@ parseURL(char *url, ParsedURL * p_url, ParsedURL * current)
 			copyParsedURL(p_url, current);
 		goto do_label;
 	}
-#if defined( __CYGWIN__ )
-	if (!strncmp(url, "file://localhost/", 17)) {
-		p_url->scheme = SCM_LOCAL;
-		p += 17 - 1;
-		url += 17 - 1;
-	}
-#endif
 #ifdef SUPPORT_DOS_DRIVE_PREFIX
 	if (IS_ALPHA(*p) && (p[1] == ':' || p[1] == '|')) {
 		p_url->scheme = SCM_LOCAL;

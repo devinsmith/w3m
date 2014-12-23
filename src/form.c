@@ -547,12 +547,10 @@ form_fputs_decode(Str s, FILE * f)
 
 	for (p = s->ptr; *p;) {
 		switch (*p) {
-#if !defined( __CYGWIN__ )
 		case '\r':
 			if (*(p + 1) == '\n')
 				p++;
 			/* continue to the next label */
-#endif				/* !defined( __CYGWIN__ ) */
 		default:
 			Strcat_char(z, *p);
 			p++;
