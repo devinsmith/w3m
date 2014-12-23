@@ -6,6 +6,6 @@ dummy.o:
 	${CC} -c ${CFLAGS} ../../src/entity.c -o dummy.o
 
 clean:
-	rm dummy.o
+	rm -f dummy.o
 
 install:
