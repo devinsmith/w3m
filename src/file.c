@@ -13,6 +13,7 @@
 #include <fcntl.h>
 #include <utime.h>
 #include <errno.h>
+#include <assert.h>
 /* foo */
 
 #include "html.h"
@@ -1663,7 +1664,6 @@ getLinkNumberStr(int correction)
 {
 	return Sprintf("[%d]", cur_hseq + correction);
 }
-
 /*
  * loadGeneralFile: load file to buffer
  */
@@ -1749,6 +1749,9 @@ load_doc:
 			/* FIXME: gettextize? */
 			disp_err_message(Sprintf("Unknown URI: %s",
 				      parsedURL2Str(&pu)->ptr)->ptr, FALSE);
+			break;
+		default:
+			assert(FALSE); /* NOTREACHED */
 			break;
 		}
 		if (page && page->length > 0)
