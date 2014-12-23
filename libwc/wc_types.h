@@ -1,4 +1,3 @@
-
 #ifndef _WC_TYPES_H
 #define _WC_TYPES_H
 
@@ -19,31 +18,31 @@ typedef wc_uchar wc_bool;
 typedef struct {
 	wc_ccs ccs;
 	wc_uint32 code;
-}      wc_wchar_t;
+} wc_wchar_t;
 
 typedef struct {
 	wc_uint16 code;
 	wc_uint16 code2;
-}      wc_map;
+} wc_map;
 
 typedef struct {
 	wc_uint16 code;
 	wc_uint16 code2;
 	wc_uint16 code3;
-}      wc_map3;
+} wc_map3;
 
 typedef struct {
 	wc_ccs ccs;
 	size_t n;
 	wc_map *map;
-	       wc_wchar_t(*conv) ();
-}      wc_table;
+	wc_wchar_t(*conv) ();
+} wc_table;
 
 typedef struct {
 	wc_ccs ccs;
 	wc_uchar g;
 	wc_bool init;
-}      wc_gset;
+} wc_gset;
 
 typedef struct {
 	wc_ces id;
@@ -51,16 +50,16 @@ typedef struct {
 	char *desc;
 	wc_gset *gset;
 	wc_uchar *gset_ext;
-	         Str(*conv_from) ();
+	Str(*conv_from) ();
 	void (*push_to) ();
-	     Str(*char_conv) ();
-}      wc_ces_info;
+	Str(*char_conv) ();
+} wc_ces_info;
 
 typedef struct {
 	wc_ces id;
 	char *name;
 	char *desc;
-}      wc_ces_list;
+} wc_ces_list;
 
 typedef struct {
 	wc_uint8 auto_detect;	/* automatically charset detect */
@@ -83,7 +82,7 @@ typedef struct {
 	wc_bool use_wide;	/* use wide characters */
 	wc_bool east_asian_width;	/* East Asian Ambiguous characters
 					 * are wide */
-}      wc_option;
+} wc_option;
 
 typedef struct {
 	wc_ces_info *ces_info;
@@ -104,6 +103,6 @@ typedef struct {
 	wc_uint32 base;
 	int shift;
 #endif
-}      wc_status;
+} wc_status;
 
 #endif
