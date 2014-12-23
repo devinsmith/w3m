@@ -1718,23 +1718,11 @@ load_doc:
 				if (stat(pu.real_file, &st) < 0)
 					return NULL;
 				if (S_ISDIR(st.st_mode)) {
-					if (UseExternalDirBuffer) {
-						Str cmd = Sprintf("%s?dir=%s#current",
-						 DirBufferCommand, pu.file);
-						b = loadGeneralFile(cmd->ptr, NULL, NO_REFERER, 0,
-								    NULL);
-						if (b != NULL && b != NO_BUFFER) {
-							copyParsedURL(&b->currentURL, &pu);
-							b->filename = b->currentURL.real_file;
-						}
-						return b;
-					} else {
-						page = loadLocalDir(pu.real_file);
-						t = "local:directory";
+					page = loadLocalDir(pu.real_file);
+					t = "local:directory";
 #ifdef USE_M17N
-						charset = SystemCharset;
+					charset = SystemCharset;
 #endif
-					}
 				}
 			}
 			break;

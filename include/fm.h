@@ -982,8 +982,6 @@ global int IgnoreCase init(TRUE);
 global int WrapSearch init(FALSE);
 global int squeezeBlankLine init(FALSE);
 global char *BookmarkFile init(NULL);
-global int UseExternalDirBuffer init(TRUE);
-global char *DirBufferCommand init("file:///$LIB/dirlist" CGI_EXTENSION);
 #ifdef USE_DICT
 global int UseDictCommand init(FALSE);
 global char *DictCommand init("file:///$LIB/w3mdict" CGI_EXTENSION);

@@ -357,10 +357,6 @@ struct param_ptr params1[] = {
 	{"decode_url", P_INT, PI_ONOFF, (void *) &DecodeURL, CMT_DECODE_URL, NULL},
 	{"display_lineinfo", P_INT, PI_ONOFF, (void *) &displayLineInfo,
 	CMT_DISPLINEINFO, NULL},
-	{"ext_dirlist", P_INT, PI_ONOFF, (void *) &UseExternalDirBuffer,
-	CMT_EXT_DIRLIST, NULL},
-	{"dirlist_cmd", P_STRING, PI_TEXT, (void *) &DirBufferCommand,
-	CMT_DIRLIST_CMD, NULL},
 #ifdef USE_DICT
 	{"use_dictcommand", P_INT, PI_ONOFF, (void *) &UseDictCommand,
 	CMT_USE_DICTCOMMAND, NULL},
