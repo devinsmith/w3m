@@ -13,7 +13,7 @@
 #define HELP_FILE "w3mhelp-w3m_en.html"
 #define HELP_CGI     "w3mhelp"
 #define W3MCONFIG    "w3mconfig"
-#define IMGDISPLAY   "feh"
+#define IMGDISPLAY   "w3mimgdisplay"
 #define XFACE2XPM    "xface2xpm"
 
 #define BOOKMARK     "bookmark.html"
@@ -68,14 +68,6 @@
 /* #undef USE_GOPHER */
 #define USE_ALARM 1
 #define USE_IMAGE 1
-#define USE_W3MIMG_X11 1
-/* #undef USE_W3MIMG_FB */
-/* #undef USE_W3MIMG_WIN */
-/* #undef W3MIMGDISPLAY_SETUID */
-/* #undef USE_IMLIB */
-#define USE_GDKPIXBUF 1
-#define USE_GTK2 1
-/* #undef USE_IMLIB2 */
 #define USE_XFACE 1
 #define USE_DICT 1
 #define USE_HISTORY 1

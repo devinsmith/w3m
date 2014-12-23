@@ -7,11 +7,6 @@ SRCS=		anchor.c backend.c buffer.c cookie.c display.c \
 		parsetagx.c rc.c search.c symbol.c table.c terms.c \
 		url.c version.c tagtable.c
 
-SRCS+=		../libindep/Str.c ../libindep/indep.c \
-		../libindep/regex.c ../libindep/textlist.c \
-		../libindep/parsetag.c ../libindep/myctype.c \
-		../libindep/hash.c
-
 SRCS+=		keybind.c
 
 MAN=		../doc/w3m.1
@@ -25,7 +20,7 @@ CFLAGS+=	-Wshadow -Wpointer-arith -Wcast-qual
 CFLAGS+=	-Wsign-compare
 
 LDADD+=		-L${PREFIX}/lib -ltls -lssl -lcrypto -lgc -lm -lintl \
-		-ltermcap ../libwc/libwc.a
+		-ltermcap ../libwc/libwc.a ../libindep/libindep.a
 
 BINDIR=		${PREFIX}/bin
 MANDIR=		${PREFIX}/man/man
