@@ -172,7 +172,7 @@ typedef RETSIGTYPE MySignalHandler;
 #define __CYGWIN__
 #endif
 
-#if defined( __CYGWIN__ ) || defined( __EMX__ )
+#if defined( __CYGWIN__ )
 #define SUPPORT_DOS_DRIVE_PREFIX 1
 #endif
 
@@ -187,16 +187,6 @@ typedef RETSIGTYPE MySignalHandler;
 #define DEFAULT_TERM	0	/* XXX */
 #endif
 
-#if defined(__EMX__)		/* use $extension? */
-#define GUNZIP_CMDNAME  "gzip"
-#define INFLATE_CMDNAME  "inflate.exe"
-#define W3MBOOKMARK_CMDNAME	"w3mbookmark.exe"
-#define W3MHELPERPANEL_CMDNAME	"w3mhelperpanel.exe"
-#define DEV_NULL_PATH	"nul"
-#define DEV_TTY_PATH	"con"
-#define CGI_EXTENSION	".cmd"
-#define USE_PATH_ENVVAR
-#else
 #define GUNZIP_CMDNAME  "gunzip"
 #define INFLATE_CMDNAME	"inflate"
 #define W3MBOOKMARK_CMDNAME	"w3mbookmark"
@@ -204,7 +194,6 @@ typedef RETSIGTYPE MySignalHandler;
 #define DEV_NULL_PATH	"/dev/null"
 #define DEV_TTY_PATH	"/dev/tty"
 #define CGI_EXTENSION	".cgi"
-#endif
 
 #define PATH_SEPARATOR	':'
 #define GUNZIP_NAME  "gunzip"

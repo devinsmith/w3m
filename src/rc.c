@@ -152,11 +152,7 @@ static int OptionEncode = FALSE;
 #define CMT_WRAP         N_("Wrap search")
 #define CMT_VIEW_UNSEENOBJECTS N_("Display unseen objects (e.g. bgimage tag)")
 #define CMT_AUTO_UNCOMPRESS	N_("Uncompress compressed data automatically when downloading")
-#ifdef __EMX__
-#define CMT_BGEXTVIEW	 N_("Run external viewer in a separate session")
-#else
 #define CMT_BGEXTVIEW    N_("Run external viewer in the background")
-#endif
 #define CMT_EXT_DIRLIST  N_("Use external program for directory listing")
 #define CMT_DIRLIST_CMD  N_("URL of directory listing command")
 #ifdef USE_DICT
@@ -1105,30 +1101,11 @@ parse_cookie()
 }
 #endif
 
-#ifdef __EMX__
-static int
-do_mkdir(const char *dir, long mode)
-{
-	char *r, abs[_MAX_PATH];
-	size_t n;
-
-	_abspath(abs, rc_dir, _MAX_PATH);	/* Translate '\\' to '/' */
-
-	if (!(n = strlen(abs)))
-		return -1;
-
-	if (*(r = abs + n - 1) == '/')	/* Ignore tailing slash if it is */
-		*r = 0;
-
-	return mkdir(abs, mode);
-}
-#else				/* not __EMX__ */
 #ifdef __MINGW32_VERSION
 #define do_mkdir(dir,mode) mkdir(dir)
 #else
 #define do_mkdir(dir,mode) mkdir(dir,mode)
 #endif				/* not __MINW32_VERSION */
-#endif				/* not __EMX__ */
 
 void
 sync_with_option(void)

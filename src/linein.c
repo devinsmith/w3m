@@ -13,10 +13,6 @@ extern int do_getch();
 #endif				/* USE_GPM */
 #endif				/* USE_MOUSE */
 
-#ifdef __EMX__
-#include <sys/kbdscan.h>
-#endif
-
 #define STR_LEN	1024
 #define CLEN (COLS - 2)
 
@@ -38,9 +34,6 @@ static void insertself(char c),
  killn(void), killb(void), _inbrk(void), _esc(void), _editor(void),
  _prev(void), _next(void), _compl(void), _tcompl(void),
  _dcompl(void), _rdcompl(void), _rcompl(void);
-#ifdef __EMX__
-static int getcntrl(void);
-#endif
 
 static int terminated(unsigned char c);
 #define iself ((void(*)())insertself)
@@ -169,12 +162,6 @@ inputLineHistSearch(char *prompt, char *def_str, int flag, Hist * hist,
 
 next_char:
 		c = getch();
-#ifdef __EMX__
-		if (c == 0) {
-			if (!(c = getcntrl()))
-				goto next_char;
-		}
-#endif
 		cm_clear = TRUE;
 		cm_disp_clear = TRUE;
 		if (!i_quote &&
@@ -273,36 +260,6 @@ next_char:
 	else
 		return allocStr(p, -1);
 }
-
-#ifdef __EMX__
-static int
-getcntrl(void)
-{
-	switch (getch()) {
-		case K_DEL:
-		return CTRL_D;
-	case K_LEFT:
-		return CTRL_B;
-	case K_RIGHT:
-		return CTRL_F;
-	case K_UP:
-		return CTRL_P;
-	case K_DOWN:
-		return CTRL_N;
-	case K_HOME:
-	case K_CTRL_LEFT:
-		return CTRL_A;
-	case K_END:
-	case K_CTRL_RIGHT:
-		return CTRL_E;
-	case K_CTRL_HOME:
-		return CTRL_U;
-	case K_CTRL_END:
-		return CTRL_K;
-	}
-	return 0;
-}
-#endif
 
 static void
 addPasswd(char *p, Lineprop * pr, int len, int col_offset, int limit)

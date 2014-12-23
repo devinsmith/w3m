@@ -262,12 +262,6 @@ fusage(FILE * f, int err)
 	exit(err);
 }
 
-#ifdef USE_M17N
-#ifdef __EMX__
-static char *getCodePage(void);
-#endif
-#endif
-
 static GC_warn_proc orig_GC_warn_proc = NULL;
 #define GC_WARN_KEEP_MAX (20)
 
@@ -389,9 +383,6 @@ main(int argc, char **argv, char **envp)
 #ifdef USE_M17N
 	char *Locale = NULL;
 	wc_uint8 auto_detect;
-#ifdef __EMX__
-	wc_ces CodePage;
-#endif
 #endif
 	GC_INIT();
 #if defined(ENABLE_NLS) || (defined(USE_M17N) && defined(HAVE_LANGINFO_CODESET))
@@ -443,11 +434,6 @@ main(int argc, char **argv, char **envp)
 		DocumentCharset = wc_guess_locale_charset(Locale, DocumentCharset);
 		SystemCharset = wc_guess_locale_charset(Locale, SystemCharset);
 	}
-#ifdef __EMX__
-	CodePage = wc_guess_charset(getCodePage(), 0);
-	if (CodePage)
-		DisplayCharset = DocumentCharset = SystemCharset = CodePage;
-#endif
 #endif
 
 	/* initializations */
@@ -1247,17 +1233,10 @@ DEFUN(nulcmd, NOTHING NULL @@@, "Do nothing")
 {				/* do nothing */
 }
 
-#ifdef __EMX__
-DEFUN(pcmap, PCMAP, "pcmap")
-{
-	w3mFuncList[(int) PcKeymap[(int) getch()]].func();
-}
-#else				/* not __EMX__ */
 void
 pcmap(void)
 {
 }
-#endif
 
 static void
 escKeyProc(int c, int esc, unsigned char *map)
@@ -5625,20 +5604,6 @@ searchKeyNum(void)
 	}
 	return n * PREC_NUM;
 }
-
-#ifdef __EMX__
-#ifdef USE_M17N
-static char *
-getCodePage(void)
-{
-	unsigned long CpList[8], CpSize;
-
-	if (!getenv("WINDOWID") && !DosQueryCp(sizeof(CpList), CpList, &CpSize))
-		return Sprintf("CP%d", *CpList)->ptr;
-	return NULL;
-}
-#endif
-#endif
 
 void
 deleteFiles()

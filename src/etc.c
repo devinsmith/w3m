@@ -1389,17 +1389,11 @@ mySystem(char *command, int background)
 {
 #ifndef __MINGW32_VERSION
 	if (background) {
-#ifndef __EMX__
 		flush_tty();
 		if (!fork()) {
 			setup_child(FALSE, 0, -1);
 			myExec(command);
 		}
-#else
-		Str cmd = Strnew_charp("start /f ");
-		Strcat_charp(cmd, command);
-		system(cmd->ptr);
-#endif
 	} else
 #endif				/* __MINGW32_VERSION */
 		system(command);

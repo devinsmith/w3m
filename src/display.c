@@ -84,14 +84,7 @@ define_effect(EFFECT_MARK_START, EFFECT_MARK_END, EFFECT_MARK_START_C,
 	{
 		if (useColor) {
 			if (useActiveColor) {
-#ifdef __EMX__
-				if (!getenv("WINDOWID"))
-					setfcolor(active_color);
-				else
-#endif
-				{
-					EFFECT_ACTIVE_START_C;
-				}
+				EFFECT_ACTIVE_START_C;
 			} else {
 				EFFECT_ACTIVE_START_NC;
 			}

@@ -17,10 +17,6 @@
 #define GC_STR_H
 #include <stdio.h>
 #include <string.h>
-#ifdef __EMX__
-#define strcasecmp	stricmp
-#define strncasecmp	strnicmp
-#endif
 
 typedef struct _Str {
 	char *ptr;

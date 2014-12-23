@@ -273,13 +273,6 @@ extern enum LinkBuffer REV_LB[];
 
 #define free(x)  GC_free(x)	/* let GC do it. */
 
-#ifdef __EMX__
-#define HAVE_STRCASECMP
-#define strcasecmp	stricmp
-#define strncasecmp	strnicmp
-#endif				/* __EMX__ */
-
-
 #define SKIP_BLANKS(p) {while(*(p)&&IS_SPACE(*(p)))(p)++;}
 #define SKIP_NON_BLANKS(p) {while(*(p)&&!IS_SPACE(*(p)))(p)++;}
 #define IS_ENDL(c) ((c)=='\0'||(c)=='\r'||(c)=='\n')
@@ -835,9 +828,6 @@ extern unsigned char GlobalKeymap[];
 extern unsigned char EscKeymap[];
 extern unsigned char EscBKeymap[];
 extern unsigned char EscDKeymap[];
-#ifdef __EMX__
-extern unsigned char PcKeymap[];
-#endif
 extern FuncList w3mFuncList[];
 
 global char *HTTP_proxy init(NULL);

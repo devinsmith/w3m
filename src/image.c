@@ -102,7 +102,6 @@ openImgdisplay()
 		else
 			cmd = Imgdisplay;
 		myExec(cmd);
-		/* XXX: ifdef __EMX__, use start /f ? */
 	}
 	activeImage = TRUE;
 	return TRUE;

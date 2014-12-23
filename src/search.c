@@ -42,7 +42,6 @@ open_migemo(char *migemo_command)
 		/* child */
 		setup_child(FALSE, 2, -1);
 		myExec(migemo_command);
-		/* XXX: ifdef __EMX__, use start /f ? */
 	}
 	return 1;
 err0:
