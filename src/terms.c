@@ -559,20 +559,6 @@ getTCstr(void)
 	GETSTR(T_ac, "ac");	/* graphics charset pairs */
 	GETSTR(T_op, "op");	/* set default color pair to its original
 				 * value */
-#if defined( CYGWIN ) && CYGWIN < 1
-	/* for TERM=pcansi on MS-DOS prompt. */
-#if 0
-	T_eA = "";
-	T_as = "\033[12m";
-	T_ae = "\033[10m";
-	T_ac = "l\001k\002m\003j\004x\005q\006n\020a\024v\025w\026u\027t\031";
-#endif
-	T_eA = "";
-	T_as = "";
-	T_ae = "";
-	T_ac = "";
-#endif				/* CYGWIN */
-
 	LINES = COLS = 0;
 	setlinescols();
 	setgraphchar();
@@ -1776,8 +1762,6 @@ sleep_till_anykey(int sec, int purge)
 
 #define XTERM_ON   {fputs("\033[?1001s\033[?1000h",ttyf); flush_tty();}
 #define XTERM_OFF  {fputs("\033[?1000l\033[?1001r",ttyf); flush_tty();}
-#define CYGWIN_ON  {fputs("\033[?1000h",ttyf); flush_tty();}
-#define CYGWIN_OFF {fputs("\033[?1000l",ttyf); flush_tty();}
 
 #ifdef USE_GPM
 /* Linux console with GPM support */
