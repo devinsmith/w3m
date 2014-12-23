@@ -12,6 +12,7 @@
 #include <unistd.h>
 #include "config.h"
 #include <string.h>
+#include <poll.h>
 #ifdef HAVE_SYS_SELECT_H
 #include <sys/select.h>
 #endif
@@ -1747,21 +1748,17 @@ skip_escseq(void)
 int
 sleep_till_anykey(int sec, int purge)
 {
-	fd_set rfd;
-	struct timeval tim;
+	struct pollfd pfd[1];
 	int er, c, ret;
 	TerminalMode ioval;
 
 	TerminalGet(tty, &ioval);
 	term_raw();
 
-	tim.tv_sec = sec;
-	tim.tv_usec = 0;
+	pfd[0].fd = tty;
+	pfd[0].events = POLLIN;
 
-	FD_ZERO(&rfd);
-	FD_SET(tty, &rfd);
-
-	ret = select(tty + 1, &rfd, 0, 0, &tim);
+	ret = poll(pfd, 1, sec * 1000);
 	if (ret > 0 && purge) {
 		c = getch();
 		if (c == ESC_CODE)
