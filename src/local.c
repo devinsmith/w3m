@@ -106,6 +106,7 @@ loadLocalDir(char *dname)
 			n++;
 		}
 	}
+	(void)closedir(d);
 
 	if (multicolList) {
 		l = COLS / (maxlen + 2);
