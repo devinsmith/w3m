@@ -6257,9 +6257,10 @@ proc_normal:
 						 % Tabstop != 0);
 					str++;
 				} else if (obuf->flag & RB_PLAIN) {
-					char *p = html_quote_char(*str);
-					if (p) {
-						push_charp(obuf, 1, p, PC_ASCII);
+					char *ch_entity = html_quote_char(*str);
+					if (ch_entity) {
+						push_charp(obuf, 1,
+						    ch_entity, PC_ASCII);
 						str++;
 					} else {
 						proc_mchar(obuf, 1, delta, &str, mode);
