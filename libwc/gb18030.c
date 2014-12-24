@@ -119,7 +119,7 @@ wc_gb18030_to_ucs(wc_wchar_t cc)
 wc_wchar_t
 wc_ucs_to_gb18030(wc_uint32 ucs)
 {
-	wc_wchar_t cc;
+	wc_wchar_t cc = {0};
 	wc_map3 *map;
 
 	if (ucs <= WC_C_UCS2_END) {
