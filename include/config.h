@@ -88,8 +88,8 @@
 #define DEF_EXT_BROWSER "/usr/bin/firefox"
 
 /* fallback viewer. mailcap override these configuration */
-#define DEF_IMAGE_VIEWER	"display"
-#define DEF_AUDIO_PLAYER	"showaudio"
+#define DEF_IMAGE_VIEWER	"feh"
+#define DEF_AUDIO_PLAYER	"mplayer"
 
 /* for USE_MIGEMO */
 #define DEF_MIGEMO_COMMAND "migemo -t egrep /usr/local/share/migemo/migemo-dict"
