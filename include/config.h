@@ -85,7 +85,7 @@
 
 #define DEF_EDITOR "/usr/bin/vi"
 #define DEF_MAILER "/usr/bin/mail"
-#define DEF_EXT_BROWSER "/usr/bin/mozilla"
+#define DEF_EXT_BROWSER "/usr/bin/firefox"
 
 /* fallback viewer. mailcap override these configuration */
 #define DEF_IMAGE_VIEWER	"display"
