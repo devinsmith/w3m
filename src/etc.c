@@ -16,6 +16,8 @@
 #endif
 #include <signal.h>
 
+#include <assert.h>
+
 #ifdef	__WATT32__
 #define	read(a,b,c)	read_s(a,b,c)
 #define	close(x)	close_s(x)
@@ -746,9 +748,10 @@ next_status(char c, enum RTstatus *status)
 		if (c == '>')
 			*status = R_ST_NORMAL;
 		return 0;
+	default:
+		assert(FALSE); /* NOTREACHED */
+		return 0;
 	}
-	/* notreached */
-	return 0;
 }
 
 int
@@ -831,6 +834,9 @@ read_token(Str buf, char **instr, enum RTstatus *status, int pre, int append)
 			/* do nothing */
 			if (pre)
 				Strcat_char(buf, *p);
+			break;
+		default:
+			assert(FALSE); /* NOTREACHED */
 			break;
 		}
 	}
