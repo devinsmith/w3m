@@ -10,8 +10,6 @@
 /* Name of package */
 #define PACKAGE "w3m"
 
-#define HELP_FILE "w3mhelp-w3m_en.html"
-#define HELP_CGI     "w3mhelp"
 #define W3MCONFIG    "w3mconfig"
 #define IMGDISPLAY   "w3mimgdisplay"
 #define XFACE2XPM    "xface2xpm"
@@ -61,7 +59,6 @@
 #define USE_MENU 1
 #define USE_COOKIE 1
 #define USE_DIGEST_AUTH 1
-#define USE_HELP_CGI 1
 #define USE_EXTERNAL_URI_LOADER 1
 #define USE_W3MMAILER 1
 #define USE_NNTP 1

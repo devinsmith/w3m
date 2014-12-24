@@ -820,6 +820,7 @@ global char TrapSignal init(TRUE);
 	mySignal(SIGINT, prevtrap); \
 }
 
+extern const char *KeymapHelp;
 extern unsigned char GlobalKeymap[];
 extern unsigned char EscKeymap[];
 extern unsigned char EscBKeymap[];

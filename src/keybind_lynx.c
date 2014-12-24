@@ -13,6 +13,8 @@
 
 #include "funcname2.h"
 
+const char *KeymapHelp = "keys-lynx.html";
+
 unsigned char GlobalKeymap[128] = {
 	/* C-@     C-a     C-b     C-c     C-d     C-e     C-f     C-g      */
 	_mark, goLineF, backBf, nulcmd, nulcmd, goLineL, followA, curlno,
