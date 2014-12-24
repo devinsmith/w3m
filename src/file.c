@@ -2129,9 +2129,10 @@ page_loaded:
 	else if (is_plain_text_type(t))
 		proc = loadBuffer;
 #ifdef USE_IMAGE
-	else if (activeImage && displayImage && !useExtImageViewer &&
-		 !(w3m_dump & ~DUMP_FRAME) && !strncasecmp(t, "image/", 6))
+	else if (activeImage && displayImage && !(w3m_dump & ~DUMP_FRAME) &&
+	    !strncasecmp(t, "image/", 6)) {
 		proc = loadImageBuffer;
+	}
 #endif
 	else if (w3m_backend);
 	else if (!(w3m_dump & ~DUMP_FRAME) || is_dump_text_type(t)) {
@@ -7490,8 +7491,8 @@ openGeneralPagerBuffer(InputStream stream)
 		buf->type = "text/plain";
 	}
 #ifdef USE_IMAGE
-	else if (activeImage && displayImage && !useExtImageViewer &&
-		 !(w3m_dump & ~DUMP_FRAME) && !strncasecmp(t, "image/", 6)) {
+	else if (activeImage && displayImage && !(w3m_dump & ~DUMP_FRAME) &&
+	    !strncasecmp(t, "image/", 6)) {
 		cur_baseURL = New(ParsedURL);
 		parseURL("-", cur_baseURL, NULL);
 		buf = loadImageBuffer(&uf, t_buf);

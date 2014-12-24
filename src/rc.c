@@ -78,9 +78,7 @@ static int OptionEncode = FALSE;
 #ifdef USE_IMAGE
 #define CMT_AUTO_IMAGE   N_("Load inline images automatically")
 #define CMT_MAX_LOAD_IMAGE N_("Maximum processes for parallel image loading")
-#define CMT_EXT_IMAGE_VIEWER   N_("Use external image viewer")
 #define CMT_IMAGE_SCALE  N_("Scale of image (%)")
-#define CMT_IMGDISPLAY   N_("External command to display image")
 #define CMT_IMAGE_MAP_LIST N_("Use link list of image map")
 #endif
 #define CMT_MULTICOL     N_("Display file names in multi-column format")
@@ -388,11 +386,7 @@ struct param_ptr params1[] = {
 	{"auto_image", P_INT, PI_ONOFF, (void *) &autoImage, CMT_AUTO_IMAGE, NULL},
 	{"max_load_image", P_INT, PI_TEXT, (void *) &maxLoadImage,
 	CMT_MAX_LOAD_IMAGE, NULL},
-	{"ext_image_viewer", P_INT, PI_ONOFF, (void *) &useExtImageViewer,
-	CMT_EXT_IMAGE_VIEWER, NULL},
 	{"image_scale", P_SCALE, PI_TEXT, (void *) &image_scale, CMT_IMAGE_SCALE,
-	NULL},
-	{"imgdisplay", P_STRING, PI_TEXT, (void *) &Imgdisplay, CMT_IMGDISPLAY,
 	NULL},
 	{"image_map_list", P_INT, PI_ONOFF, (void *) &image_map_list,
 	CMT_IMAGE_MAP_LIST, NULL},

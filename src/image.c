@@ -53,9 +53,9 @@ getCharSize()
 
 	set_environ("W3M_TTY", ttyname_tty());
 	tmp = Strnew();
-	if (!strchr(Imgdisplay, '/'))
+	if (!strchr(IMGDISPLAY, '/'))
 		Strcat_m_charp(tmp, w3m_auxbin_dir(), "/", NULL);
-	Strcat_m_charp(tmp, Imgdisplay, " -test 2>/dev/null", NULL);
+	Strcat_m_charp(tmp, IMGDISPLAY, " -test 2>/dev/null", NULL);
 	f = popen(tmp->ptr, "r");
 	if (!f)
 		return FALSE;
@@ -97,10 +97,10 @@ openImgdisplay()
 		/* child */
 		char *cmd;
 		setup_child(FALSE, 2, -1);
-		if (!strchr(Imgdisplay, '/'))
-			cmd = Strnew_m_charp(w3m_auxbin_dir(), "/", Imgdisplay, NULL)->ptr;
+		if (!strchr(IMGDISPLAY, '/'))
+			cmd = Strnew_m_charp(w3m_auxbin_dir(), "/", IMGDISPLAY, NULL)->ptr;
 		else
-			cmd = Imgdisplay;
+			cmd = IMGDISPLAY;
 		myExec(cmd);
 	}
 	activeImage = TRUE;
@@ -526,9 +526,9 @@ getImageSize(ImageCache * cache)
 	    (cache->width > 0 && cache->height > 0))
 		return FALSE;
 	tmp = Strnew();
-	if (!strchr(Imgdisplay, '/'))
+	if (!strchr(IMGDISPLAY, '/'))
 		Strcat_m_charp(tmp, w3m_auxbin_dir(), "/", NULL);
-	Strcat_m_charp(tmp, Imgdisplay, " -size ", shell_quote(cache->file), NULL);
+	Strcat_m_charp(tmp, IMGDISPLAY, " -size ", shell_quote(cache->file), NULL);
 	f = popen(tmp->ptr, "r");
 	if (!f)
 		return FALSE;
