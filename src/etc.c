@@ -750,8 +750,8 @@ next_status(char c, enum RTstatus *status)
 		return 0;
 	default:
 		assert(FALSE); /* NOTREACHED */
-		return 0;
 	}
+	return 0;
 }
 
 int
