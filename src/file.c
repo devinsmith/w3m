@@ -6227,14 +6227,14 @@ proc_normal:
 			if (obuf->flag & (RB_SPECIAL & ~RB_NOBR)) {
 				char ch = *str;
 				if (!(obuf->flag & RB_PLAIN) && (*str == '&')) {
-					char *p = str;
-					int ech = getescapechar(&p);
+					char *escape = str;
+					int ech = getescapechar(&escape);
 					if (ech == '\n' || ech == '\r') {
 						ch = '\n';
-						str = p - 1;
+						str = escape - 1;
 					} else if (ech == '\t') {
 						ch = '\t';
-						str = p - 1;
+						str = escape - 1;
 					}
 				}
 				if (ch != '\n')
