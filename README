@@ -6,7 +6,7 @@ browser and pager, since upstream seems to have died down. It is
 based on w3m 0.5.3, released 2011-01-15.
 
 w3m is ideal for browsing content-focused websites such as
-Wikipedia, blogs, and websites where the clutter displayed by
+wikis, blogs, and websites where the clutter displayed by
 graphical web browsers gets in the way of the actual content.
 
 It currently runs on OpenBSD, and compiles using BSD make, not
@@ -17,9 +17,12 @@ the release of OpenBSD 5.7.
 Features
 --------
 * Protocols: HTTPS, HTTP, FTP
-* Tables, images (in some circumstances) - including animated gifs,
-hyperlinks, forms, cookies, lists, horizontal rules.
+* Renders tables, hyperlinks, forms, lists, horizontal rules,
+headings, images/animated gifs (both in xterm).
 * vi(1)-like control scheme
+* Support for multiple character encodings: UTF-8, Shift_JIS,
+Big5, KOI8-R, etc (see charset-list)
+* and cookies.
 
 Goals
 -----
