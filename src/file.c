@@ -2128,12 +2128,6 @@ page_loaded:
 		proc = loadHTMLBuffer;
 	else if (is_plain_text_type(t))
 		proc = loadBuffer;
-#ifdef USE_IMAGE
-	else if (activeImage && displayImage && !(w3m_dump & ~DUMP_FRAME) &&
-	    !strncasecmp(t, "image/", 6)) {
-		proc = loadImageBuffer;
-	}
-#endif
 	else if (w3m_backend);
 	else if (!(w3m_dump & ~DUMP_FRAME) || is_dump_text_type(t)) {
 		if (!do_download && doExternal(f,
@@ -7489,17 +7483,7 @@ openGeneralPagerBuffer(InputStream stream)
 			stream = newEncodedStream(stream, uf.encoding);
 		buf = openPagerBuffer(stream, t_buf);
 		buf->type = "text/plain";
-	}
-#ifdef USE_IMAGE
-	else if (activeImage && displayImage && !(w3m_dump & ~DUMP_FRAME) &&
-	    !strncasecmp(t, "image/", 6)) {
-		cur_baseURL = New(ParsedURL);
-		parseURL("-", cur_baseURL, NULL);
-		buf = loadImageBuffer(&uf, t_buf);
-		buf->type = "text/html";
-	}
-#endif
-	else {
+	} else {
 		if (doExternal(uf, "-", t, &buf, t_buf)) {
 			UFclose(&uf);
 			if (buf == NULL || buf == NO_BUFFER)
