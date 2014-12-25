@@ -164,9 +164,6 @@ fversion(FILE * f)
 #ifdef USE_W3MMAILER
 		",w3mmailer"
 #endif
-#ifdef USE_NNTP
-		",nntp"
-#endif
 #ifdef USE_GOPHER
 		",gopher"
 #endif
@@ -478,12 +475,6 @@ main(int argc, char **argv, char **envp)
 	    ((p = getenv("NO_PROXY")) ||
 	     (p = getenv("no_proxy")) || (p = getenv("NO_proxy"))))
 		NO_proxy = p;
-#ifdef USE_NNTP
-	if (!non_null(NNTP_server) && (p = getenv("NNTPSERVER")) != NULL)
-		NNTP_server = p;
-	if (!non_null(NNTP_mode) && (p = getenv("NNTPMODE")) != NULL)
-		NNTP_mode = p;
-#endif
 
 	if (!non_null(Editor) && (p = getenv("EDITOR")) != NULL)
 		Editor = p;
@@ -2924,14 +2915,6 @@ DEFUN(followA, GOTO_LINK, "Go to current link")
 	}
 	if (handleMailto(a->url))
 		return;
-#if 0
-	else if (!strncasecmp(a->url, "news:", 5) && strchr(a->url, '@') == NULL) {
-		/* news:newsgroup is not supported */
-		/* FIXME: gettextize? */
-		disp_err_message("news:newsgroup_name is not supported", TRUE);
-		return;
-	}
-#endif				/* USE_NNTP */
 	url = a->url;
 #ifdef USE_IMAGE
 	if (map)
@@ -3924,14 +3907,6 @@ cmd_loadURL(char *url, ParsedURL * current, char *referer, FormList * request)
 
 	if (handleMailto(url))
 		return;
-#if 0
-	if (!strncasecmp(url, "news:", 5) && strchr(url, '@') == NULL) {
-		/* news:newsgroup is not supported */
-		/* FIXME: gettextize? */
-		disp_err_message("news:newsgroup_name is not supported", TRUE);
-		return;
-	}
-#endif				/* USE_NNTP */
 
 	refresh();
 	buf = loadGeneralFile(url, current, referer, 0, request);
@@ -4782,10 +4757,6 @@ chkURLBuffer(Buffer * buf)
 		"gopher://[a-zA-Z0-9][a-zA-Z0-9:%\\-\\./_]*",
 #endif				/* USE_GOPHER */
 		"ftp://[a-zA-Z0-9][a-zA-Z0-9:%\\-\\./=_+@#,\\$]*[a-zA-Z0-9_/]",
-#ifdef USE_NNTP
-		"news:[^<> 	][^<> 	]*",
-		"nntp://[a-zA-Z0-9][a-zA-Z0-9:%\\-\\./_]*",
-#endif				/* USE_NNTP */
 #ifndef USE_W3MMAILER		/* see also chkExternalURIBuffer() */
 		"mailto:[^<> 	][^<> 	]*@[a-zA-Z0-9][a-zA-Z0-9\\-\\._]*[a-zA-Z0-9]",
 #endif
@@ -4821,29 +4792,6 @@ DEFUN(chkWORD, MARK_WORD, "Mark current word as anchor")
 	reAnchorWord(Currentbuf, Currentbuf->currentLine, spos, epos);
 	displayBuffer(Currentbuf, B_FORCE_REDRAW);
 }
-
-#ifdef USE_NNTP
-/* mark Message-ID-like patterns as NEWS anchors */
-void
-chkNMIDBuffer(Buffer * buf)
-{
-	static char *url_like_pat[] = {
-		"<[!-;=?-~]+@[a-zA-Z0-9\\.\\-_]+>",
-		NULL,
-	};
-	int i;
-	for (i = 0; url_like_pat[i]; i++) {
-		reAnchorNews(buf, url_like_pat[i]);
-	}
-	buf->check_url |= CHK_NMID;
-}
-
-DEFUN(chkNMID, MARK_MID, "Mark Message-ID-like strings as anchors")
-{
-	chkNMIDBuffer(Currentbuf);
-	displayBuffer(Currentbuf, B_FORCE_REDRAW);
-}
-#endif				/* USE_NNTP */
 
 /* render frame */
 DEFUN(rFrame, FRAME, "Render frame")
@@ -5610,9 +5558,6 @@ w3m_exit(int i)
 	stopDownload();
 	deleteFiles();
 	disconnectFTP();
-#ifdef USE_NNTP
-	disconnectNews();
-#endif
 #ifdef __MINGW32_VERSION
 	WSACleanup();
 #endif

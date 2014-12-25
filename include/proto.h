@@ -98,12 +98,7 @@ extern void reshape(void);
 extern void chkURL(void);
 extern void chkURLBuffer(Buffer * buf);
 extern void chkWORD(void);
-#ifdef USE_NNTP
-extern void chkNMID(void);
-extern void chkNMIDBuffer(Buffer * buf);
-#else
 #define chkNMID nulcmd
-#endif
 extern void rFrame(void);
 extern void extbrz(void);
 extern void linkbrz(void);
@@ -557,17 +552,6 @@ inputLineHistSearch(char *prompt, char *def_str, int flag,
 #endif
 	extern void closeFTP(void);
 	extern void disconnectFTP(void);
-#ifdef USE_NNTP
-	extern InputStream openNewsStream(ParsedURL * pu);
-#ifdef USE_M17N
-	extern Str loadNewsgroup(ParsedURL * pu, wc_ces * charset);
-#else
-	extern Str loadNewsgroup0(ParsedURL * pu);
-#define loadNewsgroup(pu,charset) loadNewsgroup0(pu)
-#endif
-	extern void closeNews(void);
-	extern void disconnectNews(void);
-#endif
 	extern AnchorList *putAnchor(AnchorList * al, char *url, char *target,
 				      Anchor ** anchor_return, char *referer,
 				   char *title, unsigned char key, int line,
@@ -589,10 +573,6 @@ inputLineHistSearch(char *prompt, char *def_str, int flag,
 	extern Anchor *searchURLLabel(Buffer * buf, char *url);
 	extern void reAnchorWord(Buffer * buf, Line * l, int spos, int epos);
 	extern char *reAnchor(Buffer * buf, char *re);
-#ifdef USE_NNTP
-	extern char *reAnchorNews(Buffer * buf, char *re);
-	extern char *reAnchorNewsheader(Buffer * buf);
-#endif				/* USE_NNTP */
 	extern void addMultirowsForm(Buffer * buf, AnchorList * al);
 	extern Anchor *closest_next_anchor(AnchorList * a, Anchor * an, int x, int y);
 	extern Anchor *closest_prev_anchor(AnchorList * a, Anchor * an, int x, int y);

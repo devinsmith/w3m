@@ -80,10 +80,6 @@ struct cmdtable schemetable[] = {
 	{"local", SCM_LOCAL},
 	{"file", SCM_LOCAL},
 	/* {"exec", SCM_EXEC}, */
-	{"nntp", SCM_NNTP},
-	/* {"nntp", SCM_NNTP_GROUP}, */
-	{"news", SCM_NEWS},
-	/* {"news", SCM_NEWS_GROUP}, */
 	{"data", SCM_DATA},
 #ifndef USE_W3MMAILER
 	{"mailto", SCM_MAILTO},
@@ -615,16 +611,6 @@ parseURL(char *url, ParsedURL * p_url, ParsedURL * current)
 			case SCM_FTPDIR:
 				p_url->scheme = SCM_FTP;
 				break;
-#ifdef USE_NNTP
-			case SCM_NNTP:
-			case SCM_NNTP_GROUP:
-				p_url->scheme = SCM_NNTP;
-				break;
-			case SCM_NEWS:
-			case SCM_NEWS_GROUP:
-				p_url->scheme = SCM_NEWS;
-				break;
-#endif
 			default:
 				p_url->scheme = current->scheme;
 				break;
@@ -872,33 +858,6 @@ parseURL2(char *url, ParsedURL * pu, ParsedURL * current)
 #endif
 	if (pu->scheme == SCM_DATA)
 		return;
-	if (pu->scheme == SCM_NEWS || pu->scheme == SCM_NEWS_GROUP) {
-		if (pu->file && !strchr(pu->file, '@') &&
-		    (!(p = strchr(pu->file, '/')) || strchr(p + 1, '-') ||
-		     *(p + 1) == '\0'))
-			pu->scheme = SCM_NEWS_GROUP;
-		else
-			pu->scheme = SCM_NEWS;
-		return;
-	}
-	if (pu->scheme == SCM_NNTP || pu->scheme == SCM_NNTP_GROUP) {
-		if (pu->file && *pu->file == '/')
-			pu->file = allocStr(pu->file + 1, -1);
-		if (pu->file && !strchr(pu->file, '@') &&
-		    (!(p = strchr(pu->file, '/')) || strchr(p + 1, '-') ||
-		     *(p + 1) == '\0'))
-			pu->scheme = SCM_NNTP_GROUP;
-		else
-			pu->scheme = SCM_NNTP;
-		if (current && (current->scheme == SCM_NNTP ||
-				current->scheme == SCM_NNTP_GROUP)) {
-			if (pu->host == NULL) {
-				pu->host = current->host;
-				pu->port = current->port;
-			}
-		}
-		return;
-	}
 	if (pu->scheme == SCM_LOCAL) {
 		char *q = expandName(file_unquote(pu->file));
 #ifdef SUPPORT_DOS_DRIVE_PREFIX
@@ -1030,9 +989,8 @@ _parsedURL2Str(ParsedURL * pu, int pass)
 {
 	Str tmp;
 	static char *scheme_str[] = {
-		"http", "gopher", "ftp", "ftp", "file", "file", "exec", "nntp", "nntp",
-		"news", "news", "data", "mailto",
-		"https"
+		"http", "gopher", "ftp", "ftp", "file", "file", "exec", 
+		"data", "mailto", "https"
 	};
 
 	if (pu->scheme == SCM_MISSING) {
@@ -1068,12 +1026,7 @@ _parsedURL2Str(ParsedURL * pu, int pass)
 		Strcat_charp(tmp, pu->file);
 		return tmp;
 	}
-#ifdef USE_NNTP
-	if (pu->scheme != SCM_NEWS && pu->scheme != SCM_NEWS_GROUP)
-#endif				/* USE_NNTP */
-	{
-		Strcat_charp(tmp, "//");
-	}
+	Strcat_charp(tmp, "//");
 	if (pu->user) {
 		Strcat_charp(tmp, pu->user);
 		if (pass && pu->pass) {
@@ -1089,11 +1042,7 @@ _parsedURL2Str(ParsedURL * pu, int pass)
 			Strcat(tmp, Sprintf("%d", pu->port));
 		}
 	}
-	if (
-#ifdef USE_NNTP
-	    pu->scheme != SCM_NEWS && pu->scheme != SCM_NEWS_GROUP &&
-#endif				/* USE_NNTP */
-	    (pu->file == NULL || (pu->file[0] != '/'
+	if ((pu->file == NULL || (pu->file[0] != '/'
 #ifdef SUPPORT_DOS_DRIVE_PREFIX
 				  && !(IS_ALPHA(pu->file[0])
 				       && pu->file[1] == ':'
@@ -1602,18 +1551,6 @@ retry:
 		write(sock, tmp->ptr, tmp->length);
 		break;
 #endif				/* USE_GOPHER */
-#ifdef USE_NNTP
-	case SCM_NNTP:
-	case SCM_NNTP_GROUP:
-	case SCM_NEWS:
-	case SCM_NEWS_GROUP:
-		if (pu->scheme == SCM_NNTP || pu->scheme == SCM_NEWS)
-			uf.scheme = SCM_NEWS;
-		else
-			uf.scheme = SCM_NEWS_GROUP;
-		uf.stream = openNewsStream(pu);
-		return uf;
-#endif				/* USE_NNTP */
 	case SCM_DATA:
 		if (pu->file == NULL)
 			return uf;
