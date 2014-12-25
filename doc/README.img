@@ -25,7 +25,6 @@ Support
     "w3m" sends coordinate of the cursor as <name>.x=<x>&<name>.y=<y>.
   * Asynchronous loading of image files.
   * Using cache of image file as pixmap.
-  * Support of GIF animation when use GdkPixbuf.
 
 
 Key functions
@@ -77,113 +76,9 @@ Option panel
   imgdisplay
       External command to display image. The default value is "feh".
 
-Required programs
+Required packages
 
-  for X11
-    * GdkPixbuf-0.16 or later
-
-    or
-
-    * w3m-0.2.5+cvs-1.287 or later
-      http://w3m.sourceforge.net/
-      http://sourceforge.net/projects/w3m/
-      http://prdownloads.sourceforge.net/w3m/
-    * Imlib-1.9.8 (1.9.10 is recommendable.)
-      libungif-4.1.0b1 is recommendable.
-
-  for Linux framebuffer device
-    * GdkPixbuf-0.16 or later
-
-    or
-
-    * Imlib2-1.0.6 or later
-
-    * Framebuffer device(packed pixels with 8 bpp pseudocolor
-      and 16/24/32 bpp truecolor/directcolor)
-
-Notice
-    If you want to see GIF animation, please hit a suitable key, such
-    as 'h', 'l', etc., repeatedly, because a frame is rewritten
-    according to the re-drawing demand from w3m.
-
-    Some code in w3mimg/fb/fb.c was originally written by Mr. Yamasaki.
-    http://www.sainet.or.jp/~yamasaki/download/fb-sample.tar.gz
-
-    On Windows, we check the behaver on standard console, Cygwin rxvt
-    and PuTTY.
-
-
-Change log
-
-2002/02/04
- * Revised this document.
-
-2002/02/01	w3m-0.2.5+cvs-1.287
- * Merged in the CVS repository of the original w3m.
-
-2002/01/31	w3m-0.2.4-img-2.2
- * Based on w3m-0.2.4+cvs-1.278.
-
-2002/01/29	w3m-0.2.4-img-2.1
- * Based on w3m-0.2.4+cvs-1.268.
-
-2002/01/28	w3m-0.2.4-img-2.0
- * Based on w3m-0.2.4+cvs-1.265.
- * pixel_per_char and pixel_per_line are automatically detected.
- * The background color of terminal is automatically detected.
- * The source code to display images is moved to image.c
-
-2002/01/08	w3m-0.2.4-img-1.18
- * Based on w3m-0.2.4
-
-2001/12/29	w3m-0.2.3.2-img-1.17
- * Based on w3m-0.2.3.2+cvs-1.196.
-
-2001/12/25	w3m-0.2.3.2-img-1.16.1
- * [w3m-dev 02698] Thanks > Kazuhiko-san
-
-2001/12/22	w3m-0.2.3.2-img-1.16
- * Based on w3m-0.2.3.2.
-
-2001/12/20	w3m-0.2.3.1-img-1.15
- * Based on w3m-0.2.3.1.
- * Support display of image with Content-Transfer-Encoding.
-
-2001/11/29
- * Start merge against CVS source (ChangeLog 1.71)
-
-2001/11/17	w3m-0.2.2-img-1.14
- * Based on w3m-0.2.2.
-
-2001/11/14	w3m-0.2.1-inu-1.6-img-1.13
- * Based on w3m-0.2.1-inu-1.6.
-
-2001/11/05	w3m-0.2.1-inu-1.5-img-1.12
- * Based on w3m-0.2.1-inu-1.5.
- * Fixed the bug for <area>, <map>.
- * Fixed the problem with xwnmo on kterm.
-
-2001/10/03	w3m-0.2.1-inu-1.4-img-1.11
- * Based on w3m-0.2.1-inu-1.4.
- * Fixed bug when reading from stdin.
- * Fixed "configure". Thanks > Fukagawa-san.
-
-2001/08/01	w3m-0.2.1-img-1.10
- * Adjust image position.
- * Fixed scaling image.
-
-2001/07/31	w3m-0.2.1-img-1.9
- * Fixed initImgdisplay(). Thanks > David.
-
-2001/07/29	w3m-0.2.1-img-1.8
- * Fixed "configure".
-
-2001/07/28	w3m-0.2.1-img-1.7
- * Sorry, w3m-0.2.1-img-1.6 is not complete.
- * Added "configure" and "Makefile" to the patch.
-
-2001/07/27	w3m-0.2.1-img-1.6
- * Created doc/README.img.
+  * X11, Imlib2
 
 -------------------------------------------
 Hironori Sakamoto <hsaka@mth.biglobe.ne.jp>

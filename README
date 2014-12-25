@@ -18,7 +18,7 @@ Features
 --------
 * Protocols: HTTPS, HTTP, FTP
 * Renders tables, hyperlinks, forms, lists, horizontal rules,
-headings, images/animated gifs (both in xterm).
+headings, images (in xterm).
 * vi(1)-like control scheme
 * Support for multiple character encodings: UTF-8, Shift_JIS,
 Big5, KOI8-R, etc (see charset-list)
