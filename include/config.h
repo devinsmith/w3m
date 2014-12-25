@@ -61,7 +61,7 @@
 #define USE_DIGEST_AUTH 1
 #define USE_EXTERNAL_URI_LOADER 1
 #define USE_W3MMAILER 1
-/* #undef USE_GOPHER */
+#define USE_GOPHER 1
 #define USE_ALARM 1
 #define USE_IMAGE 1
 #define USE_XFACE 1
