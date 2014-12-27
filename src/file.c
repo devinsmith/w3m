@@ -7098,7 +7098,7 @@ loadGopherDir(URLFile * uf, ParsedURL * pu, wc_ces * charset)
 gopher_end:
 	TRAP_OFF;
 
-	Strcat_charp(tmp, "</ul>\n</body>\n</html>\n");
+	Strcat_charp(tmp, "</body>\n</html>\n");
 	return tmp;
 }
 #endif				/* USE_GOPHER */
