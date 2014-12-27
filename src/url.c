@@ -108,6 +108,11 @@ static struct table2 DefaultGuess[] = {
 	{"lzh", "application/x-lha"},
 	{"ps", "application/postscript"},
 	{"pdf", "application/pdf"},
+	{"txt", "text/plain"},
+	{"rtf", "text/rtf"},
+	{"css", "text/css"},
+	{"xml", "text/xml"},
+	{"csv", "text/csv"},
 	{NULL, NULL}
 };
 
@@ -216,7 +221,6 @@ DefaultFile(enum Scheme scheme)
 		return allocStr(HTTP_DEFAULT_FILE, -1);
 #ifdef USE_GOPHER
 	case SCM_GOPHER:
-		return allocStr("1", -1);
 #endif				/* USE_GOPHER */
 	case SCM_LOCAL:
 	case SCM_LOCAL_CGI:
@@ -1544,7 +1548,7 @@ retry:
 			if (sock < 0)
 				return uf;
 			if (pu->file == NULL)
-				pu->file = "1";
+				pu->file = "/";
 			tmp = Strnew_charp(file_unquote(pu->file));
 			Strcat_char(tmp, '\n');
 		}

@@ -16,7 +16,7 @@ the release of OpenBSD 5.7.
 
 Features
 --------
-* Protocols: HTTPS, HTTP, FTP
+* Protocols: HTTPS, HTTP, FTP, Gopher
 * Renders tables, hyperlinks, forms, lists, horizontal rules,
 headings, images (in xterm).
 * vi(1)-like control scheme
@@ -31,6 +31,7 @@ Goals
 Transport Layer Security (HTTPS) cleanly. (complete)
 * Format the code to a more readable style where every block is
 indented. (complete)
+* Improve Gopher support (mostly complete)
 * Clean up code for readability and easier auditing.
 * Use secure string handling everywhere. Carefully check each
 call is correct and cannot lead to buffer overflows and other

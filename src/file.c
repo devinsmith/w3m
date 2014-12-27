@@ -1864,25 +1864,20 @@ load_doc:
 	}
 #ifdef USE_GOPHER
 	else if (pu.scheme == SCM_GOPHER) {
-		switch (*pu.file) {
-		case '0':
-			t = "text/plain";
-			break;
-		case '1':
-		case 'm':
+		char *mime_type;
+		if (pu.file[strlen(pu.file) - 1] == '/') {
 			page = loadGopherDir(&f, &pu, &charset);
 			t = "gopher:directory";
 			TRAP_OFF;
 			goto page_loaded;
-		case 's':
-			t = "audio/basic";
-			break;
-		case 'g':
-			t = "image/gif";
-			break;
-		case 'h':
-			t = "text/html";
-			break;
+		}
+		mime_type = guessContentType(pu.file);
+		if (mime_type != NULL) {
+			t = mime_type;
+		} else if (strchr(pu.file, '.') == NULL) {
+			t = "text/plain";
+		} else {
+			t = "application/octet-stream";
 		}
 	}
 #endif				/* USE_GOPHER */
@@ -6960,6 +6955,9 @@ loadHTMLString(Str page)
 Str
 loadGopherDir(URLFile * uf, ParsedURL * pu, wc_ces * charset)
 {
+	char type;
+	int begin_message = FALSE;
+	int begin_list = FALSE;
 	Str volatile tmp;
 	Str lbuf, name, file, host, port;
 	char *volatile p, *volatile q;
@@ -6970,19 +6968,18 @@ loadGopherDir(URLFile * uf, ParsedURL * pu, wc_ces * charset)
 
 	tmp = parsedURL2Str(pu);
 	p = html_quote(tmp->ptr);
-	tmp =
-		convertLine(NULL, Strnew_charp(file_unquote(tmp->ptr)), RAW_MODE,
-			    charset, doc_charset);
+	tmp = convertLine(NULL, Strnew_charp(file_unquote(tmp->ptr)),
+	    RAW_MODE, charset, doc_charset);
 	q = html_quote(tmp->ptr);
-	tmp = Strnew_m_charp("<html>\n<head>\n<base href=\"", p, "\">\n<title>", q,
-			     "</title>\n</head>\n<body>\n<h1>Index of ", q,
-			     "</h1>\n<table>\n", NULL);
+	tmp = Strnew_m_charp("<html>\n<head>\n<base href=\"", p, "\">\n"
+		"<title>", q, "</title>\n</head>\n<body>\n"
+		"<h1>Index of ", q, "</h1>\n", NULL);
 
 	if (SETJMP(AbortLoading) != 0)
 		goto gopher_end;
 	TRAP_ON;
 
-	while (1) {
+	for (;;) {
 		if (lbuf = StrUFgets(uf), lbuf->length == 0)
 			break;
 		if (lbuf->ptr[0] == '.' &&
@@ -7008,40 +7005,100 @@ loadGopherDir(URLFile * uf, ParsedURL * pu, wc_ces * charset)
 		for (q = p; *q && *q != '\t' && *q != '\r' && *q != '\n'; q++);
 		port = Strnew_charp_n(p, q - p);
 
-		switch (name->ptr[0]) {
-		case '0':
-			p = "[text file]";
-			break;
-		case '1':
-			p = "[directory]";
-			break;
-		case 'm':
-			p = "[message]";
-			break;
-		case 's':
-			p = "[sound]";
-			break;
-		case 'g':
-			p = "[gif]";
-			break;
-		case 'h':
-			p = "[HTML]";
-			break;
-		default:
-			p = "[unsupported]";
-			break;
+		type = name->ptr[0];
+		/* Message, informational ('i') or error ('3') */
+		if (type == 'i' || type == '3') {
+			if (begin_list) {
+				Strcat_charp(tmp, "</table>\n");
+				begin_list = FALSE;
+			}
+
+			if (!begin_message) {
+				Strcat_charp(tmp, "<p>\n");
+				begin_message = TRUE;
+			} else {
+				Strcat_charp(tmp, "<br>\n");
+			}
+
+			Strcat_charp(tmp, html_quote(name->ptr + 1));
+		} else {
+			/* Link */
+			if (begin_message) {
+				Strcat_charp(tmp, "</p>\n");
+				begin_message = FALSE;
+			}
+			if (!begin_list) {
+				Strcat_charp(tmp, "<table>\n");
+				begin_list = TRUE;
+			}
+			switch (name->ptr[0]) {
+			case '0':
+				p = "[text]";
+				break;
+			case '1':
+				p = "[dir]";
+				break;
+			case '2':
+				p = "[cso]";
+				break;
+			case '4':
+				p = "[binhex]";
+				break;
+			case '5':
+				p = "[archive]";
+				break;
+			case '6':
+				p = "[uue]";
+				break;
+			case '7':
+				p = "[search]";
+				break;
+			case '8':
+				p = "[telnet]";
+				break;
+			case '9':
+				p = "[bin]";
+				break;
+			case 'g':
+				p = "[gif]";
+				break;
+			case 'h':
+				p = "[html]";
+				break;
+			case 'I':
+				p = "[image]";
+				break;
+			case 's':
+				p = "[sound]";
+				break;
+			case 'T':
+				p = "[tn3270]";
+				break;
+			default:
+				p = "[???]";
+				break;
+			}
+			q = Strnew_m_charp(
+			    "gopher://", host->ptr, ":", port->ptr,
+			    file->ptr, type != '1' ? "" : "/", NULL)->ptr;
+			Strcat_m_charp(tmp, "<tr>\n"
+			    "<td>", p, "</td>\n"
+			    "<td><a href=\"",
+			    html_quote(url_quote_conv(q, *charset)), "\">",
+			    html_quote(name->ptr + 1), "</a></td>\n",
+			    "</tr>\n", NULL);
 		}
-		q = Strnew_m_charp("gopher://", host->ptr, ":", port->ptr,
-				   "/", file->ptr, NULL)->ptr;
-		Strcat_m_charp(tmp, "<a href=\"",
-			       html_quote(url_quote_conv(q, *charset)),
-		       "\">", p, html_quote(name->ptr + 1), "</a>\n", NULL);
+	}
+	if (begin_message) {
+		Strcat_charp(tmp, "</p>\n");
+	} else if (begin_list) {
+		Strcat_charp(tmp, "</table>\n");
 	}
 
 gopher_end:
 	TRAP_OFF;
 
-	Strcat_charp(tmp, "</table>\n</body>\n</html>\n");
+	Strcat_charp(tmp, "</ul>\n</body>\n</html>\n");
 	return tmp;
 }
 #endif				/* USE_GOPHER */
