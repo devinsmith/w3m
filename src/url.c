@@ -1622,11 +1622,7 @@ guessContentTypeFromTable(struct table2 * table, char *filename)
 		return NULL;
 	p++;
 	for (t = table; t->item1; t++) {
-		if (!strcmp(p, t->item1))
-			return t->item2;
-	}
-	for (t = table; t->item1; t++) {
-		if (!strcasecmp(p, t->item1))
+		if (strcasecmp(p, t->item1) == 0)
 			return t->item2;
 	}
 	return NULL;
