@@ -540,7 +540,7 @@ inputLineHistSearch(char *prompt, char *def_str, int flag,
 	extern struct mailcap *searchExtViewer(char *type);
 	extern Str unquote_mailcap(char *qstr, char *type, char *name, char *attr,
 				    int *mc_stat);
-	extern char *guessContentType(char *filename);
+	extern const char *guessContentType(const char *filename);
 	extern TextList *make_domain_list(char *domain_list);
 	extern int check_no_proxy(char *domain);
 	extern InputStream openFTPStream(ParsedURL * pu, URLFile * uf);

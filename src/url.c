@@ -1608,11 +1608,11 @@ add_index_file(ParsedURL * pu, URLFile * uf)
 	}
 }
 
-static char *
-guessContentTypeFromTable(struct table2 * table, char *filename)
+static const char *
+guessContentTypeFromTable(struct table2 * table, const char *filename)
 {
 	struct table2 *t;
-	char *p;
+	const char *p;
 	if (table == NULL)
 		return NULL;
 	p = &filename[strlen(filename) - 1];
@@ -1628,10 +1628,10 @@ guessContentTypeFromTable(struct table2 * table, char *filename)
 	return NULL;
 }
 
-char *
-guessContentType(char *filename)
+const char *
+guessContentType(const char *filename)
 {
-	char *ret;
+	const char *ret;
 	int i;
 
 	if (filename == NULL)
