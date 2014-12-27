@@ -1727,8 +1727,7 @@ load_doc:
 				      parsedURL2Str(&pu)->ptr)->ptr, FALSE);
 			break;
 		default:
-			assert(FALSE); /* NOTREACHED */
-			break;
+			return NULL;
 		}
 		if (page && page->length > 0)
 			goto page_loaded;
