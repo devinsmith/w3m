@@ -7065,6 +7065,7 @@ loadGopherDir(URLFile * uf, ParsedURL * pu, wc_ces * charset)
 			case 'h':
 				p = "[html]";
 				break;
+			case 'p': /* non-standard, used by floodgap */
 			case 'I':
 				p = "[image]";
 				break;
