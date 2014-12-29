@@ -716,7 +716,6 @@ addch(char pc)
 {
 	l_prop *pr;
 	int dest, i;
-	short *dirty;
 #ifdef USE_M17N
 	static Str tmp = NULL;
 	char **p;
@@ -738,7 +737,6 @@ addch(char pc)
 		return;
 	p = ScreenImage[CurLine]->lineimage;
 	pr = ScreenImage[CurLine]->lineprop;
-	dirty = &ScreenImage[CurLine]->isdirty;
 
 #ifndef USE_M17N
 	/*

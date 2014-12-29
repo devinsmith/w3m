@@ -7620,7 +7620,6 @@ int
 save2tmp(URLFile uf, char *tmpf)
 {
 	FILE *ff;
-	int check;
 	clen_t linelen = 0, trbyte = 0;
 	Str buf;
 	MySignalHandler(*volatile prevtrap) (SIGNAL_ARG) = NULL;
@@ -7636,7 +7635,6 @@ save2tmp(URLFile uf, char *tmpf)
 		goto _end;
 	}
 	TRAP_ON;
-	check = 0;
 	buf = Strnew_size(SAVE_BUF_SIZE);
 	while (UFread(&uf, buf, SAVE_BUF_SIZE)) {
 		if (Strfputs(buf, ff) != buf->length) {

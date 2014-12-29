@@ -1026,7 +1026,7 @@ process_mMouse(int btn, int x, int y)
 {
 	Menu *menu;
 	int mselect, i;
-	static int press_btn = MOUSE_BTN_RESET, press_x, press_y;
+	static int press_btn = MOUSE_BTN_RESET, press_y;
 	char c = ' ';
 
 	menu = CurrentMenu;
@@ -1086,7 +1086,6 @@ process_mMouse(int btn, int x, int y)
 	}
 	if (btn != MOUSE_BTN4_DOWN_RXVT || press_btn == MOUSE_BTN_RESET) {
 		press_btn = btn;
-		press_x = x;
 		press_y = y;
 	} else {
 		press_btn = MOUSE_BTN_RESET;

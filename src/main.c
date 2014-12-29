@@ -1599,15 +1599,11 @@ static int
 dispincsrch(int ch, Str buf, Lineprop * prop)
 {
 	static Buffer sbuf;
-	static Line *currentLine;
-	static int pos;
 	char *str;
 	int do_next_search = FALSE;
 
 	if (ch == 0 && buf == NULL) {
 		SAVE_BUFPOSITION(&sbuf);	/* search starting point */
-		currentLine = sbuf.currentLine;
-		pos = sbuf.pos;
 		return -1;
 	}
 	str = buf->ptr;
@@ -1653,8 +1649,6 @@ dispincsrch(int ch, Str buf, Lineprop * prop)
 		arrangeCursor(Currentbuf);
 		srchcore(str, searchRoutine);
 		arrangeCursor(Currentbuf);
-		currentLine = Currentbuf->currentLine;
-		pos = Currentbuf->pos;
 	}
 	displayBuffer(Currentbuf, B_FORCE_REDRAW);
 	clear_mark(Currentbuf->currentLine);
@@ -2867,7 +2861,6 @@ handleMailto(char *url)
 /* follow HREF link */
 DEFUN(followA, GOTO_LINK, "Go to current link")
 {
-	Line *l;
 	Anchor *a;
 	ParsedURL u;
 #ifdef USE_IMAGE
@@ -2877,7 +2870,6 @@ DEFUN(followA, GOTO_LINK, "Go to current link")
 
 	if (Currentbuf->firstLine == NULL)
 		return;
-	l = Currentbuf->currentLine;
 
 #ifdef USE_IMAGE
 	a = retrieveCurrentImg(Currentbuf);
@@ -2951,13 +2943,11 @@ bufferA(void)
 /* view inline image */
 DEFUN(followI, VIEW_IMAGE, "View image")
 {
-	Line *l;
 	Anchor *a;
 	Buffer *buf;
 
 	if (Currentbuf->firstLine == NULL)
 		return;
-	l = Currentbuf->currentLine;
 
 	a = retrieveCurrentImg(Currentbuf);
 	if (a == NULL)
@@ -3200,7 +3190,6 @@ followForm(void)
 static void
 _followForm(int submit)
 {
-	Line *l;
 	Anchor *a, *a2;
 	char *p;
 	FormItemList *fi, *f2;
@@ -3209,7 +3198,6 @@ _followForm(int submit)
 
 	if (Currentbuf->firstLine == NULL)
 		return;
-	l = Currentbuf->currentLine;
 
 	a = retrieveCurrentForm(Currentbuf);
 	if (a == NULL)
