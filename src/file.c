@@ -31,7 +31,7 @@
 static int frame_source = 0;
 
 static char *guess_filename(char *file);
-static int _MoveFile(char *path1, char *path2);
+static int _MoveFile(const char *path1, const char *path2);
 static void uncompress_stream(URLFile * uf, char **src);
 static FILE *lessopen_stream(const char *path);
 static Buffer *
@@ -336,7 +336,7 @@ compress_application_type(int compression)
 }
 
 static char *
-uncompressed_file_type(char *path, char **ext)
+uncompressed_file_type(const char *path, char **ext)
 {
 	int len, slen;
 	Str fn;
@@ -369,7 +369,7 @@ uncompressed_file_type(char *path, char **ext)
 }
 
 static int
-setModtime(char *path, time_t modtime)
+setModtime(const char *path, time_t modtime)
 {
 	struct utimbuf t;
 	struct stat st;
@@ -7757,7 +7757,7 @@ doExternal(URLFile uf, char *path, char *type, Buffer ** bufp,
 }
 
 static int
-_MoveFile(char *path1, char *path2)
+_MoveFile(const char *path1, const char *path2)
 {
 	InputStream f1;
 	FILE *f2;
