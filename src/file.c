@@ -8023,7 +8023,7 @@ doFileSave(URLFile uf, char *defstr)
 }
 
 int
-checkCopyFile(char *path1, char *path2)
+checkCopyFile(const char *path1, const char *path2)
 {
 	struct stat st1, st2;
 
@@ -8036,7 +8036,7 @@ checkCopyFile(char *path1, char *path2)
 }
 
 int
-checkSaveFile(InputStream stream, char *path2)
+checkSaveFile(InputStream stream, const char *path2)
 {
 	struct stat st1, st2;
 	int des = ISfileno(stream);
@@ -8052,7 +8052,7 @@ checkSaveFile(InputStream stream, char *path2)
 }
 
 int
-checkOverWrite(char *path)
+checkOverWrite(const char *path)
 {
 	struct stat st;
 	char *ans;
