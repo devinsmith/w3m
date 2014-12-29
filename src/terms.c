@@ -1951,19 +1951,19 @@ touch_cursor()
 
 #ifdef __MINGW32_VERSION
 
-int 
+int
 tgetent(char *bp, char *name)
 {
 	return 0;
 }
 
-int 
+int
 tgetnum(char *id)
 {
 	return -1;
 }
 
-int 
+int
 tgetflag(char *id)
 {
 	return 0;
@@ -1980,7 +1980,7 @@ tgoto(char *cap, int col, int row)
 {
 }
 
-int 
+int
 tputs(char *str, int affcnt, int (*putc) (char))
 {
 }

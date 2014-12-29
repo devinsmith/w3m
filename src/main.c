@@ -85,7 +85,7 @@ _JBTYPE IntReturn[_JBLEN];
 
 static void delBuffer(Buffer * buf);
 static void cmd_loadfile(char *path);
-static void 
+static void
 cmd_loadURL(char *url, ParsedURL * current, char *referer,
 	    FormList * request);
 static void cmd_loadBuffer(Buffer * buf, int prop, enum LinkBuffer linkid);

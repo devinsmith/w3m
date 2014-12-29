@@ -1,9 +1,9 @@
 /* $Id: matrix.c,v 1.8 2003/04/07 16:27:10 ukai Exp $ */
 /*
  * matrix.h, matrix.c: Liner equation solver using LU decomposition.
- * 
+ *
  * by K.Okabe  Aug. 1999
- * 
+ *
  * LUfactor, LUsolve, Usolve and Lsolve, are based on the functions in Meschach
  * Library Version 1.2b.
  */

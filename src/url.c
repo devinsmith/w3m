@@ -994,7 +994,7 @@ _parsedURL2Str(ParsedURL * pu, int pass)
 {
 	Str tmp;
 	static char *scheme_str[] = {
-		"http", "gopher", "ftp", "ftp", "file", "file", "exec", 
+		"http", "gopher", "ftp", "ftp", "file", "file", "exec",
 		"data", "mailto", "https"
 	};
 

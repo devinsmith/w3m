@@ -1191,11 +1191,11 @@ AuthBasicCred(struct http_auth * ha, Str uname, Str pw, ParsedURL * pu,
 
 /*
  * RFC2617: 3.2.2 The Authorization Request Header
- * 
+ *
  * credentials	  = "Digest" digest-response digest-response  = 1#( username
  * | realm | nonce | digest-uri | response | [ algorithm ] | [cnonce] |
  * [opaque] | [message-qop] | [nonce-count]  | [auth-param] )
- * 
+ *
  * username		 = "username" "=" username-value username-value   =
  * quoted-string digest-uri	   = "uri" "=" digest-uri-value
  * digest-uri-value = request-uri   ; As specified by HTTP/1.1 message-qop
@@ -1415,10 +1415,10 @@ struct auth_param basic_auth_param[] = {
 /*
  * RFC2617: 3.2.1 The WWW-Authenticate Response Header challenge
  *   "Digest" digest-challenge
- * 
+ *
  * digest-challenge  = 1#( realm | [ domain ] | nonce | [ opaque ] |[ stale ] |
  * [ algorithm ] | [ qop-options ] | [auth-param] )
- * 
+ *
  * domain			= "domain" "=" <"> URI ( 1*SP URI ) <"> URI
  * = absoluteURI | abs_path nonce			 = "nonce" "="
  * nonce-value nonce-value	   = quoted-string opaque
@@ -2377,7 +2377,7 @@ set_breakpoint(struct readbuffer * obuf, int tag_length)
 	if (!obuf->bp.init_flag)
 		return;
 
-	memcpy(&obuf->bp.anchor, &obuf->anchor, 
+	memcpy(&obuf->bp.anchor, &obuf->anchor,
 	      sizeof(obuf->anchor));
 	obuf->bp.img_alt = obuf->img_alt;
 	obuf->bp.in_bold = obuf->in_bold;
@@ -2394,7 +2394,7 @@ static void
 back_to_breakpoint(struct readbuffer * obuf)
 {
 	obuf->flag = obuf->bp.flag;
-	memcpy(&obuf->anchor, &obuf->bp.anchor, 
+	memcpy(&obuf->anchor, &obuf->bp.anchor,
 	      sizeof(obuf->anchor));
 	obuf->img_alt = obuf->bp.img_alt;
 	obuf->in_bold = obuf->bp.in_bold;
@@ -2973,7 +2973,7 @@ close_effect0(struct readbuffer * obuf, int cmd)
 	}
 	if (i >= 0) {
 		obuf->tag_sp--;
-		memcpy(&obuf->tag_stack[i], &obuf->tag_stack[i + 1], 
+		memcpy(&obuf->tag_stack[i], &obuf->tag_stack[i + 1],
 		      (obuf->tag_sp - i) * sizeof(struct cmdtable *));
 		return 1;
 	} else if ((p = has_hidden_link(obuf, cmd)) != NULL) {
@@ -3033,7 +3033,7 @@ void
 save_fonteffect(struct html_feed_environ * h_env, struct readbuffer * obuf)
 {
 	if (obuf->fontstat_sp < FONT_STACK_SIZE)
-		memcpy(obuf->fontstat_stack[obuf->fontstat_sp], obuf->fontstat, 
+		memcpy(obuf->fontstat_stack[obuf->fontstat_sp], obuf->fontstat,
 		      FONTSTAT_SIZE);
 	obuf->fontstat_sp++;
 	if (obuf->in_bold)
