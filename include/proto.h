@@ -158,7 +158,7 @@ extern Str searchURIMethods(ParsedURL * pu);
 extern void chkExternalURIBuffer(Buffer * buf);
 #endif
 extern ParsedURL *schemeToProxy(enum Scheme scheme);
-extern void examineFile(char *path, URLFile * uf);
+extern void examineFile(const char *path, URLFile * uf);
 extern char *acceptableEncoding();
 extern int dir_exist(char *path);
 extern int is_html_type(const char *type);
@@ -631,8 +631,8 @@ inputLineHistSearch(char *prompt, char *def_str, int flag,
 	extern void setup_child(int child, int i, int f);
 	extern void myExec(char *command);
 	extern void mySystem(char *command, int background);
-	extern Str myExtCommand(char *cmd, char *arg, int redirect);
-	extern Str myEditor(char *cmd, char *file, int line);
+	extern Str myExtCommand(const char *cmd, const char *arg, int redirect);
+	extern Str myEditor(const char *cmd, const char *file, int line);
 	extern char *file_to_url(char *file);
 #ifdef USE_M17N
 	extern char *url_unquote_conv(char *url, wc_ces charset);

@@ -1406,10 +1406,10 @@ mySystem(char *command, int background)
 }
 
 Str
-myExtCommand(char *cmd, char *arg, int redirect)
+myExtCommand(const char *cmd, const char *arg, int redirect)
 {
 	Str tmp = NULL;
-	char *p;
+	const char *p;
 	int set_arg = FALSE;
 
 	for (p = cmd; *p; p++) {
@@ -1434,10 +1434,10 @@ myExtCommand(char *cmd, char *arg, int redirect)
 }
 
 Str
-myEditor(char *cmd, char *file, int line)
+myEditor(const char *cmd, const char *file, int line)
 {
 	Str tmp = NULL;
-	char *p;
+	const char *p;
 	int set_file = FALSE, set_line = FALSE;
 
 	for (p = cmd; *p; p++) {

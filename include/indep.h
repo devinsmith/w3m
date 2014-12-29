@@ -63,7 +63,7 @@ extern char *url_quote(char *str);
 extern Str Str_url_unquote(Str x, int is_form, int safe);
 extern Str Str_form_quote(Str x);
 #define Str_form_unquote(x) Str_url_unquote((x), TRUE, FALSE)
-extern char *shell_quote(char *str);
+extern const char *shell_quote(const char *str);
 
 extern char *w3m_auxbin_dir();
 extern char *w3m_lib_dir();

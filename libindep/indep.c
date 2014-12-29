@@ -631,11 +631,11 @@ Str_url_unquote(Str x, int is_form, int safe)
 	return x;
 }
 
-char *
-shell_quote(char *str)
+const char *
+shell_quote(const char *str)
 {
 	Str tmp = NULL;
-	char *p;
+	const char *p;
 
 	for (p = str; *p; p++) {
 		if (is_shell_unsafe(*p)) {

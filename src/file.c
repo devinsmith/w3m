@@ -33,7 +33,7 @@ static int frame_source = 0;
 static char *guess_filename(char *file);
 static int _MoveFile(char *path1, char *path2);
 static void uncompress_stream(URLFile * uf, char **src);
-static FILE *lessopen_stream(char *path);
+static FILE *lessopen_stream(const char *path);
 static Buffer *
 loadcmdout(char *cmd,
 	   Buffer * (*loadproc) (URLFile *, Buffer *),
@@ -383,7 +383,7 @@ setModtime(char *path, time_t modtime)
 }
 
 void
-examineFile(char *path, URLFile * uf)
+examineFile(const char *path, URLFile * uf)
 {
 	struct stat stbuf;
 
@@ -8175,7 +8175,7 @@ uncompress_stream(URLFile * uf, char **src)
 }
 
 static FILE *
-lessopen_stream(char *path)
+lessopen_stream(const char *path)
 {
 	char *lessopen;
 	FILE *fp;

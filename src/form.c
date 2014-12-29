@@ -743,7 +743,7 @@ form_write_from_file(FILE * f, char *boundary, char *name, char *filename,
 	FILE *fd;
 	struct stat st;
 	int c;
-	char *type;
+	const char *type;
 
 	fprintf(f, "--%s\r\n", boundary);
 	fprintf(f,
