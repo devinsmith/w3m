@@ -201,7 +201,7 @@ check_local_cgi(char *file, int status)
 }
 
 void
-set_environ(char *var, char *value)
+set_environ(const char *var, const char *value)
 {
 	if (var != NULL && value != NULL)
 		setenv(var, value, 1);

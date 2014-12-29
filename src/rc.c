@@ -1440,33 +1440,33 @@ rcFile(char *base)
 }
 
 char *
-auxbinFile(char *base)
+auxbinFile(const char *base)
 {
 	return expandPath(Strnew_m_charp(w3m_auxbin_dir(), "/", base, NULL)->ptr);
 }
 
 #if 0				/* not used */
 char *
-libFile(char *base)
+libFile(const char *base)
 {
 	return expandPath(Strnew_m_charp(w3m_lib_dir(), "/", base, NULL)->ptr);
 }
 #endif
 
 char *
-etcFile(char *base)
+etcFile(const char *base)
 {
 	return expandPath(Strnew_m_charp(w3m_etc_dir(), "/", base, NULL)->ptr);
 }
 
 char *
-confFile(char *base)
+confFile(const char *base)
 {
 	return expandPath(Strnew_m_charp(w3m_conf_dir(), "/", base, NULL)->ptr);
 }
 
 char *
-helpFile(char *base)
+helpFile(const char *base)
 {
 	return expandPath(Strnew_m_charp(w3m_help_dir(), "/", base, NULL)->ptr);
 }

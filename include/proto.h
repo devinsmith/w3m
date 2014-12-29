@@ -161,7 +161,7 @@ extern ParsedURL *schemeToProxy(enum Scheme scheme);
 extern void examineFile(char *path, URLFile * uf);
 extern char *acceptableEncoding();
 extern int dir_exist(char *path);
-extern int is_html_type(char *type);
+extern int is_html_type(const char *type);
 #ifdef USE_M17N
 extern char **get_symbol(wc_ces charset, int *width);
 extern char **set_symbol(int width);
@@ -606,14 +606,14 @@ inputLineHistSearch(char *prompt, char *def_str, int flag,
 	extern void panel_set_option(struct parsed_tagarg *);
 	extern void sync_with_option(void);
 	extern char *rcFile(char *base);
-	extern char *etcFile(char *base);
-	extern char *confFile(char *base);
-	extern char *auxbinFile(char *base);
-	extern char *libFile(char *base);
-	extern char *helpFile(char *base);
+	extern char *etcFile(const char *base);
+	extern char *confFile(const char *base);
+	extern char *auxbinFile(const char *base);
+	extern char *libFile(const char *base);
+	extern char *helpFile(const char *base);
 	extern Str localCookie(void);
 	extern Str loadLocalDir(char *dirname);
-	extern void set_environ(char *var, char *value);
+	extern void set_environ(const char *var, const char *value);
 	extern FILE *localcgi_post(char *, char *, FormList *, char *);
 #define localcgi_get(u, q, r) localcgi_post((u), (q), NULL, (r))
 	extern FILE *openSecretFile(char *fname);

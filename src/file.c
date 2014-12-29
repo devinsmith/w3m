@@ -276,7 +276,7 @@ is_dump_text_type(char *type)
 }
 
 static int
-is_text_type(char *type)
+is_text_type(const char *type)
 {
 	return (type == NULL || type[0] == '\0' ||
 		strncasecmp(type, "text/", 5) == 0 ||
@@ -293,7 +293,7 @@ is_plain_text_type(char *type)
 }
 
 int
-is_html_type(char *type)
+is_html_type(const char *type)
 {
 	return (type && (strcasecmp(type, "text/html") == 0 ||
 			 strcasecmp(type, "application/xhtml+xml") == 0));
