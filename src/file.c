@@ -178,6 +178,27 @@ static struct compression_decoder {
 	},
 };
 
+static struct gopher_type {
+	char id;
+	char *display;
+	char *mime;
+} gopher_types[] = {
+	{'0', "[text]", "text/plain"},
+	{'1', "[dir]", NULL},
+	{'2', "[cso]", NULL},
+	{'3', "[error]", "text/plain"},
+	{'4', "[binhex]", NULL},
+	{'5', "[archive]", NULL},
+	{'6', "[uue]", NULL},
+	{'7', "[search]", NULL},
+	{'8', "[telnet]", NULL},
+	{'9', "[bin]", NULL},
+	{'+', "[mirror]", NULL},
+	{'T', "[tn3270]", NULL},
+	{'g', "[gif]", "image/gif"},
+	{'I', "[image]", NULL}
+};
+
 #define SAVE_BUF_SIZE 1536
 
 static MySignalHandler
@@ -1876,6 +1897,16 @@ load_doc:
 		} else if (strchr(pu.file, '.') == NULL) {
 			t = "text/plain";
 		} else {
+			size_t i;
+			for (i = 0; i < (sizeof(gopher_types) /
+			    sizeof(struct gopher_type)); ++i) {
+				if (pu.file[0] == gopher_types[i].id) {
+					t = gopher_types[i].mime;
+					break;
+				}
+			}
+		}
+		if (t == NULL) {
 			t = "application/octet-stream";
 		}
 	}
@@ -7021,6 +7052,10 @@ loadGopherDir(URLFile * uf, ParsedURL * pu, wc_ces * charset)
 
 			Strcat_charp(tmp, html_quote(name->ptr + 1));
 		} else {
+			char unknown_type[3];
+			char type_digit[] = { type, '\0' };
+			size_t i;
+
 			/* Link */
 			if (begin_message) {
 				Strcat_charp(tmp, "</p>\n");
@@ -7030,57 +7065,24 @@ loadGopherDir(URLFile * uf, ParsedURL * pu, wc_ces * charset)
 				Strcat_charp(tmp, "<table>\n");
 				begin_list = TRUE;
 			}
-			switch (name->ptr[0]) {
-			case '0':
-				p = "[text]";
-				break;
-			case '1':
-				p = "[dir]";
-				break;
-			case '2':
-				p = "[cso]";
-				break;
-			case '4':
-				p = "[binhex]";
-				break;
-			case '5':
-				p = "[archive]";
-				break;
-			case '6':
-				p = "[uue]";
-				break;
-			case '7':
-				p = "[search]";
-				break;
-			case '8':
-				p = "[telnet]";
-				break;
-			case '9':
-				p = "[bin]";
-				break;
-			case 'g':
-				p = "[gif]";
-				break;
-			case 'h':
-				p = "[html]";
-				break;
-			case 'p': /* non-standard, used by floodgap */
-			case 'I':
-				p = "[image]";
-				break;
-			case 's':
-				p = "[sound]";
-				break;
-			case 'T':
-				p = "[tn3270]";
-				break;
-			default:
-				p = "[???]";
-				break;
+			for (i = 0; i < (sizeof(gopher_types) /
+			    sizeof(struct gopher_type)); ++i) {
+				if (type == gopher_types[i].id) {
+					p = gopher_types[i].display;
+					break;
+				}
 			}
+			if (p == NULL) {
+				unknown_type[0] = '[';
+				unknown_type[1] = type;
+				unknown_type[2] = ']';
+				p = unknown_type;
+			}
+
 			q = Strnew_m_charp(
-			    "gopher://", host->ptr, ":", port->ptr,
-			    file->ptr, type != '1' ? "" : "/", NULL)->ptr;
+			    "gopher://", host->ptr, ":", port->ptr, "/",
+			    type_digit, file->ptr, type != '1' ? "" : "/",
+			    NULL)->ptr;
 			Strcat_m_charp(tmp, "<tr>\n"
 			    "<td>", p, "</td>\n"
 			    "<td><a href=\"",

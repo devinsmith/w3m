@@ -221,6 +221,7 @@ DefaultFile(enum Scheme scheme)
 		return allocStr(HTTP_DEFAULT_FILE, -1);
 #ifdef USE_GOPHER
 	case SCM_GOPHER:
+		return allocStr("1/", -1);
 #endif				/* USE_GOPHER */
 	case SCM_LOCAL:
 	case SCM_LOCAL_CGI:
@@ -1548,11 +1549,11 @@ retry:
 			if (sock < 0)
 				return uf;
 			if (pu->file == NULL)
-				pu->file = "/";
+				pu->file = "1/";
 			tmp = Strnew_charp(file_unquote(pu->file));
 			Strcat_char(tmp, '\n');
 		}
-		write(sock, tmp->ptr, tmp->length);
+		write(sock, tmp->ptr + 1, tmp->length - 1);
 		break;
 #endif				/* USE_GOPHER */
 	case SCM_DATA:
