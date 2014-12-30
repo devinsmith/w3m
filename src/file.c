@@ -7052,7 +7052,7 @@ loadGopherDir(URLFile * uf, ParsedURL * pu, wc_ces * charset)
 
 			Strcat_charp(tmp, html_quote(name->ptr + 1));
 		} else {
-			char unknown_type[3];
+			char unknown_type[] = "[?]";
 			char type_digit[] = { type, '\0' };
 			size_t i;
 
@@ -7065,6 +7065,8 @@ loadGopherDir(URLFile * uf, ParsedURL * pu, wc_ces * charset)
 				Strcat_charp(tmp, "<table>\n");
 				begin_list = TRUE;
 			}
+
+			p = NULL;
 			for (i = 0; i < (sizeof(gopher_types) /
 			    sizeof(struct gopher_type)); ++i) {
 				if (type == gopher_types[i].id) {
@@ -7073,9 +7075,7 @@ loadGopherDir(URLFile * uf, ParsedURL * pu, wc_ces * charset)
 				}
 			}
 			if (p == NULL) {
-				unknown_type[0] = '[';
 				unknown_type[1] = type;
-				unknown_type[2] = ']';
 				p = unknown_type;
 			}
 
