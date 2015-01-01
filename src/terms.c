@@ -1565,13 +1565,7 @@ getch(void)
 {
 	char c;
 
-	while (
-#ifdef SUPPORT_WIN9X_CONSOLE_MBCS
-	       read_win32_console(&c, 1)
-#else
-	       read(tty, &c, 1)
-#endif
-	       < (int) 1) {
+	while (read(tty, &c, 1) < 1) {
 		if (errno == EINTR || errno == EAGAIN)
 			continue;
 		/* error happend on read(2) */

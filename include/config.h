@@ -168,10 +168,6 @@ typedef RETSIGTYPE MySignalHandler;
 #define __CYGWIN__
 #endif
 
-#if defined( __CYGWIN__ )
-#define SUPPORT_WIN9X_CONSOLE_MBCS 1
-#endif
-
 #if defined(__DJGPP__)
 #define DEFAULT_TERM	"dosansi"
 #else
