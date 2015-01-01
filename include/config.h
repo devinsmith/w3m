@@ -173,7 +173,6 @@ typedef RETSIGTYPE MySignalHandler;
 #endif
 
 #if defined( __CYGWIN__ )
-#define SUPPORT_NETBIOS_SHARE 1
 #define SUPPORT_WIN9X_CONSOLE_MBCS 1
 #endif
 

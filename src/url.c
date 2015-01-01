@@ -705,7 +705,6 @@ analyze_url:
 		break;
 	}
 analyze_file:
-#ifndef SUPPORT_NETBIOS_SHARE
 	if (p_url->scheme == SCM_LOCAL && p_url->user == NULL &&
 	    p_url->host != NULL && *p_url->host != '\0' &&
 	    strcmp(p_url->host, "localhost")) {
@@ -722,7 +721,6 @@ analyze_file:
 		if (p_url->port == 0)
 			p_url->port = DefaultPort[SCM_FTP];
 	}
-#endif
 	if ((*p == '\0' || *p == '#' || *p == '?') && p_url->host == NULL) {
 		p_url->file = "";
 		goto do_query;
@@ -967,15 +965,7 @@ parseURL2(char *url, ParsedURL * pu, ParsedURL * current)
 			pu->file = cleanupName(pu->file);
 		}
 		if (pu->scheme == SCM_LOCAL) {
-#ifdef SUPPORT_NETBIOS_SHARE
-			if (pu->host && strcmp(pu->host, "localhost") != 0) {
-				Str tmp = Strnew_charp("//");
-				Strcat_m_charp(tmp, pu->host,
-				 cleanupName(file_unquote(pu->file)), NULL);
-				pu->real_file = tmp->ptr;
-			} else
-#endif
-				pu->real_file = cleanupName(file_unquote(pu->file));
+			pu->real_file = cleanupName(file_unquote(pu->file));
 		}
 	}
 }
