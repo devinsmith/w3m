@@ -583,12 +583,6 @@ parseURL(char *url, ParsedURL * p_url, ParsedURL * current)
 			copyParsedURL(p_url, current);
 		goto do_label;
 	}
-#ifdef SUPPORT_DOS_DRIVE_PREFIX
-	if (IS_ALPHA(*p) && (p[1] == ':' || p[1] == '|')) {
-		p_url->scheme = SCM_LOCAL;
-		goto analyze_file;
-	}
-#endif				/* SUPPORT_DOS_DRIVE_PREFIX */
 	/* search for scheme */
 	p_url->scheme = getURLScheme(&p);
 	if (p_url->scheme == SCM_MISSING) {
@@ -639,16 +633,11 @@ parseURL(char *url, ParsedURL * p_url, ParsedURL * current)
 	}
 	/* after here, p begins with // */
 	if (p_url->scheme == SCM_LOCAL) {	/* file://foo           */
-		if (p[2] == '/' || p[2] == '~'
 		/*
 		 * <A HREF="file:///foo">file:///foo</A>  or <A
 		 * HREF="file://~user">file://~user</A>
 		 */
-#ifdef SUPPORT_DOS_DRIVE_PREFIX
-		    || (IS_ALPHA(p[2]) && (p[3] == ':' || p[3] == '|'))
-		/* <A HREF="file://DRIVE/foo">file://DRIVE/foo</A> */
-#endif				/* SUPPORT_DOS_DRIVE_PREFIX */
-			) {
+		if (p[2] == '/' || p[2] == '~') {
 			p += 2;
 			goto analyze_file;
 		}
@@ -725,20 +714,6 @@ analyze_file:
 		p_url->file = "";
 		goto do_query;
 	}
-#ifdef SUPPORT_DOS_DRIVE_PREFIX
-	if (p_url->scheme == SCM_LOCAL) {
-		q = p;
-		if (*q == '/')
-			q++;
-		if (IS_ALPHA(q[0]) && (q[1] == ':' || q[1] == '|')) {
-			if (q[1] == '|') {
-				p = allocStr(q, -1);
-				p[1] = ':';
-			} else
-				p = q;
-		}
-	}
-#endif
 
 	q = p;
 #ifdef USE_GOPHER
@@ -854,15 +829,7 @@ parseURL2(char *url, ParsedURL * pu, ParsedURL * current)
 		return;
 	if (pu->scheme == SCM_LOCAL) {
 		char *q = expandName(file_unquote(pu->file));
-#ifdef SUPPORT_DOS_DRIVE_PREFIX
-		Str drive;
-		if (IS_ALPHA(q[0]) && q[1] == ':') {
-			drive = Strnew_charp_n(q, 2);
-			Strcat_charp(drive, file_quote(q + 2));
-			pu->file = drive->ptr;
-		} else
-#endif
-			pu->file = file_quote(q);
+		pu->file = file_quote(q);
 	}
 	if (current && (pu->scheme == current->scheme ||
 		 (pu->scheme == SCM_FTP && current->scheme == SCM_FTPDIR) ||
@@ -889,10 +856,6 @@ parseURL2(char *url, ParsedURL * pu, ParsedURL * current)
 				    pu->scheme != SCM_GOPHER &&
 #endif				/* USE_GOPHER */
 				    pu->file[0] != '/'
-#ifdef SUPPORT_DOS_DRIVE_PREFIX
-				    && !(pu->scheme == SCM_LOCAL && IS_ALPHA(pu->file[0])
-					 && pu->file[1] == ':')
-#endif
 				) {
 				/* file is relative [process 1] */
 				p = pu->file;
@@ -926,9 +889,6 @@ parseURL2(char *url, ParsedURL * pu, ParsedURL * current)
 	}
 	if (pu->file) {
 		if (pu->scheme == SCM_LOCAL && pu->file[0] != '/' &&
-#ifdef SUPPORT_DOS_DRIVE_PREFIX	/* for 'drive:' */
-		    !(IS_ALPHA(pu->file[0]) && pu->file[1] == ':') &&
-#endif
 		    strcmp(pu->file, "-")) {
 			/* local file, relative path */
 			tmp = Strnew_charp(CurrentDir);
@@ -1028,13 +988,7 @@ _parsedURL2Str(ParsedURL * pu, int pass)
 			Strcat(tmp, Sprintf("%d", pu->port));
 		}
 	}
-	if ((pu->file == NULL || (pu->file[0] != '/'
-#ifdef SUPPORT_DOS_DRIVE_PREFIX
-				  && !(IS_ALPHA(pu->file[0])
-				       && pu->file[1] == ':'
-				       && pu->host == NULL)
-#endif
-				  )))
+	if (pu->file == NULL || pu->file[0] != '/')
 		Strcat_char(tmp, '/');
 	Strcat_charp(tmp, pu->file);
 	if (pu->scheme == SCM_FTPDIR && Strlastchar(tmp) != '/')

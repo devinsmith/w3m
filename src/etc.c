@@ -1505,17 +1505,8 @@ char *
 file_to_url(char *file)
 {
 	Str tmp;
-#ifdef SUPPORT_DOS_DRIVE_PREFIX
-	char *drive = NULL;
-#endif
 
 	file = expandPath(file);
-#ifdef SUPPORT_DOS_DRIVE_PREFIX
-	if (IS_ALPHA(file[0]) && file[1] == ':') {
-		drive = allocStr(file, 2);
-		file += 2;
-	} else
-#endif
 	if (file[0] != '/') {
 		tmp = Strnew_charp(CurrentDir);
 		if (Strlastchar(tmp) != '/')
@@ -1524,10 +1515,6 @@ file_to_url(char *file)
 		file = tmp->ptr;
 	}
 	tmp = Strnew_charp("file://");
-#ifdef SUPPORT_DOS_DRIVE_PREFIX
-	if (drive)
-		Strcat_charp(tmp, drive);
-#endif
 	Strcat_charp(tmp, file_quote(cleanupName(file)));
 	return tmp->ptr;
 }

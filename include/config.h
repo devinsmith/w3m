@@ -169,10 +169,6 @@ typedef RETSIGTYPE MySignalHandler;
 #endif
 
 #if defined( __CYGWIN__ )
-#define SUPPORT_DOS_DRIVE_PREFIX 1
-#endif
-
-#if defined( __CYGWIN__ )
 #define SUPPORT_WIN9X_CONSOLE_MBCS 1
 #endif
 
