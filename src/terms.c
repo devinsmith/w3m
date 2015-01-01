@@ -16,11 +16,7 @@
 #ifdef HAVE_SYS_SELECT_H
 #include <sys/select.h>
 #endif
-#ifndef __MINGW32_VERSION
 #include <sys/ioctl.h>
-#else
-#include <winsock.h>
-#endif				/* __MINGW32_VERSION */
 #ifdef USE_MOUSE
 #ifdef USE_GPM
 #include <gpm.h>
@@ -87,41 +83,6 @@ typedef struct sgttyb TerminalMode;
 #define TerminalGet(fd,x)       ioctl(fd,TIOCGETP,x)
 #define MODEFLAG(d)     ((d).sg_flags)
 #endif				/* HAVE_SGTTY_H */
-
-#ifdef __MINGW32_VERSION
-/* dummy struct */
-typedef unsigned char cc_t;
-typedef unsigned int speed_t;
-typedef unsigned int tcflag_t;
-
-#define NCCS 32
-struct termios {
-	tcflag_t c_iflag;	/* input mode flags */
-	tcflag_t c_oflag;	/* output mode flags */
-	tcflag_t c_cflag;	/* control mode flags */
-	tcflag_t c_lflag;	/* local mode flags */
-	cc_t c_line;		/* line discipline */
-	cc_t c_cc[NCCS];	/* control characters */
-	speed_t c_ispeed;	/* input speed */
-	speed_t c_ospeed;	/* output speed */
-};
-typedef struct termios TerminalMode;
-#define TerminalSet(fd,x)       (0)
-#define TerminalGet(fd,x)       (0)
-#define MODEFLAG(d)     (0)
-
-/* dummy defines */
-#define SIGHUP (0)
-#define SIGQUIT (0)
-#define ECHO (0)
-#define ISIG (0)
-#define VEOF (0)
-#define ICANON (0)
-#define IXON (0)
-#define IXOFF (0)
-
-char *ttyname(int);
-#endif				/* __MINGW32_VERSION */
 
 #define MAX_LINE        200
 #define MAX_COLUMN      400
@@ -345,7 +306,6 @@ set_tty(void)
 void
 ttymode_set(int mode, int imode)
 {
-#ifndef __MINGW32_VERSION
 	TerminalMode ioval;
 
 	TerminalGet(tty, &ioval);
@@ -360,13 +320,11 @@ ttymode_set(int mode, int imode)
 		printf("Error occured while set %x: errno=%d\n", mode, errno);
 		reset_error_exit(SIGNAL_ARGLIST);
 	}
-#endif
 }
 
 void
 ttymode_reset(int mode, int imode)
 {
-#ifndef __MINGW32_VERSION
 	TerminalMode ioval;
 
 	TerminalGet(tty, &ioval);
@@ -381,7 +339,6 @@ ttymode_reset(int mode, int imode)
 		printf("Error occured while reset %x: errno=%d\n", mode, errno);
 		reset_error_exit(SIGNAL_ARGLIST);
 	}
-#endif				/* __MINGW32_VERSION */
 }
 
 #ifndef HAVE_SGTTY_H
@@ -1946,47 +1903,3 @@ touch_cursor()
 #endif
 }
 #endif
-
-#ifdef __MINGW32_VERSION
-
-int
-tgetent(char *bp, char *name)
-{
-	return 0;
-}
-
-int
-tgetnum(char *id)
-{
-	return -1;
-}
-
-int
-tgetflag(char *id)
-{
-	return 0;
-}
-
-char *
-tgetstr(char *id, char **area)
-{
-	id = "";
-}
-
-char *
-tgoto(char *cap, int col, int row)
-{
-}
-
-int
-tputs(char *str, int affcnt, int (*putc) (char))
-{
-}
-
-char *
-ttyname(int tty)
-{
-	return "CON";
-}
-
-#endif				/* __MINGW32_VERSION */

@@ -31,12 +31,6 @@ extern int do_getch();
 #endif				/* defined(USE_GPM) || defined(USE_SYSMOUSE) */
 #endif
 
-#ifdef __MINGW32_VERSION
-#include <winsock.h>
-
-WSADATA WSAData;
-#endif
-
 #define DSTR_LEN	256
 
 Hist *LoadHist;
@@ -77,11 +71,7 @@ static char *MarkString = NULL;
 static char *SearchString = NULL;
 int (*searchRoutine) (Buffer *, char *);
 
-#ifndef __MINGW32_VERSION
 JMP_BUF IntReturn;
-#else
-_JBTYPE IntReturn[_JBLEN];
-#endif				/* __MINGW32_VERSION */
 
 static void delBuffer(Buffer * buf);
 static void cmd_loadfile(char *path);
@@ -728,22 +718,6 @@ main(int argc, char **argv, char **envp)
 	if (w3m_debug)
 		dbug_init();
 	sock_init();
-#endif
-
-#ifdef __MINGW32_VERSION
-	{
-		int err;
-		WORD wVerReq;
-
-		wVerReq = MAKEWORD(1, 1);
-
-		err = WSAStartup(wVerReq, &WSAData);
-		if (err != 0) {
-			fprintf(stderr, "Can't find winsock\n");
-			return 1;
-		}
-		_fmode = _O_BINARY;
-	}
 #endif
 
 	FirstTab = NULL;
@@ -5554,9 +5528,6 @@ w3m_exit(int i)
 	stopDownload();
 	deleteFiles();
 	disconnectFTP();
-#ifdef __MINGW32_VERSION
-	WSACleanup();
-#endif
 	exit(i);
 }
 
@@ -6284,11 +6255,9 @@ download_action(struct parsed_tagarg * arg)
 		if (!strncmp(arg->arg, "stop", 4)) {
 			pid = (pid_t) strtonum(&arg->arg[4],
 			    0, INT_MAX, &errstr);
-#ifndef __MINGW32_VERSION
 			if (errstr == NULL) {
 				kill(pid, SIGKILL);
 			}
-#endif
 		} else if (!strncmp(arg->arg, "ok", 2)) {
 			pid = (pid_t) strtonum(&arg->arg[2],
 			    0, INT_MAX, &errstr);
@@ -6326,9 +6295,7 @@ stopDownload(void)
 	for (d = FirstDL; d != NULL; d = d->next) {
 		if (!d->running)
 			continue;
-#ifndef __MINGW32_VERSION
 		kill(d->pid, SIGKILL);
-#endif
 		unlink(d->lock);
 	}
 }

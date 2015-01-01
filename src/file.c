@@ -1587,17 +1587,9 @@ getAuthCookie(struct http_auth * hauth, char *auth_header,
 				  getpassphrase(proxy ? "Proxy Password: " :
 						"Password: "));
 #else
-#ifndef __MINGW32_VERSION
 			*pwd = Strnew_charp((char *)
 					getpass(proxy ? "Proxy Password: " :
 						"Password: "));
-#else
-			term_raw();
-			*pwd = Strnew_charp((char *)
-				      inputLine(proxy ? "Proxy Password: " :
-					  "Password: ", NULL, IN_PASSWORD));
-			term_cbreak();
-#endif				/* __MINGW32_VERSION */
 #endif
 		}
 	}
@@ -7795,7 +7787,6 @@ _MoveFile(const char *path1, const char *path2)
 int
 _doFileCopy(char *tmpf, char *defstr, int download)
 {
-#ifndef __MINGW32_VERSION
 	Str msg;
 	Str filen;
 	char *p, *q = NULL;
@@ -7901,7 +7892,6 @@ _doFileCopy(char *tmpf, char *defstr, int download)
 		if (PreserveTimestamp && !is_pipe && !stat(tmpf, &st))
 			setModtime(p, st.st_mtime);
 	}
-#endif				/* __MINGW32_VERSION */
 	return 0;
 }
 
@@ -7916,7 +7906,6 @@ doFileMove(char *tmpf, char *defstr)
 int
 doFileSave(URLFile uf, char *defstr)
 {
-#ifndef __MINGW32_VERSION
 	Str msg;
 	Str filen;
 	char *p, *q;
@@ -8016,7 +8005,6 @@ doFileSave(URLFile uf, char *defstr)
 		if (PreserveTimestamp && uf.modtime != -1)
 			setModtime(p, uf.modtime);
 	}
-#endif				/* __MINGW32_VERSION */
 	return 0;
 }
 
@@ -8086,7 +8074,6 @@ inputAnswer(char *prompt)
 static void
 uncompress_stream(URLFile * uf, char **src)
 {
-#ifndef __MINGW32_VERSION
 	pid_t pid1;
 	FILE *f1;
 	char *expand_cmd = GUNZIP_CMDNAME;
@@ -8169,7 +8156,6 @@ uncompress_stream(URLFile * uf, char **src)
 	}
 	UFhalfclose(uf);
 	uf->stream = newFileStream(f1, (void (*) ()) fclose);
-#endif				/* __MINGW32_VERSION */
 }
 
 static FILE *

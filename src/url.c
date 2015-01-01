@@ -1,14 +1,10 @@
 /* $Id: url.c,v 1.100 2010/12/15 10:50:24 htrb Exp $ */
 #include "fm.h"
-#ifndef __MINGW32_VERSION
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netdb.h>
-#else
-#include <winsock.h>
-#endif				/* __MINGW32_VERSION */
 
 #include <assert.h>
 #include <signal.h>
@@ -33,11 +29,6 @@ enum TLSinit tls_state = STATE_PREINIT;
 #ifdef	__WATT32__
 #define	write(a,b,c)	write_s(a,b,c)
 #endif				/* __WATT32__ */
-
-#ifdef __MINGW32_VERSION
-#define	write(a,b,c)	send(a,b,c, 0)
-#define close(fd)	closesocket(fd)
-#endif
 
 #ifdef INET6
 /* see rc.c, "dns_order" and dnsorders[] */

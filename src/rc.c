@@ -1080,11 +1080,7 @@ parse_cookie()
 }
 #endif
 
-#ifdef __MINGW32_VERSION
-#define do_mkdir(dir,mode) mkdir(dir)
-#else
 #define do_mkdir(dir,mode) mkdir(dir,mode)
-#endif				/* not __MINW32_VERSION */
 
 void
 sync_with_option(void)

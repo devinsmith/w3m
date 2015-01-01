@@ -3,9 +3,6 @@
 #include "myctype.h"
 #include "istream.h"
 #include <signal.h>
-#ifdef __MINGW32_VERSION
-#include <winsock.h>
-#endif
 
 #include <tls.h>
 
@@ -373,21 +370,13 @@ ISeos(InputStream stream)
 static void
 basic_close(int *handle)
 {
-#ifdef __MINGW32_VERSION
-	closesocket(*(int *) handle);
-#else
 	close(*(int *) handle);
-#endif
 }
 
 static int
 basic_read(int *handle, char *buf, int len)
 {
-#ifdef __MINGW32_VERSION
-	return recv(*(int *) handle, buf, len, 0);
-#else
 	return read(*(int *) handle, buf, len);
-#endif
 }
 
 static void
