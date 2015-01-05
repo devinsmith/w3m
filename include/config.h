@@ -80,8 +80,6 @@
 /* #undef TABLE_EXPAND */
 /* #undef TABLE_NO_COMPACT */
 #define NOWRAP
-/* #define MATRIX */
-#undef MATRIX
 
 #define DEF_EDITOR "/usr/bin/vi"
 #define DEF_MAILER "/usr/bin/mail"

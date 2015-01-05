@@ -1,16 +1,4 @@
 /* $Id: table.h,v 1.12 2003/09/22 21:02:21 ukai Exp $ */
-#if (defined(MESCHACH) && !defined(MATRIX))
-#define MATRIX
-#endif				/* (defined(MESCHACH) && !defined(MATRIX)) */
-
-#ifdef MATRIX
-#ifdef MESCHACH
-#include <matrix2.h>
-#else				/* not MESCHACH */
-#include "matrix.h"
-#endif				/* not MESCHACH */
-#endif				/* MATRIX */
-
 #include "Str.h"
 
 #define MAX_TABLE 20		/* maximum nest level of table */
@@ -41,12 +29,7 @@ struct table_cell {
 	short index[MAXCELL];
 	short maxcell;
 	short icell;
-#ifdef MATRIX
-	short eindex[MAXCELL];
-	short necell;
-#else
 	short *indexarray;
-#endif
 	short width[MAXCELL];
 	short minimum_width[MAXCELL];
 	short fixed_width[MAXCELL];
@@ -109,10 +92,6 @@ struct table {
 	TextList *suspended_data;
 	/* use for counting skipped spaces */
 	struct table_linfo linfo;
-#ifdef MATRIX
-	MAT *matrix;
-	VEC *vector;
-#endif				/* MATRIX */
 	int sloppy_width;
 };
 
