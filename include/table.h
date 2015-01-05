@@ -44,7 +44,9 @@ struct table_cell {
 #ifdef MATRIX
 	short eindex[MAXCELL];
 	short necell;
-#endif				/* MATRIX */
+#else
+	short *indexarray;
+#endif
 	short width[MAXCELL];
 	short minimum_width[MAXCELL];
 	short fixed_width[MAXCELL];

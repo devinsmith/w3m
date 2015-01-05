@@ -1351,6 +1351,9 @@ set_table_width(struct table * t, short *newwidth, int maxwidth)
 	}
 
 	for (k = 0; k <= cell->maxcell; k++) {
+		if (cell->indexarray == NULL) {
+			continue;
+		}
 		j = cell->indexarray[k];
 		bcol = cell->col[j];
 		ecol = bcol + cell->colspan[j];
