@@ -1883,7 +1883,8 @@ list_menu(Buffer * buf)
 	AnchorList *al = buf->href;
 	Anchor *a;
 	Anchor **ap;
-	int i, n, nitem = 0, key = -1, two = FALSE;
+	int i, key = -1, two = FALSE;
+	size_t n, nitem = 0;
 	char **label;
 	char *t;
 	unsigned char c;
@@ -1930,32 +1931,32 @@ list_menu(Buffer * buf)
 	menu.cursorY = buf->cursorY + buf->rootY;
 	menu.x = menu.cursorX + FRAME_WIDTH + 1;
 	menu.y = menu.cursorY + 2;
-	for (i = 0; i < 128; i++)
-		menu.keyselect[i] = -1;
+	for (n = 0; n < 128; n++)
+		menu.keyselect[n] = -1;
 	if (two) {
-		for (i = 0; i < nlmKeys2; i++) {
-			c = lmKeys2[i];
+		for (n = 0; n < nlmKeys2; n++) {
+			c = lmKeys2[n];
 			menu.keymap[(int) c] = lmGoto;
-			menu.keyselect[(int) c] = i;
+			menu.keyselect[(int) c] = n;
 		}
-		for (i = 0; i < nlmKeys; i++) {
-			c = lmKeys[i];
+		for (n = 0; n < nlmKeys; n++) {
+			c = lmKeys[n];
 			menu.keymap[(int) c] = lmSelect;
-			menu.keyselect[(int) c] = i;
+			menu.keyselect[(int) c] = n;
 		}
 	} else {
-		for (i = 0; i < nitem; i++) {
-			c = lmKeys[i];
+		for (n = 0; n < nitem; n++) {
+			c = lmKeys[n];
 			menu.keymap[(int) c] = mSelect;
-			menu.keyselect[(int) c] = i;
+			menu.keyselect[(int) c] = n;
 		}
 	}
 
 	a = retrieveCurrentAnchor(buf);
 	if (a) {
-		for (i = 0; i < nitem; i++) {
-			if (a->hseq == ap[i]->hseq) {
-				menu.initial = i;
+		for (n = 0; n < nitem; n++) {
+			if (a->hseq == ap[n]->hseq) {
+				menu.initial = n;
 				break;
 			}
 		}
