@@ -244,6 +244,7 @@ void
 new_menu(Menu * menu, MenuItem * item)
 {
 	int i, l;
+	size_t j;
 	char *p;
 
 	menu->cursorX = 0;
@@ -263,8 +264,8 @@ new_menu(Menu * menu, MenuItem * item)
 	for (i = 0; item[i].type != MENU_END; i++);
 	menu->nitem = i;
 	menu->height = menu->nitem;
-	for (i = 0; i < 128; i++)
-		menu->keymap[i] = MenuKeymap[i];
+	for (j = 0; j < sizeof(menu->keymap) / sizeof(*menu->keymap); j++)
+		menu->keymap[j] = MenuKeymap[j];
 	menu->width = 0;
 	for (i = 0; i < menu->nitem; i++) {
 		if ((p = item[i].keys) != NULL) {
@@ -1783,7 +1784,8 @@ accesskey_menu(Buffer * buf)
 	AnchorList *al = buf->href;
 	Anchor *a;
 	Anchor **ap;
-	int i, n, nitem = 0, key = -1;
+	int i, key = -1;
+	size_t j, n, nitem = 0;
 	char **label;
 	char *t;
 	unsigned char c;
@@ -1818,30 +1820,30 @@ accesskey_menu(Buffer * buf)
 	menu.cursorY = buf->cursorY + buf->rootY;
 	menu.x = menu.cursorX + FRAME_WIDTH + 1;
 	menu.y = menu.cursorY + 2;
-	for (i = 0; i < 128; i++)
-		menu.keyselect[i] = -1;
-	for (i = 0; i < nitem; i++) {
-		c = ap[i]->accesskey;
+	for (j = 0; j < sizeof(menu.keyselect) / sizeof(*menu.keyselect); j++)
+		menu.keyselect[j] = -1;
+	for (j = 0; j < nitem; j++) {
+		c = ap[j]->accesskey;
 		menu.keymap[(int) c] = mSelect;
-		menu.keyselect[(int) c] = i;
+		menu.keyselect[(int) c] = j;
 	}
-	for (i = 0; i < nitem; i++) {
-		c = ap[i]->accesskey;
+	for (j = 0; j < nitem; j++) {
+		c = ap[j]->accesskey;
 		if (!IS_ALPHA(c) || menu.keyselect[n] >= 0)
 			continue;
 		c = TOLOWER(c);
 		menu.keymap[(int) c] = mSelect;
-		menu.keyselect[(int) c] = i;
+		menu.keyselect[(int) c] = j;
 		c = TOUPPER(c);
 		menu.keymap[(int) c] = mSelect;
-		menu.keyselect[(int) c] = i;
+		menu.keyselect[(int) c] = j;
 	}
 
 	a = retrieveCurrentAnchor(buf);
 	if (a && a->accesskey && IS_ASCII(a->accesskey)) {
-		for (i = 0; i < nitem; i++) {
-			if (a->hseq == ap[i]->hseq) {
-				menu.initial = i;
+		for (j = 0; j < nitem; j++) {
+			if (a->hseq == ap[j]->hseq) {
+				menu.initial = j;
 				break;
 			}
 		}
@@ -1931,7 +1933,7 @@ list_menu(Buffer * buf)
 	menu.cursorY = buf->cursorY + buf->rootY;
 	menu.x = menu.cursorX + FRAME_WIDTH + 1;
 	menu.y = menu.cursorY + 2;
-	for (n = 0; n < 128; n++)
+	for (n = 0; n < sizeof(menu.keyselect) / sizeof(*menu.keyselect); n++)
 		menu.keyselect[n] = -1;
 	if (two) {
 		for (n = 0; n < nlmKeys2; n++) {
