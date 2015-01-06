@@ -18,12 +18,7 @@
 #include "myctype.h"
 #include "regex.h"
 
-enum TLSinit {
-	STATE_PREINIT	= 0,
-	STATE_INIT	= 1,
-	STATE_BROKEN	= 2
-};
-enum TLSinit tls_state = STATE_PREINIT;
+static int tls_initialized = FALSE;
 
 #ifdef	__WATT32__
 #define	write(a,b,c)	write_s(a,b,c)
@@ -237,14 +232,13 @@ openTLSHandle(int sock, const char *hostname,
 	struct tls_config *config = NULL;
 	struct tls *client = NULL;
 
-	if (tls_state == STATE_PREINIT && tls_init() == -1) {
-		tls_state = STATE_BROKEN;
-		disp_err_message(Strnew_charp(
-		    "TLS error: tls_init() failed")->ptr, FALSE);
-		return -1;
+	if (!tls_initialized && tls_init() == -1) {
+		fprintf(stderr, "TLS error: tls_init() failed." \
+		    "Something is very wrong.");
+		exit(1);
 	}
 
-	tls_state = STATE_INIT;
+	tls_initialized = TRUE;
 
 	config = tls_config_new();
 	if (config == NULL) {
