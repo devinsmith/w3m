@@ -714,12 +714,6 @@ main(int argc, char **argv, char **envp)
 		i++;
 	}
 
-#ifdef	__WATT32__
-	if (w3m_debug)
-		dbug_init();
-	sock_init();
-#endif
-
 	FirstTab = NULL;
 	LastTab = NULL;
 	nTab = 0;

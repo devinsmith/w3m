@@ -20,10 +20,6 @@
 
 static int tls_initialized = FALSE;
 
-#ifdef	__WATT32__
-#define	write(a,b,c)	write_s(a,b,c)
-#endif				/* __WATT32__ */
-
 #ifdef INET6
 /* see rc.c, "dns_order" and dnsorders[] */
 int ai_family_order_table[7][3] = {
