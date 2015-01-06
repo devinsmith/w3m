@@ -1824,19 +1824,19 @@ accesskey_menu(Buffer * buf)
 		menu.keyselect[j] = -1;
 	for (j = 0; j < nitem; j++) {
 		c = ap[j]->accesskey;
-		menu.keymap[(int) c] = mSelect;
-		menu.keyselect[(int) c] = j;
+		menu.keymap[c] = mSelect;
+		menu.keyselect[c] = j;
 	}
 	for (j = 0; j < nitem; j++) {
 		c = ap[j]->accesskey;
 		if (!IS_ALPHA(c) || menu.keyselect[n] >= 0)
 			continue;
 		c = TOLOWER(c);
-		menu.keymap[(int) c] = mSelect;
-		menu.keyselect[(int) c] = j;
+		menu.keymap[c] = mSelect;
+		menu.keyselect[c] = j;
 		c = TOUPPER(c);
-		menu.keymap[(int) c] = mSelect;
-		menu.keyselect[(int) c] = j;
+		menu.keymap[c] = mSelect;
+		menu.keyselect[c] = j;
 	}
 
 	a = retrieveCurrentAnchor(buf);
@@ -1938,19 +1938,19 @@ list_menu(Buffer * buf)
 	if (two) {
 		for (n = 0; n < nlmKeys2; n++) {
 			c = lmKeys2[n];
-			menu.keymap[(int) c] = lmGoto;
-			menu.keyselect[(int) c] = n;
+			menu.keymap[c] = lmGoto;
+			menu.keyselect[c] = n;
 		}
 		for (n = 0; n < nlmKeys; n++) {
 			c = lmKeys[n];
-			menu.keymap[(int) c] = lmSelect;
-			menu.keyselect[(int) c] = n;
+			menu.keymap[c] = lmSelect;
+			menu.keyselect[c] = n;
 		}
 	} else {
 		for (n = 0; n < nitem; n++) {
 			c = lmKeys[n];
-			menu.keymap[(int) c] = mSelect;
-			menu.keyselect[(int) c] = n;
+			menu.keymap[c] = mSelect;
+			menu.keyselect[c] = n;
 		}
 	}
 
