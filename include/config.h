@@ -111,8 +111,6 @@ typedef long clen_t;
 #define HAVE_SYS_ERRLIST 1
 #define HAVE_WAITPID 1
 #define HAVE_WAIT3 1
-#define HAVE_GETCWD 1
-#define HAVE_GETWD 1
 #define HAVE_SYMLINK 1
 #define HAVE_READLINK 1
 #define HAVE_LSTAT 1
