@@ -2511,6 +2511,10 @@ feed_table(struct table * tbl, char *line, struct table_mode * mode,
 	Str tmp;
 	struct table_linfo *linfo = &tbl->linfo;
 
+	if (mode == NULL) {
+		return -1;
+	}
+
 	if (*line == '<' && line[1] && REALLY_THE_BEGINNING_OF_A_TAG(line)) {
 		struct parsed_tag *tag;
 		p = line;
