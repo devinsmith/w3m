@@ -5,8 +5,7 @@
 #include <string.h>
 #include <sys/types.h>
 #include <unistd.h>
-#include "config.h"
-#include "w3mimg.h"
+#include "img-display.h"
 
 #define MAX_IMAGE 1000
 
@@ -38,7 +37,7 @@ main(int argc, char **argv)
 	setreuid(owner_uid, runner_uid);
 	GetOption(argc, argv);
 	if (!defined_debug)
-		freopen(DEV_NULL_PATH, "w", stderr);
+		freopen("/dev/null", "w", stderr);
 
 	/*
 	 * back real and effective run w3mimg_open() in setuid privileges

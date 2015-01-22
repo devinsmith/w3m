@@ -4,13 +4,12 @@
 #include <string.h>
 #include <ctype.h>
 #include <unistd.h>
-#include "config.h"
 
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <Imlib2.h>
 
-#include "w3mimg.h"
+#include "img-display.h"
 
 #define OFFSET_X	2
 #define OFFSET_Y	2

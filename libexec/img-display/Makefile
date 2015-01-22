@@ -1,7 +1,7 @@
 .include <bsd.xconf.mk>
 
 PROG=		w3mimgdisplay
-SRCS=		w3mimgdisplay.c x11_w3mimg.c
+SRCS=		img-display.c x11-imlib2.c
 MAN=
 
 PREFIX?=	/usr/local
