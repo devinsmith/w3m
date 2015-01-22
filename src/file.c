@@ -4,9 +4,7 @@
 #include "myctype.h"
 #include <signal.h>
 #include <setjmp.h>
-#if defined(HAVE_WAITPID) || defined(HAVE_WAIT3)
 #include <sys/wait.h>
-#endif
 #include <stdio.h>
 #include <time.h>
 #include <sys/stat.h>
@@ -7793,9 +7791,6 @@ _doFileCopy(char *tmpf, char *defstr, int download)
 	char *p, *q = NULL;
 	pid_t pid;
 	char *lock;
-#if !(defined(HAVE_SYMLINK) && defined(HAVE_LSTAT))
-	FILE *f;
-#endif
 	struct stat st;
 	clen_t size = 0;
 	int is_pipe = FALSE;
@@ -7837,13 +7832,7 @@ _doFileCopy(char *tmpf, char *defstr, int download)
 			return -1;
 		}
 		lock = tmpfname(TMPF_DFL, ".lock")->ptr;
-#if defined(HAVE_SYMLINK) && defined(HAVE_LSTAT)
 		symlink(p, lock);
-#else
-		f = fopen(lock, "w");
-		if (f)
-			fclose(f);
-#endif
 		flush_tty();
 		pid = fork();
 		if (!pid) {
@@ -7913,9 +7902,6 @@ doFileSave(URLFile uf, char *defstr)
 	pid_t pid;
 	char *lock;
 	char *tmpf = NULL;
-#if !(defined(HAVE_SYMLINK) && defined(HAVE_LSTAT))
-	FILE *f;
-#endif
 
 	if (fmInitialized) {
 		p = searchKeyData();
@@ -7943,13 +7929,7 @@ doFileSave(URLFile uf, char *defstr)
 		 * }
 		 */
 		lock = tmpfname(TMPF_DFL, ".lock")->ptr;
-#if defined(HAVE_SYMLINK) && defined(HAVE_LSTAT)
 		symlink(p, lock);
-#else
-		f = fopen(lock, "w");
-		if (f)
-			fclose(f);
-#endif
 		flush_tty();
 		pid = fork();
 		if (!pid) {

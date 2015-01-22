@@ -13,9 +13,7 @@
 #include "config.h"
 #include <string.h>
 #include <poll.h>
-#ifdef HAVE_SYS_SELECT_H
 #include <sys/select.h>
-#endif
 #include <sys/ioctl.h>
 #ifdef USE_MOUSE
 #ifdef USE_GPM

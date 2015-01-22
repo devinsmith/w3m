@@ -9,9 +9,7 @@
 #include <fcntl.h>
 #include <sys/types.h>
 #include <time.h>
-#if defined(HAVE_WAITPID) || defined(HAVE_WAIT3)
 #include <sys/wait.h>
-#endif
 #include <signal.h>
 
 #include <assert.h>
@@ -580,15 +578,6 @@ mydirname(char *s)
 		p--;
 	return allocStr(s, strlen(s) - strlen(p) + 1);
 }
-
-#ifndef HAVE_STRERROR
-char *
-strerror(int errno)
-{
-	extern char *sys_errlist[];
-	return sys_errlist[errno];
-}
-#endif				/* not HAVE_STRERROR */
 
 #ifndef HAVE_SYS_ERRLIST
 char **sys_errlist;

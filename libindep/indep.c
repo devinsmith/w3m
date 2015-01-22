@@ -186,50 +186,6 @@ rest:
 	return name;
 }
 
-#ifndef HAVE_STRCHR
-char *
-strchr(const char *s, int c)
-{
-	while (*s) {
-		if ((unsigned char) *s == c)
-			return (char *) s;
-		s++;
-	}
-	return NULL;
-}
-#endif				/* not HAVE_STRCHR */
-
-#ifndef HAVE_STRCASECMP
-int
-strcasecmp(const char *s1, const char *s2)
-{
-	int x;
-	while (*s1) {
-		x = TOLOWER(*s1) - TOLOWER(*s2);
-		if (x != 0)
-			return x;
-		s1++;
-		s2++;
-	}
-	return -TOLOWER(*s2);
-}
-
-int
-strncasecmp(const char *s1, const char *s2, size_t n)
-{
-	int x;
-	while (*s1 && n) {
-		x = TOLOWER(*s1) - TOLOWER(*s2);
-		if (x != 0)
-			return x;
-		s1++;
-		s2++;
-		n--;
-	}
-	return n ? -TOLOWER(*s2) : 0;
-}
-#endif				/* not HAVE_STRCASECMP */
-
 #ifndef HAVE_STRCASESTR
 /* string search using the simplest algorithm */
 char *

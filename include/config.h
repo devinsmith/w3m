@@ -96,28 +96,17 @@
 #define HAVE_TERMIOS_H 1
 /* #undef HAVE_TERMIO_H */
 /* #undef HAVE_SGTTY_H */
-#define HAVE_DIRENT_H 1
-#define HAVE_LOCALE_H 1
 #define SIZEOF_LONG_LONG 8
 #if SIZEOF_LONG_LONG > 0
 typedef long long clen_t;
 #else
 typedef long clen_t;
 #endif
-#define HAVE_STRCASECMP 1
 #define HAVE_STRCASESTR 1
-#define HAVE_STRCHR 1
-#define HAVE_STRERROR 1
 #define HAVE_SYS_ERRLIST 1
-#define HAVE_WAITPID 1
 #define HAVE_WAIT3 1
-#define HAVE_SYMLINK 1
-#define HAVE_READLINK 1
-#define HAVE_LSTAT 1
 /* #undef HAVE_GETPASSPHRASE */
-#define HAVE_CHDIR 1
 #define HAVE_SETPGRP 1
-#define HAVE_SETLOCALE 1
 #define HAVE_LANGINFO_CODESET 1
 
 /* #undef SETPGRP_VOID */
@@ -131,9 +120,6 @@ typedef long clen_t;
 #define SETPGRP() setpgid(0, 0)
 #endif
 #define HAVE_FLOAT_H 1
-#define HAVE_SYS_SELECT_H 1
-
-#define HAVE_SIGSETJMP 1
 
 #define RETSIGTYPE void
 typedef RETSIGTYPE MySignalHandler;
@@ -141,25 +127,11 @@ typedef RETSIGTYPE MySignalHandler;
 #define SIGNAL_ARGLIST 0	/* XXX */
 #define SIGNAL_RETURN return
 
-#ifdef HAVE_SIGSETJMP
 #define SETJMP(env) sigsetjmp(env,1)
 #define LONGJMP(env,val) siglongjmp(env,val)
 #define JMP_BUF sigjmp_buf
-#else
-#define SETJMP(env) setjmp(env)
-#define LONGJMP(env,val) longjmp(env)
-#define JMP_BUF jmp_buf
-#endif
 
-#ifndef HAVE_LSTAT
-#define lstat stat
-#endif
-
-#if defined(__DJGPP__)
-#define DEFAULT_TERM	"dosansi"
-#else
 #define DEFAULT_TERM	0	/* XXX */
-#endif
 
 #define GUNZIP_CMDNAME  "gunzip"
 #define INFLATE_CMDNAME	"inflate"
