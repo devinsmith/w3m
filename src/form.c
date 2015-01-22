@@ -489,18 +489,27 @@ formUpdateBuffer(Anchor * a, Buffer * buf, FormItemList * form)
 				spos = a->start.pos;
 				epos = a->end.pos;
 			}
-			pos = form_update_line(l, &p, spos, epos, COLPOS(l, epos) - col,
-					       rows > 1,
-					 form->type == FORM_INPUT_PASSWORD);
-			if (pos != epos) {
-				shiftAnchorPosition(buf->href, buf->hmarklist,
-					   a->start.line, spos, pos - epos);
-				shiftAnchorPosition(buf->name, buf->hmarklist,
-					   a->start.line, spos, pos - epos);
-				shiftAnchorPosition(buf->img, buf->hmarklist,
-					   a->start.line, spos, pos - epos);
-				shiftAnchorPosition(buf->formitem, buf->hmarklist,
-					   a->start.line, spos, pos - epos);
+			if (epos <= l->len) {
+				pos = form_update_line(l, &p, spos, epos,
+				    COLPOS(l, epos) - col, rows > 1,
+				    form->type == FORM_INPUT_PASSWORD);
+				if (pos != epos) {
+					shiftAnchorPosition(buf->href,
+					    buf->hmarklist, a->start.line,
+					    spos, pos - epos);
+
+					shiftAnchorPosition(buf->name,
+					    buf->hmarklist, a->start.line,
+					    spos, pos - epos);
+
+					shiftAnchorPosition(buf->img,
+					    buf->hmarklist, a->start.line,
+					    spos, pos - epos);
+
+					shiftAnchorPosition(buf->formitem,
+					    buf->hmarklist, a->start.line,
+					    spos, pos - epos);
+				}
 			}
 		}
 		break;
