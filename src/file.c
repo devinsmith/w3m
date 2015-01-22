@@ -2966,7 +2966,7 @@ close_effect0(struct readbuffer * obuf, int cmd)
 	}
 	if (i >= 0) {
 		obuf->tag_sp--;
-		memcpy(&obuf->tag_stack[i], &obuf->tag_stack[i + 1],
+		memmove(&obuf->tag_stack[i], &obuf->tag_stack[i + 1],
 		      (obuf->tag_sp - i) * sizeof(struct cmdtable *));
 		return 1;
 	} else if ((p = has_hidden_link(obuf, cmd)) != NULL) {
@@ -3000,7 +3000,7 @@ close_anchor(struct html_feed_environ * h_env, struct readbuffer * obuf)
 			} else {
 				if (i >= 0) {
 					obuf->tag_sp--;
-					memcpy(&obuf->tag_stack[i],
+					memmove(&obuf->tag_stack[i],
 					    &obuf->tag_stack[i + 1],
 					    (obuf->tag_sp - i) *
 					    sizeof(struct cmdtable *));
