@@ -104,7 +104,6 @@ typedef long clen_t;
 #endif
 #define HAVE_STRCASESTR 1
 #define HAVE_SYS_ERRLIST 1
-#define HAVE_WAIT3 1
 /* #undef HAVE_GETPASSPHRASE */
 #define HAVE_SETPGRP 1
 #define HAVE_LANGINFO_CODESET 1
