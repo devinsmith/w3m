@@ -8,14 +8,16 @@
 #include "config.h"
 #include "w3mimg.h"
 
-w3mimg_op *w_op;
+#define MAX_IMAGE 1000
+
+static w3mimg_op *w_op;
+
 static char *background = NULL;
 static int offset_x = 0, offset_y = 0;
 static int defined_bg = 0, defined_x = 0, defined_y = 0, defined_test = 0;
 static int defined_debug = 0;
 static char *defined_size = NULL;
 
-#define MAX_IMAGE 1000
 static W3MImage *imageBuf = NULL;
 static int maxImage = 0, maxAnim = 100, clearMargin = 0;
 
@@ -24,34 +26,29 @@ static void DrawImage(char *buf, int redraw);
 static void TermImage(void);
 static void ClearImage(char *buf);
 
-#include <assert.h>
 int
 main(int argc, char **argv)
 {
 	int len;
 	char buf[1024 + 128];
-#ifdef W3MIMGDISPLAY_SETUID
 	uid_t runner_uid = getuid();
 	uid_t owner_uid = geteuid();
 
 	/* swap real and effective */
 	setreuid(owner_uid, runner_uid);
-#endif
 	GetOption(argc, argv);
 	if (!defined_debug)
 		freopen(DEV_NULL_PATH, "w", stderr);
 
-#ifdef W3MIMGDISPLAY_SETUID
 	/*
 	 * back real and effective run w3mimg_open() in setuid privileges
 	 */
 	setreuid(runner_uid, owner_uid);
-#endif
 	w_op = w3mimg_open();
-#ifdef W3MIMGDISPLAY_SETUID
+
 	/* make sure drop privileges now */
 	setreuid(runner_uid, runner_uid);
-#endif
+
 	if (w_op == NULL)
 		exit(1);
 	if (defined_x)
