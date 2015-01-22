@@ -1287,11 +1287,11 @@ close_all_fds_except(int i, int f)
 {
 	switch (i) {		/* fall through */
 		case 0:
-		dup2(open(DEV_NULL_PATH, O_RDONLY), 0);
+		dup2(open("/dev/null", O_RDONLY), 0);
 	case 1:
-		dup2(open(DEV_NULL_PATH, O_WRONLY), 1);
+		dup2(open("/dev/null", O_WRONLY), 1);
 	case 2:
-		dup2(open(DEV_NULL_PATH, O_WRONLY), 2);
+		dup2(open("/dev/null", O_WRONLY), 2);
 	}
 	/* close all other file descriptors (socket, ...) */
 	for (i = 3; i < FOPEN_MAX; i++) {

@@ -340,7 +340,7 @@ localcgi_post(char *uri, char *qstr, FormList * request, char *referer)
 	} else {
 		set_environ("REQUEST_METHOD", "GET");
 		set_environ("QUERY_STRING", qstr ? qstr : "");
-		freopen(DEV_NULL_PATH, "r", stdin);
+		freopen("/dev/null", "r", stdin);
 	}
 
 #ifdef HAVE_CHDIR

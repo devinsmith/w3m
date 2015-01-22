@@ -167,7 +167,6 @@ typedef RETSIGTYPE MySignalHandler;
 #define INFLATE_CMDNAME	"inflate"
 #define W3MBOOKMARK_CMDNAME	"w3mbookmark"
 #define W3MHELPERPANEL_CMDNAME	"w3mhelperpanel"
-#define DEV_NULL_PATH	"/dev/null"
 #define DEV_TTY_PATH	"/dev/tty"
 #define CGI_EXTENSION	".cgi"
 
