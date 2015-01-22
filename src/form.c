@@ -455,11 +455,19 @@ formUpdateBuffer(Anchor * a, Buffer * buf, FormItemList * form)
 #ifdef MENU_SELECT
 	case FORM_SELECT:
 		if (form->type == FORM_SELECT) {
+			if (form->label == NULL) {
+				break;
+			}
 			p = form->label->ptr;
 			updateSelectOption(form, form->select_option);
 		} else
 #endif				/* MENU_SELECT */
+		{
+			if (form->value == NULL) {
+				break;
+			}
 			p = form->value->ptr;
+		}
 		l = buf->currentLine;
 		if (form->type == FORM_TEXTAREA) {
 			int n = a->y - buf->currentLine->linenumber;
