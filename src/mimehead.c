@@ -18,6 +18,9 @@
 
 #define BAD_BASE64 255
 
+static const char Base64Table[] =
+"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+
 static
 unsigned char
 c2e(char x)
@@ -312,9 +315,6 @@ decodeMIME0(Str orgstr)
 }
 
 /* encoding */
-
-static char Base64Table[] =
-"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
 
 Str
 encodeB(char *a)

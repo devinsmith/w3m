@@ -6,7 +6,7 @@
 #undef BUFSIZE
 #define BUFSIZE 4096
 
-static char dummy_head[1 + 1] = {
+static const char dummy_head[1 + 1] = {
 	0x8 + 0x7 * 0x10,
 	(((0x8 + 0x7 * 0x10) * 0x100 + 30) / 31 * 31) & 0xFF,
 };
