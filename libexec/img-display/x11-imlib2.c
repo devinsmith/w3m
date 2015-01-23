@@ -371,8 +371,7 @@ w3mimg_x11open()
 
 	return wop;
 error:
-	if (xi)
-		free(xi);
+	free(xi);
 	free(wop);
 	return NULL;
 }
