@@ -242,7 +242,7 @@ gotoLine(Buffer * buf, int n)
 		       (getNextPage(buf, 1) != NULL));
 	}
 	if (l->linenumber > n) {
-		if (snprintf(msg, sizeof(msg), "First line is #%ld",
+		if ((size_t)snprintf(msg, sizeof(msg), "First line is #%ld",
 		    l->linenumber) < sizeof(msg)) {
 			set_delayed_message(msg);
 		}
@@ -251,7 +251,7 @@ gotoLine(Buffer * buf, int n)
 	}
 	if (buf->lastLine->linenumber < n) {
 		l = buf->lastLine;
-		if (snprintf(msg, sizeof(msg), "Last line is #%ld",
+		if ((size_t)snprintf(msg, sizeof(msg), "Last line is #%ld",
 		    buf->lastLine->linenumber) < sizeof(msg)) {
 			set_delayed_message(msg);
 		}
@@ -289,7 +289,7 @@ gotoRealLine(Buffer * buf, int n)
 		       (getNextPage(buf, 1) != NULL));
 	}
 	if (l->real_linenumber > n) {
-		if (snprintf(msg, sizeof(msg), "First line is #%ld",
+		if ((size_t)snprintf(msg, sizeof(msg), "First line is #%ld",
 		    l->real_linenumber) < sizeof(msg)) {
 			set_delayed_message(msg);
 		}
@@ -298,7 +298,7 @@ gotoRealLine(Buffer * buf, int n)
 	}
 	if (buf->lastLine->real_linenumber < n) {
 		l = buf->lastLine;
-		if (snprintf(msg, sizeof(msg), "Last line is #%ld",
+		if ((size_t)snprintf(msg, sizeof(msg), "Last line is #%ld",
 		    buf->lastLine->real_linenumber) < sizeof(msg)) {
 			set_delayed_message(msg);
 		}
