@@ -301,15 +301,13 @@ w3mimg_x11open()
 	XWindowAttributes attr;
 	Window root, *children;
 
-	wop = (w3mimg_op *) malloc(sizeof(w3mimg_op));
+	wop = (w3mimg_op *) calloc(1, sizeof(w3mimg_op));
 	if (wop == NULL)
 		return NULL;
-	memset(wop, 0, sizeof(w3mimg_op));
 
-	xi = (struct x11_info *) malloc(sizeof(struct x11_info));
+	xi = (struct x11_info *) calloc(1, sizeof(struct x11_info));
 	if (xi == NULL)
 		goto error;
-	memset(xi, 0, sizeof(struct x11_info));
 
 	xi->display = XOpenDisplay(NULL);
 	if (xi->display == NULL) {
