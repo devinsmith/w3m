@@ -30,23 +30,12 @@ main(int argc, char **argv)
 {
 	int len;
 	char buf[1024 + 128];
-	uid_t runner_uid = getuid();
-	uid_t owner_uid = geteuid();
 
-	/* swap real and effective */
-	setreuid(owner_uid, runner_uid);
 	GetOption(argc, argv);
 	if (!defined_debug)
 		freopen("/dev/null", "w", stderr);
 
-	/*
-	 * back real and effective run w3mimg_open() in setuid privileges
-	 */
-	setreuid(runner_uid, owner_uid);
 	w_op = w3mimg_open();
-
-	/* make sure drop privileges now */
-	setreuid(runner_uid, runner_uid);
 
 	if (w_op == NULL)
 		exit(1);

@@ -383,11 +383,6 @@ w3mimg_op *
 w3mimg_open()
 {
 	w3mimg_op *w_op = NULL;
-	uid_t runner_uid = getuid();
-	uid_t owner_uid = geteuid();
-	/* run in user privileges */
-	setreuid(owner_uid, runner_uid);
 	w_op = w3mimg_x11open();
-	setreuid(runner_uid, owner_uid);
 	return w_op;
 }
