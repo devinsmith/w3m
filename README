@@ -6,39 +6,41 @@ browser and pager, since upstream seems to have died down. It is
 based on w3m 0.5.3, released 2011-01-15.
 
 w3m is ideal for browsing content-focused websites such as
-wikis, blogs, and websites where the clutter displayed by
-graphical web browsers gets in the way of the actual content.
+websites where the clutter displayed by graphical web browsers
+gets in the way of the actual content.
 
-It currently runs on OpenBSD, and compiles using BSD make, not
-GNU autotools. Releases which can run on other platforms are
-expected to be released when the libtls API is finalized, after
-the release of OpenBSD 5.7.
+It currently runs on OpenBSD, and compiles using BSD make.
 
 Features
 --------
 * Protocols: HTTPS, HTTP, FTP, Gopher
 * Renders tables, hyperlinks, forms, lists, horizontal rules,
-headings, images (in xterm).
+headings, images (in xterm, using imlib2).
 * vi(1)-like control scheme
 * Support for multiple character encodings: UTF-8, Shift_JIS,
 Big5, KOI8-R, etc (see charset-list)
 * and cookies.
 
-Goals
+Changes since 0.5.3
 -----
-* Improve security standards...
 * Use libtls from [libressl](http://libressl.org) to implement
-Transport Layer Security (HTTPS) cleanly. (complete)
+Transport Layer Security (HTTPS) cleanly.
 * Format the code to a more readable style where every block is
-indented. (complete)
-* Improve Gopher support (mostly complete)
-* Clean up code for readability and easier auditing.
-* Use secure string handling everywhere. Carefully check each
-call is correct and cannot lead to buffer overflows and other
-security problems.
-* Insert checks for integer overflow where necessary.
-* Use modern C (size_t, const, enums, snprintf, etc).
-* Compile cleanly (without warnings) using strict compiler settings.
-* Remove counter-intuitive features and #ifdefs which clutter the
-code and make it harder to understand (DOS support, etc).
-* Add support for newer and unimplemented HTML elements.
+indented.
+* Improveed Gopher support.
+* Inserted checks for integer overflow in allocation functions.
+* Use asprintf() to implement gc-based Snprintf() instead of
+hand-rolled evilness.
+* Use modern C features (size_t, const, enums, snprintf, memcpy 
+instead of bcopy, etc).
+* Removed DOS, usenet support, improperly licensed MATRIX code
+which didn't seem to be doing anything massively better than
+non-MATRIX code.
+* Format string fixes (including Y2038 fixes).
+* NULL pointer dereference bugs fixed.
+
+Still TODO
+-----
+* Lots of compiler warnings need to be fixed.
+* Minimal compilation without image support needs to be made easy.
+* Remove and clean up more code!
