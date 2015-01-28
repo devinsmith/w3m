@@ -25,22 +25,24 @@ Changes since 0.5.3
 -----
 * Use libtls from [libressl](http://libressl.org) to implement
 Transport Layer Security (HTTPS) cleanly.
-* Format the code to a more readable style where every block is
-indented.
-* Improveed Gopher support.
+* NULL pointer dereference and buffer overflow bugs fixed.
+* Format string fixes (including Y2038 fixes).
 * Inserted checks for integer overflow in allocation functions.
 * Use asprintf() to implement gc-based Snprintf() instead of
 hand-rolled evilness.
+* Removed DOS, usenet support, improperly licensed MATRIX code
+which didn't seem to be doing anything noticeably better than
+non-MATRIX code.
 * Use modern C features (size_t, const, enums, snprintf, memcpy 
 instead of bcopy, etc).
-* Removed DOS, usenet support, improperly licensed MATRIX code
-which didn't seem to be doing anything massively better than
-non-MATRIX code.
-* Format string fixes (including Y2038 fixes).
-* NULL pointer dereference bugs fixed.
+* Formatted the code to a more readable style where every block
+is indented.
+* Improved Gopher support.
 
 Still TODO
 -----
+* Privilege separation: decode images and do other nasty
+stuff in a jail.
 * Lots of compiler warnings need to be fixed.
 * Minimal compilation without image support needs to be made easy.
 * Remove and clean up more code!
