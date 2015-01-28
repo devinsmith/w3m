@@ -28,7 +28,7 @@ Transport Layer Security (HTTPS) cleanly.
 * NULL pointer dereference and buffer overflow bugs fixed.
 * Format string fixes (including Y2038 fixes).
 * Inserted checks for integer overflow in allocation functions.
-* Use asprintf() to implement gc-based Snprintf() instead of
+* Use asprintf() to implement gc-based Sprintf() instead of
 hand-rolled evilness.
 * Removed DOS, usenet support, improperly licensed MATRIX code
 which didn't seem to be doing anything noticeably better than
