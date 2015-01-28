@@ -5,9 +5,9 @@ This repository is for the continued development of the w3m web
 browser and pager, since upstream seems to have died down. It is
 based on w3m 0.5.3, released 2011-01-15.
 
-w3m is ideal for browsing content-focused websites such as
-websites where the clutter displayed by graphical web browsers
-gets in the way of the actual content.
+w3m is ideal for browsing content-focused websites where the
+clutter displayed by graphical web browsers gets in the way of
+the actual content.
 
 It currently runs on OpenBSD, and compiles using BSD make.
 
