@@ -72,7 +72,6 @@
 #define INET6 1
 #define HAVE_SOCKLEN_T 1
 /* #undef HAVE_OLD_SS_FAMILY */
-#undef USE_EGD
 #define ENABLE_REMOVE_TRAILINGSPACES
 /* #undef MENU_THIN_FRAME */
 /* #undef USE_RAW_SCROLL */
