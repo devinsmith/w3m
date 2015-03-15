@@ -9,23 +9,28 @@ SRCS=		anchor.c backend.c buffer.c cookie.c display.c \
 		search.c symbol.c table.c terms.c url.c version.c \
 		tagtable.c
 
-.ifdef (${USE_IMAGE:L} == "yes")
+.if (${USE_IMAGE:L} == "yes")
 SRCS+=		image.c
 CFLAGS+=	-DUSE_IMAGE
+.endif
+
+.if (${USE_M17N:L} == "yes")
+CFLAGS+=	-DUSE_M17N -DUSE_UNICODE -I../libwc
+LDADD+=		../libwc/libwc.a
 .endif
 
 SRCS+=		keybind.c
 
 MAN=		../doc/w3m.1
 
-CFLAGS+=	-I${PREFIX}/include -I../libwc -I../include
+CFLAGS+=	-I${PREFIX}/include -I../include
 
 CFLAGS+=	-Wall
 CFLAGS+=	-Wshadow -Wpointer-arith -Wcast-qual
 CFLAGS+=	-Wsign-compare
 
 LDADD+=		-L${PREFIX}/lib -ltls -lssl -lcrypto -lgc -lm \
-		-ltermcap ../libwc/libwc.a ../libindep/libindep.a
+		-ltermcap ../libindep/libindep.a
 
 BINDIR=		${PREFIX}/bin
 MANDIR=		${PREFIX}/man/man

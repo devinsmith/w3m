@@ -1,5 +1,8 @@
 PREFIX?=	/usr/local
+
 USE_IMAGE?=	yes
+USE_M17N?=	yes
+
 SYS_CONF_DIR?=	/etc
 LIBEXEC_DIR?=	${PREFIX}/libexec
 LOCALE_DIR?=	/usr/share/locale

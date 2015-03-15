@@ -1877,7 +1877,11 @@ load_doc:
 	else if (pu.scheme == SCM_GOPHER) {
 		char *mime_type;
 		if (pu.file[strlen(pu.file) - 1] == '/') {
+#ifdef USE_M17N
 			page = loadGopherDir(&f, &pu, &charset);
+#else
+			page = loadGopherDir(&f, &pu, NULL);
+#endif
 			t = "gopher:directory";
 			TRAP_OFF;
 			goto page_loaded;

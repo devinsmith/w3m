@@ -1,3 +1,5 @@
+.include <../config.mk>
+
 LIB=		indep
 SHLIB_MAJOR=	1
 SHLIB_MINOR=	0
@@ -7,11 +9,15 @@ SRCS=		Str.c indep.c regex.c textlist.c parsetag.c \
 
 PREFIX?=	/usr/local
 
-CFLAGS+=	-Wall -I../include -I../libwc -I${PREFIX}/include
+CFLAGS+=	-Wall -I../include -I${PREFIX}/include
 
 LDADD+=		-L${PREFIX}/lib -lgc
 
+.if (${USE_M17N:L} == "yes")
+CFLAGS+=	-DUSE_M17N -DUSE_UNICODE -I../libwc
+LDADD+=		../libwc/libwc.a
+.endif
+
 install:
 
-.include <../config.mk>
 .include <bsd.lib.mk>
