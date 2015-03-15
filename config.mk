@@ -1,8 +1,9 @@
 PREFIX?=	/usr/local
-SYS_CONF_DIR=	/etc
-LIBEXEC_DIR=	${PREFIX}/libexec
-LOCALE_DIR=	/usr/share/locale
-HELP_DIR=	${PREFIX}/share/doc/w3m
+USE_IMAGE?=	yes
+SYS_CONF_DIR?=	/etc
+LIBEXEC_DIR?=	${PREFIX}/libexec
+LOCALE_DIR?=	/usr/share/locale
+HELP_DIR?=	${PREFIX}/share/doc/w3m
 CFLAGS+=	-DCGIBIN_DIR="\"${LIBEXEC_DIR}/w3m/cgi-bin\"" \
 		-DAUXBIN_DIR="\"${LIBEXEC_DIR}/w3m\"" \
 		-DHELP_DIR="\"${HELP_DIR}\"" \

@@ -63,7 +63,6 @@
 #define USE_W3MMAILER 1
 #define USE_GOPHER 1
 #define USE_ALARM 1
-#define USE_IMAGE 1
 #define USE_XFACE 1
 #define USE_DICT 1
 #define USE_HISTORY 1
