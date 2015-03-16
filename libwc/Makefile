@@ -13,11 +13,9 @@ HDRS=		big5.h ccs.h ces.h gb18030.h gbk.h hkscs.h hz.h \
 		ucs.h uhc.h utf7.h utf8.h viet.h wc.h wc_types.h \
 		wtf.h
 
-
 PREFIX?=	/usr/local
 
-CFLAGS+=	-Wall -I. -I../include -I${PREFIX}/include \
-		-DUSE_UNICODE
+CFLAGS+=	-Wall -I. -I../include -I${PREFIX}/include
 
 LDADD+=		-L${PREFIX}/lib -lgc
 

@@ -1,6 +1,3 @@
-
-#ifdef USE_UNICODE
-
 #include "wc.h"
 #include "ucs.h"
 #include "utf8.h"
@@ -340,5 +337,3 @@ wc_char_conv_from_utf8(wc_uchar c, wc_status * st)
 	st->state = -1;
 	return os;
 }
-
-#endif

@@ -15,7 +15,7 @@ CFLAGS+=	-DUSE_IMAGE
 .endif
 
 .if (${USE_M17N:L} == "yes")
-CFLAGS+=	-DUSE_M17N -DUSE_UNICODE -I../libwc
+CFLAGS+=	-DUSE_M17N -I../libwc
 LDADD+=		../libwc/libwc.a
 .endif
 

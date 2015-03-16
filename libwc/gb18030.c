@@ -1,11 +1,8 @@
-
 #include "wc.h"
 #include "gb18030.h"
 #include "search.h"
 #include "wtf.h"
-#ifdef USE_UNICODE
 #include "ucs.h"
-#endif
 #include "map/gb18030_ucs.map"
 
 #define C0 WC_GB18030_MAP_C0
@@ -68,7 +65,6 @@ wc_gbk_or_gbk_ext(wc_uint16 code)
 	? WC_CCS_GBK_EXT : WC_CCS_GBK;
 }
 
-#ifdef USE_UNICODE
 wc_uint32
 wc_gb18030_to_ucs(wc_wchar_t cc)
 {
@@ -154,7 +150,6 @@ wc_ucs_to_gb18030(wc_uint32 ucs)
 	cc.ccs = WC_CCS_UNKNOWN;
 	return cc;
 }
-#endif
 
 Str
 wc_conv_from_gb18030(Str is, wc_ces ces)
@@ -166,9 +161,7 @@ wc_conv_from_gb18030(Str is, wc_ces ces)
 	int state = WC_GB18030_NOSTATE;
 	wc_uint32 gbk;
 	wc_wchar_t cc;
-#ifdef USE_UNICODE
 	wc_uint32 ucs;
-#endif
 
 	for (p = sp; p < ep && *p < 0x80; p++);
 	if (p == ep)
@@ -223,12 +216,10 @@ wc_conv_from_gb18030(Str is, wc_ces ces)
 					| ((wc_uint32) * (p - 2) << 16)
 					| ((wc_uint32) * (p - 1) << 8)
 					| *p;
-#ifdef USE_UNICODE
 				if (WcOption.gb18030_as_ucs &&
 				    (ucs = wc_gb18030_to_ucs(cc)) != WC_C_UCS4_ERROR)
 					wtf_push(os, WC_CCS_GB18030 | (wc_ucs_to_ccs(ucs) & ~WC_CCS_A_SET), cc.code);
 				else
-#endif
 					wtf_push(os, cc.ccs, cc.code);
 			} else
 				wtf_push_unknown(os, p - 3, 4);
@@ -291,11 +282,9 @@ wc_push_to_gb18030(Str os, wc_wchar_t cc, wc_status * st)
 				Strcat_charp(os, WC_REPLACE);
 			return;
 		default:
-#ifdef USE_UNICODE
 			if (WcOption.ucs_conv)
 				cc = wc_any_to_any_ces(cc, st);
 			else
-#endif
 				cc.ccs = WC_CCS_IS_WIDE(cc.ccs) ? WC_CCS_UNKNOWN_W : WC_CCS_UNKNOWN;
 			continue;
 		}
@@ -309,9 +298,7 @@ wc_char_conv_from_gb18030(wc_uchar c, wc_status * st)
 	static wc_uchar gb[4];
 	wc_uint32 gbk;
 	wc_wchar_t cc;
-#ifdef USE_UNICODE
 	wc_uint32 ucs;
-#endif
 
 	if (st->state == -1) {
 		st->state = WC_GB18030_NOSTATE;
@@ -360,12 +347,10 @@ wc_char_conv_from_gb18030(wc_uchar c, wc_status * st)
 				| ((wc_uint32) gb[1] << 16)
 				| ((wc_uint32) gb[2] << 8)
 				| c;
-#ifdef USE_UNICODE
 			if (WcOption.gb18030_as_ucs &&
 			    (ucs = wc_gb18030_to_ucs(cc)) != WC_C_UCS4_ERROR)
 				wtf_push(os, WC_CCS_GB18030 | (wc_ucs_to_ccs(ucs) & ~WC_CCS_A_SET), cc.code);
 			else
-#endif
 				wtf_push(os, cc.ccs, cc.code);
 		}
 		break;

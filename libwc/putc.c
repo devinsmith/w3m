@@ -1,4 +1,3 @@
-
 #include "wc.h"
 #include "wtf.h"
 

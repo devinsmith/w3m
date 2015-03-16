@@ -1,14 +1,11 @@
-
 #include "wc.h"
 #include "iso2022.h"
 #include "sjis.h"
 #include "big5.h"
 #include "hz.h"
 #include "viet.h"
-#ifdef USE_UNICODE
 #include "utf8.h"
 #include "utf7.h"
-#endif
 
 wc_uint8 WC_DETECT_MAP[0x100] = {
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -63,9 +60,7 @@ wc_create_detect_map(wc_ces ces, wc_bool esc)
 			for (i = 0; i < 0x20; i++)
 				WC_DETECT_MAP[i] = 0;
 			WC_DETECT_MAP[WC_C_HZ_TILDA] = (ces == WC_CES_HZ_GB_2312) ? 1 : 0;
-#ifdef USE_UNICODE
 			WC_DETECT_MAP[WC_C_UTF7_PLUS] = (ces == WC_CES_UTF_7) ? 1 : 0;
-#endif
 		}
 		detect_ces = ces;
 	}
@@ -87,11 +82,9 @@ wc_auto_detect(char *is, size_t len, wc_ces hint)
 	int possible = 0;
 	wc_bool iso2022jp2 = WC_FALSE, iso2022jp3 = WC_FALSE, iso2022cn = WC_FALSE,
 	        iso2022kr = WC_FALSE, ok = WC_FALSE;
-#ifdef USE_UNICODE
 	int utf8_state = 0;
 	int utf8_detect = DETECT_ERROR;
 	int utf8_next = 0;
-#endif
 
 	wc_create_detect_map(hint, WC_TRUE);
 	for (; p < ep && !WC_DETECT_MAP[*p]; p++);
@@ -141,12 +134,10 @@ wc_auto_detect(char *is, size_t len, wc_ces hint)
 		iso_detect = euc_detect = DETECT_NORMAL;
 		possible = 3;
 		break;
-#ifdef USE_UNICODE
 	case WC_CES_UTF_8:
 		iso_detect = DETECT_NORMAL;
 		possible = 1;
 		break;
-#endif
 	case WC_CES_US_ASCII:
 		iso_detect = latin_detect = DETECT_NORMAL;
 		possible = 2;
@@ -162,12 +153,10 @@ wc_auto_detect(char *is, size_t len, wc_ces hint)
 		}
 		break;
 	}
-#ifdef USE_UNICODE
 	if (priv_detect == DETECT_ERROR) {
 		utf8_detect = DETECT_NORMAL;
 		possible++;
 	}
-#endif
 
 	wc_input_init(WC_CES_US_ASCII, &st);
 
@@ -400,7 +389,6 @@ wc_auto_detect(char *is, size_t len, wc_ces hint)
 					possible--;
 			*/
 		}
-#ifdef USE_UNICODE
 		if (utf8_detect != DETECT_ERROR) {
 			switch (utf8_state) {
 			case WC_UTF8_NOSTATE:
@@ -435,7 +423,6 @@ wc_auto_detect(char *is, size_t len, wc_ces hint)
 			if (utf8_detect == DETECT_ERROR)
 				possible--;
 		}
-#endif
 	}
 
 	if (iso_detect != DETECT_ERROR) {
@@ -490,15 +477,11 @@ wc_auto_detect(char *is, size_t len, wc_ces hint)
 		if (big5_detect != DETECT_ERROR)
 			return hint;
 		break;
-#ifdef USE_UNICODE
 	case WC_CES_UTF_8:
 		return hint;
-#endif
 	case WC_CES_US_ASCII:
-#ifdef USE_UNICODE
 		if (utf8_detect != DETECT_ERROR)
 			return hint;
-#endif
 		if (latin_detect != DETECT_ERROR)
 			return WC_CES_ISO_8859_1;
 		return hint;
@@ -507,10 +490,8 @@ wc_auto_detect(char *is, size_t len, wc_ces hint)
 			return hint;
 		if (priv_detect != DETECT_ERROR)
 			return hint;
-#ifdef USE_UNICODE
 		if (utf8_detect != DETECT_ERROR)
 			return WC_CES_UTF_8;
-#endif
 		return hint;
 	}
 	if (euc_detect == DETECT_OK)
@@ -519,21 +500,17 @@ wc_auto_detect(char *is, size_t len, wc_ces hint)
 		return WC_CES_SHIFT_JIS;
 	if (big5_detect == DETECT_OK)
 		return WC_CES_BIG5;
-#ifdef USE_UNICODE
 	if (utf8_detect == DETECT_OK)
 		return WC_CES_UTF_8;
 	if (sjis_detect & DETECT_POSSIBLE)
 		return WC_CES_SHIFT_JIS;
-#endif
 	if (euc_detect != DETECT_ERROR)
 		return euc;
 	if (sjis_detect != DETECT_ERROR)
 		return WC_CES_SHIFT_JIS;
 	if (big5_detect != DETECT_ERROR)
 		return WC_CES_BIG5;
-#ifdef USE_UNICODE
 	if (utf8_detect != DETECT_ERROR)
 		return WC_CES_UTF_8;
-#endif
 	return hint;
 }

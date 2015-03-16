@@ -15,9 +15,7 @@
 #ifdef USE_M17N
 #include "wc.h"
 #include "wtf.h"
-#ifdef USE_UNICODE
 #include "ucs.h"
-#endif
 #endif
 #ifdef USE_MOUSE
 #ifdef USE_GPM
@@ -2120,7 +2118,7 @@ DEFUN(movR1, MOVE_RIGHT1,
  * From: Takashi Nishimoto <g96p0935@mse.waseda.ac.jp> Date: Mon, 14 Jun 1999
  * 09:29:56 +0900
  */
-#if defined(USE_M17N) && defined(USE_UNICODE)
+#ifdef USE_M17N
 #define nextChar(s, l)	do { (s)++; } while ((s) < (l)->len && (l)->propBuf[s] & PC_WCHAR2)
 #define prevChar(s, l)	do { (s)--; } while ((s) > 0 && (l)->propBuf[s] & PC_WCHAR2)
 

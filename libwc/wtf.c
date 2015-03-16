@@ -1,4 +1,3 @@
-
 #include "wc.h"
 #include "wtf.h"
 #include "sjis.h"
@@ -10,10 +9,8 @@
 #include "gbk.h"
 #include "gb18030.h"
 #include "uhc.h"
-#ifdef USE_UNICODE
 #include "ucs.h"
 #include "utf8.h"
-#endif
 
 wc_uint8 WTF_WIDTH_MAP[0x100] = {
 	1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
@@ -202,9 +199,7 @@ wtf_push(Str os, wc_ccs ccs, wc_uint32 code)
 			cc2 = wc_ksx1001_to_johab(cc);
 			if (!WC_CCS_IS_UNKNOWN(cc2.ccs))
 				cc = cc2;
-		}
-#ifdef USE_UNICODE
-		else if (WcOption.ucs_conv) {
+		} else if (WcOption.ucs_conv) {
 			wc_bool fix_width_conv = WcOption.fix_width_conv;
 			WcOption.fix_width_conv = WC_FALSE;
 			wc_output_init(wtf_major_ces, &wtf_major_st);
@@ -221,7 +216,6 @@ wtf_push(Str os, wc_ccs ccs, wc_uint32 code)
 			}
 			WcOption.fix_width_conv = fix_width_conv;
 		}
-#endif
 	}
 	switch (WC_CCS_TYPE(cc.ccs)) {
 	case WC_CCS_A_CS94:
@@ -491,9 +485,7 @@ wtf_parse(wc_uchar ** p)
 			*p = q;
 			return cc2;
 		}
-	}
-#ifdef USE_UNICODE
-	else if ((cc.ccs == WC_CCS_US_ASCII || cc.ccs == WC_CCS_ISO_8859_1 ||
+	} else if ((cc.ccs == WC_CCS_US_ASCII || cc.ccs == WC_CCS_ISO_8859_1 ||
 		  WC_CCS_IS_UNICODE(cc.ccs)) && WC_CCS_IS_UNICODE(cc2.ccs)) {
 		while (1) {
 			ucs = (WC_CCS_SET(cc.ccs) == WC_CCS_UCS_TAG)
@@ -517,7 +509,6 @@ wtf_parse(wc_uchar ** p)
 				break;
 		}
 	}
-#endif
 	return cc;
 }
 
@@ -544,9 +535,7 @@ wtf_is_hangul(wc_uchar * p)
 		wc_uchar f = *(p + 1) & 0x7f;
 		return (f == WC_F_JOHAB_1 || f == WC_F_JOHAB_2 || f == WC_F_JOHAB_3 ||
 			f == WC_F_UHC_1 || f == WC_F_UHC_2);
-	}
-#ifdef USE_UNICODE
-	else if (*p == WTF_C_WCS16W) {
+	} else if (*p == WTF_C_WCS16W) {
 		wc_uchar f = (*(++p) & 0x7f) >> 2;
 		if (f == WC_F_UCS2)
 			return wc_is_ucs_hangul(wtf_to_wcs16(p));
@@ -555,7 +544,6 @@ wtf_is_hangul(wc_uchar * p)
 		if (f == WC_F_UCS_TAG)
 			return wc_is_ucs_hangul(wc_ucs_tag_to_ucs(wtf_to_wcs32(p)));
 	}
-#endif
 	return WC_FALSE;
 }
 

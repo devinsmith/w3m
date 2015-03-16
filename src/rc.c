@@ -612,24 +612,20 @@ struct param_ptr params10[] = {
 	NULL},
 	{"use_combining", P_CHARINT, PI_ONOFF, (void *) &WcOption.use_combining,
 	CMT_USE_COMBINING, NULL},
-#ifdef USE_UNICODE
 	{"east_asian_width", P_CHARINT, PI_ONOFF,
 	(void *) &WcOption.east_asian_width, CMT_EAST_ASIAN_WIDTH, NULL},
 	{"use_language_tag", P_CHARINT, PI_ONOFF,
 	(void *) &WcOption.use_language_tag, CMT_USE_LANGUAGE_TAG, NULL},
 	{"ucs_conv", P_CHARINT, PI_ONOFF, (void *) &WcOption.ucs_conv, CMT_UCS_CONV,
 	NULL},
-#endif
 	{"pre_conv", P_CHARINT, PI_ONOFF, (void *) &WcOption.pre_conv, CMT_PRE_CONV,
 	NULL},
 	{"search_conv", P_CHARINT, PI_ONOFF, (void *) &SearchConv, CMT_SEARCH_CONV,
 	NULL},
 	{"fix_width_conv", P_CHARINT, PI_ONOFF, (void *) &WcOption.fix_width_conv,
 	CMT_FIX_WIDTH_CONV, NULL},
-#ifdef USE_UNICODE
 	{"use_gb12345_map", P_CHARINT, PI_ONOFF, (void *) &WcOption.use_gb12345_map,
 	CMT_USE_GB12345_MAP, NULL},
-#endif
 	{"use_jisx0201", P_CHARINT, PI_ONOFF, (void *) &WcOption.use_jisx0201,
 	CMT_USE_JISX0201, NULL},
 	{"use_jisc6226", P_CHARINT, PI_ONOFF, (void *) &WcOption.use_jisc6226,
@@ -642,10 +638,8 @@ struct param_ptr params10[] = {
 	CMT_USE_JISX0213, NULL},
 	{"strict_iso2022", P_CHARINT, PI_ONOFF, (void *) &WcOption.strict_iso2022,
 	CMT_STRICT_ISO2022, NULL},
-#ifdef USE_UNICODE
 	{"gb18030_as_ucs", P_CHARINT, PI_ONOFF, (void *) &WcOption.gb18030_as_ucs,
 	CMT_GB18030_AS_UCS, NULL},
-#endif
 	{"simple_preserve_space", P_CHARINT, PI_ONOFF, (void *) &SimplePreserveSpace,
 	CMT_SIMPLE_PRESERVE_SPACE, NULL},
 	{NULL, 0, 0, NULL, NULL, NULL},
@@ -1119,7 +1113,7 @@ sync_with_option(void)
 		AcceptEncoding = acceptableEncoding();
 	if (AcceptMedia == NULL || *AcceptMedia == '\0')
 		AcceptMedia = acceptableMimeTypes();
-#ifdef USE_UNICODE
+#ifdef USE_M17N
 	update_utf8_symbol();
 #endif
 	if (fmInitialized) {

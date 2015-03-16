@@ -7,10 +7,8 @@
 #else				/* DUMMY */
 #include "fm.h"
 #ifdef USE_M17N
-#ifdef USE_UNICODE
 #include "ucs.h"
 #include "utf8.h"
-#endif
 #endif
 #endif				/* DUMMY */
 
@@ -54,13 +52,11 @@ conv_entity(unsigned int c)
 #endif
 	}
 #ifdef USE_M17N
-#ifdef USE_UNICODE
 	if (c <= WC_C_UCS4_END) {	/* Unicode */
 		wc_uchar utf8[7];
 		wc_ucs_to_utf8(c, utf8);
 		return wc_conv((char *) utf8, WC_CES_UTF_8, InnerCharset)->ptr;
 	}
-#endif
 #endif
 	return "?";
 }

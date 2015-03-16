@@ -174,7 +174,7 @@ extern Str convertLine0(URLFile * uf, Str line, int mode);
 #define convertLine(uf,line,mode,charset,dcharset) convertLine0(uf,line,mode)
 #endif
 extern void push_symbol(Str str, char symbol, int width, int n);
-#ifdef USE_UNICODE
+#ifdef USE_M17N
 extern void update_utf8_symbol(void);
 #endif
 extern Buffer *loadFile(char *path);

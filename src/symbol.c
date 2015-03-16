@@ -1,4 +1,3 @@
-
 #include "fm.h"
 
 #include "Symbols/alt.sym"
@@ -9,9 +8,7 @@
 #include "Symbols/euccn.sym"
 #include "Symbols/euctw.sym"
 #include "Symbols/big5.sym"
-#ifdef USE_UNICODE
 #include "Symbols/utf8.sym"
-#endif
 #include "Symbols/cp850.sym"
 
 typedef struct {
@@ -34,9 +31,7 @@ static symbol_set euckr_symbol_set = {WC_CES_EUC_KR, 2, euckr_symbol, NULL};
 static symbol_set euccn_symbol_set = {WC_CES_EUC_CN, 2, euccn_symbol, NULL};
 static symbol_set euctw_symbol_set = {WC_CES_EUC_TW, 2, euctw_symbol, NULL};
 static symbol_set big5_symbol_set = {WC_CES_BIG5, 2, big5_symbol, NULL};
-#ifdef USE_UNICODE
 static symbol_set utf8_symbol_set = {WC_CES_UTF_8, 1, utf8_symbol, NULL};
-#endif
 static symbol_set cp850_symbol_set = {WC_CES_CP850, 1, cp850_symbol, NULL};
 
 static charset_symbol_set charset_symbol_list[] = {
@@ -57,9 +52,7 @@ static charset_symbol_set charset_symbol_list[] = {
 	{WC_CES_EUC_TW, &euctw_symbol_set},
 	{WC_CES_BIG5, &big5_symbol_set},
 	{WC_CES_HKSCS, &big5_symbol_set},
-#ifdef USE_UNICODE
 	{WC_CES_UTF_8, &utf8_symbol_set},
-#endif
 	{WC_CES_CP850, &cp850_symbol_set},
 	{0, NULL},
 };
@@ -144,7 +137,6 @@ set_symbol(int width)
 	return symbol_buf;
 }
 
-#ifdef USE_UNICODE
 void
 update_utf8_symbol(void)
 {
@@ -157,7 +149,6 @@ update_utf8_symbol(void)
 		}
 	}
 }
-#endif
 
 #else
 
