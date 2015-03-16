@@ -345,6 +345,24 @@ die_oom(size_t bytes)
 	exit(1);
 }
 
+static char *
+get_current_dir(void)
+{
+	long sizel = pathconf(".", _PC_PATH_MAX);
+	char *buf;
+	char *result;
+
+	if (sizel == -1) goto fail;
+	buf = NewAtom((size_t)sizel);
+	result = getcwd(buf, (size_t)sizel);
+	if (result == NULL) goto fail;
+	return result;
+fail:
+	fprintf(stderr, "w3m: failed to get current directory\n");
+	exit(1);
+	return NULL; /* NOTREACHED */
+}
+
 int
 main(int argc, char **argv, char **envp)
 {
@@ -387,7 +405,7 @@ main(int argc, char **argv, char **envp)
 	load_argv = New_N(char *, argc - 1);
 	load_argc = 0;
 
-	CurrentDir = currentdir();
+	CurrentDir = get_current_dir();
 	CurrentPid = (int) getpid();
 	BookmarkFile = NULL;
 	config_file = NULL;

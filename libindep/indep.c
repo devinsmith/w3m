@@ -82,19 +82,6 @@ strCmp(const void *s1, const void *s2)
 }
 
 char *
-currentdir()
-{
-	char *path;
-#ifdef MAXPATHLEN
-	path = NewAtom_N(char, MAXPATHLEN);
-	getcwd(path, MAXPATHLEN);
-#else
-	path = getcwd(NULL, 0);
-#endif
-	return path;
-}
-
-char *
 cleanupName(char *name)
 {
 	char *buf, *p, *q;
