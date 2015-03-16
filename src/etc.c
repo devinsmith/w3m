@@ -11,6 +11,7 @@
 #include <time.h>
 #include <sys/wait.h>
 #include <signal.h>
+#include <unistd.h>
 
 #include <assert.h>
 
@@ -1295,7 +1296,7 @@ setup_child(int child, int i, int f)
 	reset_signals();
 	mySignal(SIGINT, SIG_IGN);
 	if (!child)
-		SETPGRP();
+		setpgid(0, 0);
 	close_tty();
 	close_all_fds_except(i, f);
 	QuietMessage = TRUE;

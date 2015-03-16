@@ -100,19 +100,8 @@ typedef long clen_t;
 #define HAVE_STRCASESTR 1
 #define HAVE_SYS_ERRLIST 1
 /* #undef HAVE_GETPASSPHRASE */
-#define HAVE_SETPGRP 1
 #define HAVE_LANGINFO_CODESET 1
 
-/* #undef SETPGRP_VOID */
-#ifdef HAVE_SETPGRP
-#ifdef SETPGRP_VOID
-#define SETPGRP() setpgrp()
-#else
-#define SETPGRP() setpgrp(0,0)
-#endif
-#else				/* no HAVE_SETPGRP; OS/2 EMX */
-#define SETPGRP() setpgid(0, 0)
-#endif
 #define HAVE_FLOAT_H 1
 
 #define RETSIGTYPE void
