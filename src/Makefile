@@ -35,4 +35,8 @@ LDADD+=		-L${PREFIX}/lib -ltls -lssl -lcrypto -lgc -lm \
 BINDIR=		${PREFIX}/bin
 MANDIR=		${PREFIX}/man/man
 
+install:
+	install -d ${BINDIR}
+	install -m 755 w3m ${BINDIR}
+
 .include <bsd.prog.mk>

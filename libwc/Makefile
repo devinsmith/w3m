@@ -1,3 +1,5 @@
+.include <../config.mk>
+
 LIB=		wc
 SHLIB_MAJOR=	1
 SHLIB_MINOR=	0
@@ -11,8 +13,6 @@ SRCS=		big5.c ces.c char_conv.c charset.c combining.c \
 HDRS=		big5.h ccs.h ces.h gb18030.h gbk.h hkscs.h hz.h \
 		iso2022.h jis.h johab.h priv.h search.h sjis.h \
 		ucs.h uhc.h utf8.h viet.h wc.h wc_types.h wtf.h
-
-PREFIX?=	/usr/local
 
 CFLAGS+=	-Wall -I. -I../include -I${PREFIX}/include
 
