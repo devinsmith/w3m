@@ -54,7 +54,7 @@ Supported encoding schemes (character set)
       CP857, CP860, CP861, CP862, CP863, CP864, CP865, CP866, CP869, CP1006,
       CP1250, CP1251, CP1252, CP1253, CP1254, CP1255, CP1256, CP1257
   * Unicode (UCS-4)
-      UTF-8, UTF-7
+      UTF-8
 
   NOTE:
     * The left part of JIS X 0201 and GB 1988 (Chinese ASCII) are
@@ -149,7 +149,6 @@ Command line options
         cp???:     CP???
         w12??:     CP12??
         u(tf8):    UTF-8
-        u(tf)7:    UTF-7
 
 Option pannel
 
