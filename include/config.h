@@ -68,7 +68,6 @@
 #define ID_EXT
 /* #undef CLEAR_BUF */
 #define INET6 1
-#define HAVE_SOCKLEN_T 1
 /* #undef HAVE_OLD_SS_FAMILY */
 #define ENABLE_REMOVE_TRAILINGSPACES
 /* #undef MENU_THIN_FRAME */

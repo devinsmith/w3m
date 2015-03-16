@@ -19,10 +19,6 @@
 #include <netdb.h>
 #include <arpa/inet.h>
 
-#ifndef HAVE_SOCKLEN_T
-typedef int socklen_t;
-#endif
-
 typedef struct _FTP {
 	char *host;
 	int port;
