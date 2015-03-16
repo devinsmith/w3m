@@ -79,7 +79,6 @@ wc_conv_to_ces(Str is, wc_ces ces)
 	case WC_CES_VISCII_11:
 	case WC_CES_VPS:
 	case WC_CES_UTF_8:
-	case WC_CES_UTF_7:
 		while (p < ep)
 			(*st.ces_info->push_to) (os, wtf_parse(&p), &st);
 		break;

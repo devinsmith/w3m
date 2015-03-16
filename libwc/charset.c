@@ -411,8 +411,6 @@ wc_charset_short_to_ces(char *charset)
 			return WC_CES_VPS;
 		return WC_CES_VISCII_11;
 	case 'u':
-		if (*(p + 1) == '7')
-			return WC_CES_UTF_7;
 		return WC_CES_UTF_8;
 	case 'a':
 		return WC_CES_US_ASCII;
