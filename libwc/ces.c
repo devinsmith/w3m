@@ -1,4 +1,3 @@
-
 #include "wc.h"
 #include "iso2022.h"
 #include "sjis.h"
@@ -12,7 +11,6 @@
 #include "viet.h"
 #include "priv.h"
 #include "utf8.h"
-#include "utf7.h"
 
 static wc_gset gset_usascii[] = {
 	{WC_CCS_US_ASCII, WC_C_G0_CS94, 1},
@@ -253,13 +251,6 @@ static wc_gset gset_utf8[] = {
 	{WC_CCS_UCS_TAG, 0x80, 1},
 	{0, 0, 0},
 };
-static wc_gset gset_utf7[] = {
-	{WC_CCS_US_ASCII, 0, 1},
-	{WC_CCS_UCS2, 0x80, 1},
-	{WC_CCS_UCS4, 0x80, 1},
-	{WC_CCS_UCS_TAG, 0x80, 1},
-	{0, 0, 0},
-};
 
 static wc_gset gset_raw[] = {
 	{WC_CCS_US_ASCII, 0, 1},
@@ -392,6 +383,5 @@ wc_ces_info WcCesInfo[] = {
 	ces_priv2(VPS, "VPS", "Vietnamese (VPS)", vps),
 
 	ces_priv2(UTF_8, "UTF-8", "Unicode (UTF-8)", utf8),
-	ces_priv2(UTF_7, "UTF-7", "Unicode (UTF-7)", utf7),
 	{0, NULL, NULL, NULL, NULL, NULL, NULL, NULL},
 };

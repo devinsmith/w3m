@@ -5,7 +5,6 @@
 #include "hz.h"
 #include "viet.h"
 #include "utf8.h"
-#include "utf7.h"
 
 wc_uint8 WC_DETECT_MAP[0x100] = {
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -60,7 +59,6 @@ wc_create_detect_map(wc_ces ces, wc_bool esc)
 			for (i = 0; i < 0x20; i++)
 				WC_DETECT_MAP[i] = 0;
 			WC_DETECT_MAP[WC_C_HZ_TILDA] = (ces == WC_CES_HZ_GB_2312) ? 1 : 0;
-			WC_DETECT_MAP[WC_C_UTF7_PLUS] = (ces == WC_CES_UTF_7) ? 1 : 0;
 		}
 		detect_ces = ces;
 	}

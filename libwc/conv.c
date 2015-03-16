@@ -4,7 +4,6 @@
 #include "hz.h"
 #include "ucs.h"
 #include "utf8.h"
-#include "utf7.h"
 
 char *WcReplace = "?";
 char *WcReplaceW = "??";
@@ -136,6 +135,4 @@ wc_push_end(Str os, wc_status * st)
 		wc_push_to_hz_end(os, st);
 	else if (st->ces_info->id == WC_CES_UTF_8)
 		wc_push_to_utf8_end(os, st);
-	else if (st->ces_info->id == WC_CES_UTF_7)
-		wc_push_to_utf7_end(os, st);
 }

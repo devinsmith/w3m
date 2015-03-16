@@ -306,8 +306,6 @@ wc_charset_to_ces(char *charset)
 	case 'u':
 		if (!strncmp(p, "utf8", 4))
 			return WC_CES_UTF_8;
-		if (!strncmp(p, "utf7", 4))
-			return WC_CES_UTF_7;
 		if (!strncmp(p, "uhc", 3))
 			return WC_CES_UHC;
 		if (!strncmp(p, "ujis", 4))
