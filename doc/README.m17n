@@ -3,7 +3,7 @@ Muntilingualizaion of w3m
                                                               H. Sakamoto
 
 Introduction
- 
+
   Note: The patches described here have been integrated with some changes
   for maintainance. Some features (e.g. UTF-7) have been removed from the
   current code.
