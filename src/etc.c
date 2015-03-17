@@ -1489,19 +1489,48 @@ rest:
 char *
 file_to_url(char *file)
 {
-	Str tmp;
+	const char *error = "";
+	char *cwd = NULL;
 
 	file = expandPath(file);
 	if (file[0] != '/') {
-		tmp = Strnew_charp(CurrentDir);
-		if (Strlastchar(tmp) != '/')
-			Strcat_char(tmp, '/');
-		Strcat_charp(tmp, file);
-		file = tmp->ptr;
+		long pmax_s = pathconf(".", _PC_PATH_MAX);
+		size_t pmax_u = (size_t)pmax_s;
+
+		if (pmax_s == -1) {
+			error = "failed to get max path size";
+			goto fail;
+		}
+		if ((cwd = malloc(pmax_u)) == NULL) {
+			error = "out of memory";
+			goto fail;
+		}
+		if (getcwd(cwd, pmax_u) == NULL) {
+			error = "failed to get current dir";
+			goto fail;
+		}
+
+		if (cwd[strlen(cwd) - 1] != '/') {
+			if (strlcat(cwd, "/", pmax_u) >= pmax_u) {
+				error = "path too long";
+				goto fail;
+			}
+		}
+
+		if (strlcat(cwd, file, pmax_u) >= pmax_u) {
+			error = "path too long";
+			goto fail;
+		}
+
+		file = Strnew_charp(cwd)->ptr;
+		free(cwd);
 	}
-	tmp = Strnew_charp("file://");
-	Strcat_charp(tmp, file_quote(cleanupName(file)));
-	return tmp->ptr;
+	return Sprintf("file://%s", file_quote(cleanupName(file)))->ptr;
+fail:
+	fprintf(stderr, "w3m: %s\n", error);
+	exit(1);
+	free(cwd);
+	return NULL; /* NOTREACHED */
 }
 
 #ifdef USE_M17N

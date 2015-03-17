@@ -871,7 +871,14 @@ parseURL2(char *url, ParsedURL * pu, ParsedURL * current)
 		if (pu->scheme == SCM_LOCAL && pu->file[0] != '/' &&
 		    strcmp(pu->file, "-")) {
 			/* local file, relative path */
-			tmp = Strnew_charp(CurrentDir);
+			char *cwd = getcwd(NULL, 0);
+			if (cwd == NULL) {
+				fprintf(stderr,
+				    "w3m: failed to get current dir\n");
+				exit(1);
+			}
+			tmp = Strnew_charp(cwd);
+			free(cwd);
 			if (Strlastchar(tmp) != '/')
 				Strcat_char(tmp, '/');
 			Strcat_charp(tmp, file_unquote(pu->file));

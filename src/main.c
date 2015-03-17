@@ -346,19 +346,46 @@ die_oom(size_t bytes)
 }
 
 static char *
-get_current_dir(void)
+get_bookmark_file(const char *input)
 {
-	long sizel = pathconf(".", _PC_PATH_MAX);
-	char *buf;
-	char *result;
+	const char *error = "";
+	char *cwd = NULL;
 
-	if (sizel == -1) goto fail;
-	buf = NewAtom((size_t)sizel);
-	result = getcwd(buf, (size_t)sizel);
-	if (result == NULL) goto fail;
-	return result;
+	if (input[0] != '~' && input[0] != '/') {
+		long pmax_s = pathconf(".", _PC_PATH_MAX);
+		size_t pmax_u = (size_t)pmax_s;
+
+		if (pmax_s == -1) {
+			error = "failed to get max path size";
+			goto fail;
+		}
+		if ((cwd = malloc(pmax_u)) == NULL) {
+			error = "out of memory";
+			goto fail;
+		}
+		if (getcwd(cwd, pmax_u) == NULL) {
+			error = "failed to get current dir";
+			goto fail;
+		}
+
+		if (cwd[strlen(cwd) - 1] != '/') {
+			if (strlcat(cwd, "/", pmax_u) >= pmax_u) {
+				error = "bookmark path too long";
+				goto fail;
+			}
+		}
+
+		if (strlcat(cwd, input, pmax_u) >= pmax_u) {
+			error = "bookmark path too long";
+			goto fail;
+		}
+
+		return cleanupName(cwd);
+	}
+	return Strnew_charp(input)->ptr;
 fail:
-	fprintf(stderr, "w3m: failed to get current directory\n");
+	fprintf(stderr, "w3m: %s\n", error);
+	free(cwd);
 	exit(1);
 	return NULL; /* NOTREACHED */
 }
@@ -405,7 +432,6 @@ main(int argc, char **argv, char **envp)
 	load_argv = New_N(char *, argc - 1);
 	load_argc = 0;
 
-	CurrentDir = get_current_dir();
 	CurrentPid = (int) getpid();
 	BookmarkFile = NULL;
 	config_file = NULL;
@@ -564,14 +590,7 @@ main(int argc, char **argv, char **envp)
 			else if (!strcmp("-bookmark", argv[i])) {
 				if (++i >= argc)
 					usage();
-				BookmarkFile = argv[i];
-				if (BookmarkFile[0] != '~' && BookmarkFile[0] != '/') {
-					Str tmp = Strnew_charp(CurrentDir);
-					if (Strlastchar(tmp) != '/')
-						Strcat_char(tmp, '/');
-					Strcat_charp(tmp, BookmarkFile);
-					BookmarkFile = cleanupName(tmp->ptr);
-				}
+				BookmarkFile = get_bookmark_file(argv[i]);
 			} else if (!strcmp("-F", argv[i]))
 				RenderFrame = TRUE;
 			else if (!strcmp("-W", argv[i])) {
@@ -6105,8 +6124,15 @@ addDownloadList(pid_t pid, char *url, char *save, char *lock, clen_t size)
 	d = New(DownloadList);
 	d->pid = pid;
 	d->url = url;
-	if (save[0] != '/' && save[0] != '~')
-		save = Strnew_m_charp(CurrentDir, "/", save, NULL)->ptr;
+	if (save[0] != '/' && save[0] != '~') {
+		char *cwd = getcwd(NULL, 0);
+		if (cwd == NULL) {
+			fprintf(stderr, "w3m: failed to get current dir\n");
+			exit(1);
+		}
+		save = Strnew_m_charp(cwd, "/", save, NULL)->ptr;
+		free(cwd);
+	}
 	d->save = expandPath(save);
 	d->lock = lock;
 	d->size = size;

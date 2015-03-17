@@ -266,8 +266,6 @@ extern enum LinkBuffer REV_LB[];
 #define inputFilenameHist(p,d,h)	inputLineHist(p,d,IN_FILENAME,h)
 #define inputChar(p)		inputLine(p,"",IN_CHAR)
 
-#define free(x)  GC_free(x)	/* let GC do it. */
-
 #define SKIP_BLANKS(p) {while(*(p)&&IS_SPACE(*(p)))(p)++;}
 #define SKIP_NON_BLANKS(p) {while(*(p)&&!IS_SPACE(*(p)))(p)++;}
 #define IS_ENDL(c) ((c)=='\0'||(c)=='\r'||(c)=='\n')
@@ -856,7 +854,6 @@ global char *personal_document_root init(NULL);
 global char *cgi_bin init(NULL);
 global char *index_file init(NULL);
 
-global char *CurrentDir;
 global int CurrentPid;
 /*
  * global Buffer *Currentbuf;
