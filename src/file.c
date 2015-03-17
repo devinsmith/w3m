@@ -6298,9 +6298,9 @@ proc_normal:
 
 				indent = h_env->envs[h_env->envc].indent;
 				if (obuf->bp.pos - i > indent) {
-					Str line;
+					Str procline;
 					append_tags(obuf);
-					line = Strnew_charp(bp);
+					procline = Strnew_charp(bp);
 					Strshrink(obuf->line, obuf->line->length - obuf->bp.len);
 #ifdef FORMAT_NICE
 					if (obuf->pos - i > h_env->limit)
@@ -6311,7 +6311,7 @@ proc_normal:
 #ifdef FORMAT_NICE
 					obuf->flag &= ~RB_FILL;
 #endif				/* FORMAT_NICE */
-					HTMLlineproc1(line->ptr, h_env);
+					HTMLlineproc1(procline->ptr, h_env);
 				}
 			}
 		}
