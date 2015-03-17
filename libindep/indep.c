@@ -82,9 +82,11 @@ strCmp(const void *s1, const void *s2)
 }
 
 char *
-cleanupName(char *name)
+cleanupName(const char *name)
 {
-	char *buf, *p, *q;
+	char *buf;
+	char *p;
+	const char *q;
 	size_t len = strlen(name);
 
 	buf = allocStr(name, len++);
@@ -137,9 +139,9 @@ cleanupName(char *name)
 }
 
 char *
-expandPath(char *name)
+expandPath(const char *name)
 {
-	char *p;
+	const char *p;
 	struct passwd *passent, *getpwnam(const char *);
 	Str extpath = NULL;
 
@@ -170,7 +172,7 @@ expandPath(char *name)
 		return extpath->ptr;
 	}
 rest:
-	return name;
+	return Strnew_charp(name)->ptr;
 }
 
 #ifndef HAVE_STRCASESTR
@@ -196,7 +198,7 @@ strcasestr(const char *s1, const char *s2)
 #endif
 
 static int
-strcasematch(char *s1, char *s2)
+strcasematch(const char *s1, const char *s2)
 {
 	int x;
 	while (*s1) {
@@ -230,20 +232,20 @@ strcasemstr(char *str, char *srch[], char **ret_ptr)
 }
 
 char *
-remove_space(char *str)
+remove_space(const char *str)
 {
-	char *p, *q;
+	const char *p, *q;
 
 	for (p = str; *p && IS_SPACE(*p); p++);
 	for (q = p; *q; q++);
 	for (; q > p && IS_SPACE(*(q - 1)); q--);
 	if (*q != '\0')
 		return Strnew_charp_n(p, q - p)->ptr;
-	return p;
+	return Strnew_charp(p)->ptr;
 }
 
 int
-non_null(char *s)
+non_null(const char *s)
 {
 	if (s == NULL)
 		return FALSE;
@@ -359,10 +361,10 @@ getescapecmd(char **s)
 }
 
 char *
-html_quote(char *str)
+html_quote(const char *str)
 {
 	Str tmp = NULL;
-	char *p, *q;
+	const char *p, *q;
 
 	for (p = str; *p; p++) {
 		q = html_quote_char(*p);
@@ -377,7 +379,7 @@ html_quote(char *str)
 	}
 	if (tmp)
 		return tmp->ptr;
-	return str;
+	return Strnew_charp(str)->ptr;
 }
 
 char *
@@ -412,10 +414,10 @@ static char xdigit[0x10] = "0123456789ABCDEF";
    -1)
 
 char *
-url_quote(char *str)
+url_quote(const char *str)
 {
 	Str tmp = NULL;
-	char *p;
+	const char *p;
 
 	for (p = str; *p; p++) {
 		if (is_url_quote(*p)) {
@@ -431,14 +433,14 @@ url_quote(char *str)
 	}
 	if (tmp)
 		return tmp->ptr;
-	return str;
+	return Strnew_charp(str)->ptr;
 }
 
 char *
-file_quote(char *str)
+file_quote(const char *str)
 {
 	Str tmp = NULL;
-	char *p;
+	const char *p;
 	char buf[4];
 
 	for (p = str; *p; p++) {
@@ -455,14 +457,14 @@ file_quote(char *str)
 	}
 	if (tmp)
 		return tmp->ptr;
-	return str;
+	return Strnew_charp(str)->ptr;
 }
 
 char *
-file_unquote(char *str)
+file_unquote(const char *str)
 {
 	Str tmp = NULL;
-	char *p, *q;
+	const char *p, *q;
 	int c;
 
 	for (p = str; *p;) {
@@ -484,7 +486,7 @@ file_unquote(char *str)
 	}
 	if (tmp)
 		return tmp->ptr;
-	return str;
+	return Strnew_charp(str)->ptr;
 }
 
 Str

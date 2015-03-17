@@ -38,20 +38,20 @@ extern int getescapechar(char **s);
 extern char *getescapecmd(char **s);
 extern char *allocStr(const char *s, int len);
 extern int strCmp(const void *s1, const void *s2);
-extern char *cleanupName(char *name);
-extern char *expandPath(char *name);
+extern char *cleanupName(const char *name);
+extern char *expandPath(const char *name);
 #ifndef HAVE_STRCASESTR
 extern char *strcasestr(const char *s1, const char *s2);
 #endif
 extern int strcasemstr(char *str, char *srch[], char **ret_ptr);
-extern char *remove_space(char *str);
-extern int non_null(char *s);
+extern char *remove_space(const char *str);
+extern int non_null(const char *s);
 extern void cleanup_line(Str s, int mode);
-extern char *html_quote(char *str);
+extern char *html_quote(const char *str);
 extern char *html_unquote(char *str);
-extern char *file_quote(char *str);
-extern char *file_unquote(char *str);
-extern char *url_quote(char *str);
+extern char *file_quote(const char *str);
+extern char *file_unquote(const char *str);
+extern char *url_quote(const char *str);
 extern Str Str_url_unquote(Str x, int is_form, int safe);
 extern Str Str_form_quote(Str x);
 #define Str_form_unquote(x) Str_url_unquote((x), TRUE, FALSE)
