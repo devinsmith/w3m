@@ -3075,8 +3075,10 @@ query_from_followform(Str * query, FormItemList * fi, int multipart)
 		}
 		fi->parent->body = (*query)->ptr;
 		fi->parent->boundary =
-			Sprintf("------------------------------%d%ld%ld%ld", CurrentPid,
-		   fi->parent, fi->parent->body, fi->parent->boundary)->ptr;
+		    Sprintf("------------------------------%d%lld%lld%lld",
+			CurrentPid, (long long)fi->parent,
+			(long long)fi->parent->body,
+			(long long)fi->parent->boundary)->ptr;
 	}
 	*query = Strnew();
 	for (f2 = fi->parent->item; f2; f2 = f2->next) {
