@@ -6570,7 +6570,6 @@ showProgress(clen_t * linelen, clen_t * trbyte)
 		for (j = pos + 1; j <= i; j++)
 			addch('|');
 		standend();
-		/* no_clrtoeol(); */
 		refresh();
 	} else {
 		cur_time = time(0);

@@ -1279,24 +1279,6 @@ rscroll(int n)
 }
 #endif
 
-#if 0
-void
-need_clrtoeol(void)
-{
-	/* Clear to the end of line as the need arises */
-	l_prop *lprop = ScreenImage[CurLine]->lineprop;
-
-	if (lprop[CurColumn] & S_EOL)
-		return;
-
-	if (!(ScreenImage[CurLine]->isdirty & (L_NEED_CE | L_CLRTOEOL)) ||
-	    ScreenImage[CurLine]->eol > CurColumn)
-		ScreenImage[CurLine]->eol = CurColumn;
-
-	ScreenImage[CurLine]->isdirty |= L_NEED_CE;
-}
-#endif				/* 0 */
-
 /* XXX: conflicts with curses's clrtoeol(3) ? */
 void
 clrtoeol(void)
@@ -1380,17 +1362,6 @@ clrtobotx(void)
 {
 	clrtobot_eol(clrtoeolx);
 }
-
-#if 0
-void
-no_clrtoeol(void)
-{
-	int i;
-	l_prop *lprop = ScreenImage[CurLine]->lineprop;
-
-	ScreenImage[CurLine]->isdirty &= ~L_CLRTOEOL;
-}
-#endif				/* 0 */
 
 void
 addstr(const char *s)
