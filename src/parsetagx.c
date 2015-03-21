@@ -287,7 +287,8 @@ parsedtag_get_value(struct parsed_tag * tag, int id, void *value)
 	int i;
 	if (!parsedtag_exists(tag, id) || !tag->value[i = tag->map[id]])
 		return 0;
-	return toValFunc[AttrMAP[id].vtype] (tag->value[i], value);
+	return toValFunc[(unsigned char)AttrMAP[id].vtype]
+	    (tag->value[i], value);
 }
 
 Str
