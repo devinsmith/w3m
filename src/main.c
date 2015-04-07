@@ -5498,6 +5498,7 @@ w3m_exit(int i)
 	stopDownload();
 	deleteFiles();
 	disconnectFTP();
+	endwin();
 	exit(i);
 }
 

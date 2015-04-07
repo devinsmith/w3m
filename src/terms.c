@@ -23,7 +23,6 @@
 extern int tputs(const char *, int, int (*)(int));
 char *tgetstr(char *, char **);
 
-MySignalHandler reset_exit(SIGNAL_ARG), reset_error_exit(SIGNAL_ARG), error_dump(SIGNAL_ARG);
 static int line_drawing_has_init = 0;
 static char *T_as = "";
 static char *T_ae = "";
@@ -269,63 +268,9 @@ sleep_till_anykey(int sec, int purge)
 	er = tcsetattr(STDIN_FILENO, TCSANOW, &ioval);
 	if (er == -1) {
 		printf("Error occured: errno=%d\n", errno);
-		reset_error_exit(SIGNAL_ARGLIST);
+		exit(1);
 	}
 	return ret;
-}
-
-
-static MySignalHandler
-reset_exit_with_value(SIGNAL_ARG, int rval)
-{
-#ifdef USE_MOUSE
-	if (mouseActive)
-		mouse_end();
-#endif				/* USE_MOUSE */
-	clear();
-	resetty();
-	endwin();
-	w3m_exit(rval);
-	SIGNAL_RETURN;
-}
-
-MySignalHandler
-reset_error_exit(SIGNAL_ARG)
-{
-	reset_exit_with_value(SIGNAL_ARGLIST, 1);
-}
-
-MySignalHandler
-reset_exit(SIGNAL_ARG)
-{
-	reset_exit_with_value(SIGNAL_ARGLIST, 0);
-}
-
-
-MySignalHandler
-error_dump(SIGNAL_ARG)
-{
-	mySignal(SIGABRT, SIG_DFL);
-	clear();
-	resetty();
-	endwin();
-	abort();
-	SIGNAL_RETURN;
-}
-
-void
-set_int(void)
-{
-	mySignal(SIGHUP, reset_exit);
-	mySignal(SIGINT, reset_exit);
-	mySignal(SIGQUIT, reset_exit);
-	mySignal(SIGTERM, reset_exit);
-	mySignal(SIGILL, error_dump);
-	mySignal(SIGABRT, error_dump);
-	mySignal(SIGFPE, error_dump);
-#ifdef SIGBUS
-	mySignal(SIGBUS, error_dump);
-#endif /* SIGBUS */
 }
 
 void
