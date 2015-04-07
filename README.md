@@ -49,15 +49,15 @@ stuff in a jail.
 
 Building and installing
 -----------------------
-# pkg_add boehm-gc imlib2
-# make
-# make install
+\# pkg_add boehm-gc imlib2
+\# make
+\# make install
 $ w3m https://en.wikipedia.org
 
 Additionally, it's possible to build without m17n and/or image
 support:
 
-# pkg_add boehm-gc
-# USE_IMAGE=no USE_M17N=no make
-# make install
+\# pkg_add boehm-gc
+\# USE_IMAGE=no USE_M17N=no make
+\# make install
 $ w3m https://en.wikipedia.org
