@@ -47,11 +47,9 @@
 /* #define ENABLE_NLS 0 */
 
 #define USE_COLOR 1
-#define USE_ANSI_COLOR 1
-#define USE_BG_COLOR 1
 /* #undef USE_MIGEMO */
 #define USE_MARK
-#define USE_MOUSE 1
+/* #define USE_MOUSE */
 /* #undef USE_GPM */
 /* #undef USE_SYSMOUSE */
 #define USE_MENU 1

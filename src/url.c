@@ -17,6 +17,7 @@
 #include "Str.h"
 #include "myctype.h"
 #include "regex.h"
+#include "terms.h"
 
 static int tls_initialized = FALSE;
 

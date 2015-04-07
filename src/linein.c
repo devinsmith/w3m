@@ -2,6 +2,7 @@
 #include "fm.h"
 #include "local.h"
 #include "myctype.h"
+#include "terms.h"
 
 #ifdef USE_MOUSE
 #ifdef USE_GPM

@@ -1,6 +1,7 @@
 /* $Id: display.c,v 1.71 2010/07/18 14:10:09 htrb Exp $ */
 #include <signal.h>
 #include <math.h>
+#include "terms.h"
 #include "fm.h"
 
 /* *INDENT-OFF* */
@@ -31,27 +32,19 @@
  *     7  white
  */
 
-#define EFFECT_ANCHOR_START_C       setfcolor(anchor_color)
-#define EFFECT_IMAGE_START_C        setfcolor(image_color)
-#define EFFECT_FORM_START_C         setfcolor(form_color)
-#define EFFECT_ACTIVE_START_C      (setfcolor(active_color), underline())
-#define EFFECT_VISITED_START_C      setfcolor(visited_color)
-#ifdef USE_BG_COLOR
-#define EFFECT_MARK_START_C         setbcolor(mark_color)
-#else
-#define EFFECT_MARK_START_C         standout()
-#endif
+#define EFFECT_ANCHOR_START_C	attron(COLOR_PAIR(anchor_color))
+#define EFFECT_IMAGE_START_C	attron(COLOR_PAIR(image_color))
+#define EFFECT_FORM_START_C	attron(COLOR_PAIR(form_color))
+#define EFFECT_ACTIVE_START_C	(attron(COLOR_PAIR(active_color)), underline())
+#define EFFECT_VISITED_START_C	attron(COLOR_PAIR(visited_color))
+#define EFFECT_MARK_START_C	standout()
 
-#define EFFECT_IMAGE_END_C          setfcolor(basic_color)
-#define EFFECT_ANCHOR_END_C         setfcolor(basic_color)
-#define EFFECT_FORM_END_C           setfcolor(basic_color)
-#define EFFECT_ACTIVE_END_C        (setfcolor(basic_color), underlineend())
-#define EFFECT_VISITED_END_C        setfcolor(basic_color)
-#ifdef USE_BG_COLOR
-#define EFFECT_MARK_END_C           setbcolor(bg_color)
-#else
-#define EFFECT_MARK_END_C           standend()
-#endif
+#define EFFECT_ANCHOR_END_C	attroff(COLOR_PAIR(anchor_color))
+#define EFFECT_IMAGE_END_C	attroff(COLOR_PAIR(image_color))
+#define EFFECT_FORM_END_C	attroff(COLOR_PAIR(form_color))
+#define EFFECT_ACTIVE_END_C	(attroff(COLOR_PAIR(active_color)), underlineend())
+#define EFFECT_VISITED_END_C	attroff(COLOR_PAIR(visited_color))
+#define EFFECT_MARK_END_C	standend()
 
 #define EFFECT_ANCHOR_START_M       underline()
 #define EFFECT_ANCHOR_END_M         underlineend()
@@ -178,6 +171,17 @@ fmInit(void)
 {
 	if (!fmInitialized) {
 		initscr();
+		savetty();
+#ifdef USE_COLOR
+		if (useColor) {
+			if (has_colors()) {
+				start_color();
+				use_default_colors();
+			} else {
+				useColor = FALSE;
+			}
+		}
+#endif
 		term_raw();
 		term_noecho();
 #ifdef USE_IMAGE
@@ -197,9 +201,6 @@ static int ccolumn = -1;
 static int ulmode = 0, somode = 0, bomode = 0;
 static int anch_mode = 0, emph_mode = 0, imag_mode = 0, form_mode = 0, active_mode = 0,
  visited_mode = 0, mark_mode = 0, graph_mode = 0;
-#ifdef USE_ANSI_COLOR
-static Linecolor color_mode = 0;
-#endif
 
 #ifdef USE_BUFINFO
 static Buffer *save_current_buf = NULL;
@@ -218,9 +219,6 @@ static Line *redrawLineImage(Buffer * buf, Line * l, int i);
 #endif
 static int redrawLineRegion(Buffer * buf, Line * l, int i, int bpos, int epos);
 static void do_effects(Lineprop m);
-#ifdef USE_ANSI_COLOR
-static void do_color(Linecolor c);
-#endif
 
 static Str
 make_lastline_link(Buffer * buf, char *title, char *url)
@@ -252,7 +250,7 @@ make_lastline_link(Buffer * buf, char *title, char *url)
 	if (DecodeURL)
 		u = Strnew_charp(url_unquote_conv(u->ptr, buf->document_charset));
 #ifdef USE_M17N
-	u = checkType(u, &pr, NULL);
+	u = checkType(u, &pr);
 #endif
 	if (l <= 4 || l >= get_Str_strwidth(u)) {
 		if (!s)
@@ -356,6 +354,16 @@ displayBuffer(Buffer * buf, enum DBmode mode)
 {
 	Str msg;
 	int ny = 0;
+
+#ifdef USE_M17N
+	wc_putc_init(InnerCharset, DisplayCharset);
+#endif
+
+	init_pair(anchor_color, anchor_color, -1);
+	init_pair(image_color, image_color, -1);
+	init_pair(form_color, form_color, -1);
+	init_pair(active_color, active_color, -1);
+	init_pair(visited_color, visited_color, -1);
 
 	if (!buf)
 		return;
@@ -476,6 +484,10 @@ displayBuffer(Buffer * buf, enum DBmode mode)
 		save_current_buf = buf;
 	}
 #endif
+
+#ifdef USE_M17N
+	wc_putc_end();
+#endif
 }
 
 static void
@@ -562,9 +574,6 @@ redrawNLine(Buffer * buf, int n)
 #ifdef USE_COLOR
 	if (useColor) {
 		EFFECT_ANCHOR_END_C;
-#ifdef USE_BG_COLOR
-		setbcolor(bg_color);
-#endif				/* USE_BG_COLOR */
 	}
 #endif				/* USE_COLOR */
 	if (nTab > 1
@@ -642,9 +651,6 @@ redrawLine(Buffer * buf, Line * l, int i)
 	int column = buf->currentColumn;
 	char *p;
 	Lineprop *pr;
-#ifdef USE_ANSI_COLOR
-	Linecolor *pc;
-#endif
 #ifdef USE_COLOR
 	Anchor *a;
 	ParsedURL url;
@@ -694,12 +700,6 @@ redrawLine(Buffer * buf, Line * l, int i)
 	pos = columnPos(l, column);
 	p = &(l->lineBuf[pos]);
 	pr = &(l->propBuf[pos]);
-#ifdef USE_ANSI_COLOR
-	if (useColor && l->colorBuf)
-		pc = &(l->colorBuf[pos]);
-	else
-		pc = NULL;
-#endif
 	rcol = COLPOS(l, pos);
 
 	for (j = 0; rcol - column < buf->COLS && pos + j < l->len; j += delta) {
@@ -722,10 +722,6 @@ redrawLine(Buffer * buf, Line * l, int i)
 		ncol = COLPOS(l, pos + j + delta);
 		if (ncol - column > buf->COLS)
 			break;
-#ifdef USE_ANSI_COLOR
-		if (pc)
-			do_color(pc[j]);
-#endif
 		if (rcol < column) {
 			for (rcol = column; rcol < ncol; rcol++)
 				addChar(' ', 0);
@@ -787,10 +783,6 @@ redrawLine(Buffer * buf, Line * l, int i)
 		graph_mode = FALSE;
 		graphend();
 	}
-#ifdef USE_ANSI_COLOR
-	if (color_mode)
-		do_color(0);
-#endif
 	if (rcol - column < buf->COLS)
 		clrtoeolx();
 	return l;
@@ -874,9 +866,6 @@ redrawLineRegion(Buffer * buf, Line * l, int i, int bpos, int epos)
 	int column = buf->currentColumn;
 	char *p;
 	Lineprop *pr;
-#ifdef USE_ANSI_COLOR
-	Linecolor *pc;
-#endif
 	int bcol, ecol;
 #ifdef USE_COLOR
 	Anchor *a;
@@ -889,12 +878,6 @@ redrawLineRegion(Buffer * buf, Line * l, int i, int bpos, int epos)
 	pos = columnPos(l, column);
 	p = &(l->lineBuf[pos]);
 	pr = &(l->propBuf[pos]);
-#ifdef USE_ANSI_COLOR
-	if (useColor && l->colorBuf)
-		pc = &(l->colorBuf[pos]);
-	else
-		pc = NULL;
-#endif
 	rcol = COLPOS(l, pos);
 	bcol = bpos - pos;
 	ecol = epos - pos;
@@ -919,10 +902,6 @@ redrawLineRegion(Buffer * buf, Line * l, int i, int bpos, int epos)
 		ncol = COLPOS(l, pos + j + delta);
 		if (ncol - column > buf->COLS)
 			break;
-#ifdef USE_ANSI_COLOR
-		if (pc)
-			do_color(pc[j]);
-#endif
 		if (j >= bcol && j < ecol) {
 			if (rcol < column) {
 				move(i, buf->rootX);
@@ -987,10 +966,6 @@ redrawLineRegion(Buffer * buf, Line * l, int i, int bpos, int epos)
 		graph_mode = FALSE;
 		graphend();
 	}
-#ifdef USE_ANSI_COLOR
-	if (color_mode)
-		do_color(0);
-#endif
 	return rcol - column;
 }
 
@@ -1041,24 +1016,6 @@ do_effects(Lineprop m)
 	do_effect1(PE_MARK, mark_mode, EFFECT_MARK_START, EFFECT_MARK_END);
 }
 
-#ifdef USE_ANSI_COLOR
-static void
-do_color(Linecolor c)
-{
-	if (c & 0x8)
-		setfcolor(c & 0x7);
-	else if (color_mode & 0x8)
-		setfcolor(basic_color);
-#ifdef USE_BG_COLOR
-	if (c & 0x80)
-		setbcolor((c >> 4) & 0x7);
-	else if (color_mode & 0x80)
-		setbcolor(bg_color);
-#endif
-	color_mode = c;
-}
-#endif
-
 #ifdef USE_M17N
 void
 addChar(char c, Lineprop mode)
@@ -1097,14 +1054,14 @@ addChar(char c, Lineprop mode)
 			}
 #ifdef USE_M17N
 			if (w == 2 && WcOption.use_wide)
-				addstr(graph2_symbol[(int) c]);
+				addmch(graph2_symbol[(int) c], SIZE_MAX);
 			else
 #endif
 				addch(*graph_symbol[(int) c]);
 		} else {
 #ifdef USE_M17N
 			symbol = get_symbol(DisplayCharset, &w);
-			addstr(symbol[(int) c]);
+			addmch(symbol[(int) c], SIZE_MAX);
 #else
 			symbol = get_symbol();
 			addch(*symbol[(int) c]);
@@ -1134,7 +1091,7 @@ addChar(char c, Lineprop mode)
 		char buf[5];
 		snprintf(buf, sizeof(buf), "[%.2X]",
 			(unsigned char) wtf_get_code((wc_uchar *) p) | 0x80);
-		addstr(buf);
+		addmch(buf, SIZE_MAX);
 	} else
 		addmch(p, len);
 #else
@@ -1188,7 +1145,7 @@ message(const char *s, int return_x, int return_y)
 	if (!fmInitialized)
 		return;
 	move(LASTLINE, 0);
-	addnstr(s, COLS - 1);
+	addnstr_sup(s, COLS - 1);
 	clrtoeolx();
 	move(return_y, return_x);
 }

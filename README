@@ -25,6 +25,7 @@ Changes since 0.5.3
 -----
 * Use libtls from [libressl](http://libressl.org) to implement
 Transport Layer Security (HTTPS) cleanly.
+* Reduced terms.c in favor of libcurses.
 * NULL pointer dereference and buffer overflow bugs fixed.
 * Format string fixes (including Y2038 fixes).
 * Inserted checks for integer overflow in allocation functions.

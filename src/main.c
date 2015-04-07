@@ -9,7 +9,7 @@
 #include <fcntl.h>
 #include <sys/wait.h>
 #include <time.h>
-#include "terms.h"
+#include <curses.h>
 #include "myctype.h"
 #include "regex.h"
 #ifdef USE_M17N
@@ -26,6 +26,7 @@ extern int do_getch();
 #define getch()	do_getch()
 #endif				/* defined(USE_GPM) || defined(USE_SYSMOUSE) */
 #endif
+#include "terms.h"
 
 #define DSTR_LEN	256
 
@@ -49,12 +50,6 @@ static AlarmEvent DefaultAlarm = {
 };
 static AlarmEvent *CurrentAlarm = &DefaultAlarm;
 static MySignalHandler SigAlarm(SIGNAL_ARG);
-#endif
-
-#ifdef SIGWINCH
-static int need_resize_screen = FALSE;
-static MySignalHandler resize_hook(SIGNAL_ARG);
-static void resize_screen(void);
 #endif
 
 #ifdef SIGPIPE
@@ -123,9 +118,6 @@ fversion(FILE * f)
 #endif
 #ifdef USE_COLOR
 		",color"
-#ifdef USE_ANSI_COLOR
-		",ansi-color"
-#endif
 #endif
 #ifdef USE_MOUSE
 		",mouse"
@@ -761,12 +753,6 @@ main(int argc, char **argv, char **envp)
 #endif
 	if (!w3m_dump && !w3m_backend) {
 		fmInit();
-#ifdef SIGWINCH
-		mySignal(SIGWINCH, resize_hook);
-#else				/* not SIGWINCH */
-		setlinescols();
-		setupscreen();
-#endif				/* not SIGWINCH */
 	}
 #ifdef USE_IMAGE
 	else if (w3m_halfdump && displayImage)
@@ -1055,29 +1041,11 @@ main(int argc, char **argv, char **envp)
 			alarm(CurrentAlarm->sec);
 		}
 #endif
-#ifdef SIGWINCH
-		mySignal(SIGWINCH, resize_hook);
-#endif
 #ifdef USE_IMAGE
 		if (activeImage && displayImage && Currentbuf->img &&
 		    !Currentbuf->image_loaded) {
 			do {
-#ifdef SIGWINCH
-				if (need_resize_screen)
-					resize_screen();
-#endif
 				loadImage(Currentbuf, IMG_FLAG_NEXT);
-			} while (sleep_till_anykey(1, 0) <= 0);
-		}
-#ifdef SIGWINCH
-		else
-#endif
-#endif
-#ifdef SIGWINCH
-		{
-			do {
-				if (need_resize_screen)
-					resize_screen();
 			} while (sleep_till_anykey(1, 0) <= 0);
 		}
 #endif
@@ -1382,26 +1350,6 @@ intTrap(SIGNAL_ARG)
 	LONGJMP(IntReturn, 0);
 	SIGNAL_RETURN;
 }
-
-#ifdef SIGWINCH
-static MySignalHandler
-resize_hook(SIGNAL_ARG)
-{
-	need_resize_screen = TRUE;
-	mySignal(SIGWINCH, resize_hook);
-	SIGNAL_RETURN;
-}
-
-static void
-resize_screen(void)
-{
-	need_resize_screen = FALSE;
-	setlinescols();
-	setupscreen();
-	if (CurrentTab)
-		displayBuffer(Currentbuf, B_FORCE_REDRAW);
-}
-#endif				/* SIGWINCH */
 
 #ifdef SIGPIPE
 static MySignalHandler
@@ -4372,7 +4320,7 @@ _peekURL(int only_img)
 		s = Strnew_charp(url_unquote_conv
 				 (s->ptr, Currentbuf->document_charset));
 #ifdef USE_M17N
-	s = checkType(s, &pp, NULL);
+	s = checkType(s, &pp);
 	p = NewAtom_N(Lineprop, s->length);
 	memcpy(p, pp, s->length * sizeof(Lineprop));
 #endif
@@ -4430,7 +4378,7 @@ DEFUN(curURL, PEEK, "Peek current URL")
 		if (DecodeURL)
 			s = Strnew_charp(url_unquote_conv(s->ptr, 0));
 #ifdef USE_M17N
-		s = checkType(s, &pp, NULL);
+		s = checkType(s, &pp);
 		p = NewAtom_N(Lineprop, s->length);
 		memcpy(p, pp, s->length * sizeof(Lineprop));
 #endif

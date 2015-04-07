@@ -408,12 +408,6 @@ struct param_ptr params2[] = {
 	(void *) colorstr},
 	{"form_color", P_COLOR, PI_SEL_C, (void *) &form_color, CMT_F_COLOR,
 	(void *) colorstr},
-#ifdef USE_BG_COLOR
-	{"mark_color", P_COLOR, PI_SEL_C, (void *) &mark_color, CMT_MARK_COLOR,
-	(void *) colorstr},
-	{"bg_color", P_COLOR, PI_SEL_C, (void *) &bg_color, CMT_BG_COLOR,
-	(void *) colorstr},
-#endif				/* USE_BG_COLOR */
 	{"active_style", P_INT, PI_ONOFF, (void *) &useActiveColor,
 	CMT_ACTIVE_STYLE, NULL},
 	{"active_color", P_COLOR, PI_SEL_C, (void *) &active_color, CMT_C_COLOR,

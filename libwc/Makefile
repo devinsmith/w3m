@@ -16,7 +16,7 @@ HDRS=		big5.h ccs.h ces.h gb18030.h gbk.h hkscs.h hz.h \
 
 CFLAGS+=	-Wall -I. -I../include -I${PREFIX}/include
 
-LDADD+=		-L${PREFIX}/lib -lgc
+LDADD+=		-L${PREFIX}/lib -lcurses -lgc
 
 install:
 

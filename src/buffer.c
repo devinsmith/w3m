@@ -1,5 +1,6 @@
 /* $Id: buffer.c,v 1.30 2010/07/18 14:10:09 htrb Exp $ */
 #include "fm.h"
+#include "terms.h"
 
 #ifdef USE_MOUSE
 #ifdef USE_GPM
@@ -328,13 +329,13 @@ listBuffer(Buffer * top, Buffer * current)
 	Buffer *buf = top;
 
 	move(0, 0);
+#if 0 /* XXX */
 #ifdef USE_COLOR
 	if (useColor) {
 		setfcolor(basic_color);
-#ifdef USE_BG_COLOR
 		setbcolor(bg_color);
-#endif				/* USE_BG_COLOR */
 	}
+#endif
 #endif				/* USE_COLOR */
 	clrtobotx();
 	for (i = 0; i < LASTLINE; i++) {
@@ -347,7 +348,7 @@ listBuffer(Buffer * top, Buffer * current)
 			standend();
 			clrtoeolx();
 			move(i, 0);
-			toggle_stand();
+			toggle_stand(-1);
 		} else
 			clrtoeolx();
 		if (buf->nextBuffer == NULL) {
@@ -434,7 +435,7 @@ selectBuffer(Buffer * firstbuf, Buffer * currentbuf, char *selectchar)
 				writeBufferName(currentbuf, spoint);
 				standend();
 				move(spoint, 0);
-				toggle_stand();
+				toggle_stand(-1);
 			} else if (cpoint < maxbuf - 1) {
 				topbuf = currentbuf;
 				currentbuf = currentbuf->nextBuffer;
@@ -453,7 +454,7 @@ selectBuffer(Buffer * firstbuf, Buffer * currentbuf, char *selectchar)
 				writeBufferName(currentbuf, spoint);
 				standend();
 				move(spoint, 0);
-				toggle_stand();
+				toggle_stand(-1);
 			} else if (cpoint > 0) {
 				i = cpoint - sclimit;
 				if (i < 0)
@@ -605,9 +606,6 @@ writeBufferCache(Buffer * buf)
 	Str tmp;
 	FILE *cache = NULL;
 	Line *l;
-#ifdef USE_ANSI_COLOR
-	int colorflag;
-#endif
 
 	if (buf->savecache)
 		return -1;
@@ -638,18 +636,6 @@ writeBufferCache(Buffer * buf)
 			    fwrite(l->propBuf, sizeof(Lineprop), l->size, cache) < l->size)
 				goto _error;
 		}
-#ifdef USE_ANSI_COLOR
-		colorflag = l->colorBuf ? 1 : 0;
-		if (fwrite1(colorflag, cache))
-			goto _error;
-		if (colorflag) {
-			if (l->bpos == 0) {
-				if (fwrite(l->colorBuf, sizeof(Linecolor), l->size, cache) <
-				    l->size)
-					goto _error;
-			}
-		}
-#endif
 	}
 
 	fclose(cache);
@@ -668,9 +654,6 @@ readBufferCache(Buffer * buf)
 	FILE *cache;
 	Line *l = NULL, *prevl = NULL, *basel = NULL;
 	long lnum = 0, clnum, tlnum;
-#ifdef USE_ANSI_COLOR
-	int colorflag;
-#endif
 
 	if (buf->savecache == NULL)
 		return -1;
@@ -713,19 +696,6 @@ readBufferCache(Buffer * buf)
 			l->propBuf = basel->propBuf + l->bpos;
 		} else
 			break;
-#ifdef USE_ANSI_COLOR
-		if (fread1(colorflag, cache))
-			break;
-		if (colorflag) {
-			if (l->bpos == 0) {
-				l->colorBuf = NewAtom_N(Linecolor, l->size);
-				fread(l->colorBuf, sizeof(Linecolor), l->size, cache);
-			} else
-				l->colorBuf = basel->colorBuf + l->bpos;
-		} else {
-			l->colorBuf = NULL;
-		}
-#endif
 	}
 	buf->lastLine = prevl;
 	buf->lastLine->next = NULL;

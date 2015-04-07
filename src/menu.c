@@ -9,6 +9,7 @@
 #include "func.h"
 #include "myctype.h"
 #include "regex.h"
+#include "terms.h"
 
 #ifdef USE_MOUSE
 #ifdef USE_GPM
@@ -236,9 +237,12 @@ static MenuList *w3mMenuList;
 
 static Menu *CurrentMenu = NULL;
 
-#define mvaddch(y, x, c)        (move(y, x), addch(c))
-#define mvaddstr(y, x, str)     (move(y, x), addstr(str))
-#define mvaddnstr(y, x, str, n) (move(y, x), addnstr_sup(str, n))
+/*
+ * Custom mvaddstr() and mvaddnstr() definitions are used to fit in with the
+ * m17n support.
+ */
+#define menu_mvaddstr(y, x, str)	(move(y, x), addmstr(str))
+#define menu_mvaddnstr(y, x, str, n)	(move(y, x), addnstr_sup(str, n))
 
 void
 new_menu(Menu * menu, MenuItem * item)
@@ -342,60 +346,60 @@ draw_menu(Menu * menu)
 
 	if (menu->offset == 0) {
 		G_start;
-		mvaddstr(y, x, FRAME[3]);
+		menu_mvaddstr(y, x, FRAME[3]);
 		for (i = FRAME_WIDTH; i < w - FRAME_WIDTH; i += FRAME_WIDTH)
-			mvaddstr(y, x + i, FRAME[10]);
-		mvaddstr(y, x + i, FRAME[6]);
+			menu_mvaddstr(y, x + i, FRAME[10]);
+		menu_mvaddstr(y, x + i, FRAME[6]);
 		G_end;
 	} else {
 		G_start;
-		mvaddstr(y, x, FRAME[5]);
+		menu_mvaddstr(y, x, FRAME[5]);
 		G_end;
 		for (i = FRAME_WIDTH; i < w - FRAME_WIDTH; i++)
-			mvaddstr(y, x + i, " ");
+			menu_mvaddstr(y, x + i, " ");
 		G_start;
-		mvaddstr(y, x + i, FRAME[5]);
+		menu_mvaddstr(y, x + i, FRAME[5]);
 		G_end;
 		i = (w / 2 - 1) / FRAME_WIDTH * FRAME_WIDTH;
-		mvaddstr(y, x + i, ":");
+		menu_mvaddstr(y, x + i, ":");
 	}
 
 	for (j = 0; j < menu->height; j++) {
 		y++;
 		G_start;
-		mvaddstr(y, x, FRAME[5]);
+		menu_mvaddstr(y, x, FRAME[5]);
 		G_end;
 		draw_menu_item(menu, menu->offset + j);
 		G_start;
-		mvaddstr(y, x + w - FRAME_WIDTH, FRAME[5]);
+		menu_mvaddstr(y, x + w - FRAME_WIDTH, FRAME[5]);
 		G_end;
 	}
 	y++;
 	if (menu->offset + menu->height == menu->nitem) {
 		G_start;
-		mvaddstr(y, x, FRAME[9]);
+		menu_mvaddstr(y, x, FRAME[9]);
 		for (i = FRAME_WIDTH; i < w - FRAME_WIDTH; i += FRAME_WIDTH)
-			mvaddstr(y, x + i, FRAME[10]);
-		mvaddstr(y, x + i, FRAME[12]);
+			menu_mvaddstr(y, x + i, FRAME[10]);
+		menu_mvaddstr(y, x + i, FRAME[12]);
 		G_end;
 	} else {
 		G_start;
-		mvaddstr(y, x, FRAME[5]);
+		menu_mvaddstr(y, x, FRAME[5]);
 		G_end;
 		for (i = FRAME_WIDTH; i < w - FRAME_WIDTH; i++)
-			mvaddstr(y, x + i, " ");
+			menu_mvaddstr(y, x + i, " ");
 		G_start;
-		mvaddstr(y, x + i, FRAME[5]);
+		menu_mvaddstr(y, x + i, FRAME[5]);
 		G_end;
 		i = (w / 2 - 1) / FRAME_WIDTH * FRAME_WIDTH;
-		mvaddstr(y, x + i, ":");
+		menu_mvaddstr(y, x + i, ":");
 	}
 }
 
 void
 draw_menu_item(Menu * menu, int mselect)
 {
-	mvaddnstr(menu->y + mselect - menu->offset, menu->x,
+	menu_mvaddnstr(menu->y + mselect - menu->offset, menu->x,
 		  menu->item[mselect].label, menu->width);
 }
 
@@ -420,7 +424,7 @@ select_menu(Menu * menu, int mselect)
 	 * move(menu->cursorY, menu->cursorX);
 	 */
 	move(menu->y + mselect - menu->offset, menu->x);
-	toggle_stand();
+	toggle_stand(menu->width);
 	refresh();
 
 	return (menu->select);

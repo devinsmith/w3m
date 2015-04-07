@@ -16,7 +16,6 @@ CFLAGS+=	-DUSE_IMAGE
 
 .if (${USE_M17N:L} == "yes")
 CFLAGS+=	-DUSE_M17N -I../libwc
-LDADD+=		../libwc/libwc.a
 .endif
 
 SRCS+=		keybind.c
@@ -29,8 +28,13 @@ CFLAGS+=	-Wall
 CFLAGS+=	-Wshadow -Wpointer-arith -Wcast-qual
 CFLAGS+=	-Wsign-compare
 
-LDADD+=		-L${PREFIX}/lib -ltls -lssl -lcrypto -lgc -lm \
-		-ltermcap ../libindep/libindep.a
+LDADD+=		-L${PREFIX}/lib -lm -ltermcap -lcurses \
+		-ltls -lssl -lcrypto \
+		-lgc ../libindep/libindep.a
+
+.if (${USE_M17N:L} == "yes")
+LDADD+=		../libwc/libwc.a
+.endif
 
 BINDIR=		${PREFIX}/bin
 MANDIR=		${PREFIX}/man/man
