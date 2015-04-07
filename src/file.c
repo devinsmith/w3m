@@ -13,6 +13,8 @@
 #include <errno.h>
 #include <assert.h>
 #include <math.h>
+#include <unistd.h>
+#include <curses.h>
 /* foo */
 
 #include "html.h"

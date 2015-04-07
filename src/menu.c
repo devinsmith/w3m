@@ -11,6 +11,8 @@
 #include "regex.h"
 #include "terms.h"
 
+#include <curses.h>
+
 #ifdef USE_MOUSE
 #ifdef USE_GPM
 #include <gpm.h>

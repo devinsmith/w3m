@@ -15,14 +15,7 @@
 #define _GNU_SOURCE		/* strcasestr() */
 #endif
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
 #include <sys/types.h>
-#include <sys/stat.h>
-#include <unistd.h>
-#include <curses.h>
 #include "config.h"
 #include "history.h"
 
@@ -41,8 +34,6 @@
 #else
 typedef int wc_ces;		/* XXX: not used */
 #endif
-
-#include <locale.h>
 
 #ifdef ENABLE_NLS
 #include <libintl.h>

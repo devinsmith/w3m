@@ -10,6 +10,7 @@
 #include <sys/wait.h>
 #include <time.h>
 #include <curses.h>
+#include <locale.h>
 #include "myctype.h"
 #include "regex.h"
 #ifdef USE_M17N

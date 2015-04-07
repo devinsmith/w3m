@@ -12,6 +12,7 @@
 #include <poll.h>
 #include <signal.h>
 #include <string.h>
+#include <unistd.h>
 #include "fm.h"
 #include "terms.h"
 #ifdef USE_M17N

@@ -2,8 +2,9 @@
 #include "fm.h"
 #include "myctype.h"
 #include "istream.h"
+#include <unistd.h>
 #include <signal.h>
-
+#include <curses.h>
 #include <tls.h>
 
 #define	uchar		unsigned char

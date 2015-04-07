@@ -5,6 +5,8 @@
 #include <signal.h>
 #include <setjmp.h>
 #include <time.h>
+#include <unistd.h>
+#include <curses.h>
 
 #include "fm.h"
 #include "html.h"

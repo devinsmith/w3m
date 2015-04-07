@@ -2,6 +2,9 @@
 #include "fm.h"
 #include "terms.h"
 
+#include <unistd.h>
+#include <curses.h>
+
 #ifdef USE_MOUSE
 #ifdef USE_GPM
 #include <gpm.h>

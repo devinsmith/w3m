@@ -8,6 +8,7 @@
 #include <errno.h>
 #include <unistd.h>
 #include <sys/wait.h>
+#include <curses.h>
 
 #ifdef USE_IMAGE
 

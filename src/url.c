@@ -10,6 +10,8 @@
 #include <setjmp.h>
 #include <errno.h>
 #include <tls.h>
+#include <unistd.h>
+#include <curses.h>
 
 #include <sys/stat.h>
 

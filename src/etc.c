@@ -13,6 +13,7 @@
 #include <sys/wait.h>
 #include <signal.h>
 #include <unistd.h>
+#include <curses.h>
 
 #include <assert.h>
 

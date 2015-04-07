@@ -8,6 +8,7 @@
 #include "myctype.h"
 #include "local.h"
 #include "regex.h"
+#include <unistd.h>
 
 extern Str *textarea_str;
 #ifdef MENU_SELECT
