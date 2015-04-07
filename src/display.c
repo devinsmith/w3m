@@ -1,5 +1,4 @@
 /* $Id: display.c,v 1.71 2010/07/18 14:10:09 htrb Exp $ */
-#include <signal.h>
 #include <math.h>
 #include <curses.h>
 #include "terms.h"
