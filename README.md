@@ -23,7 +23,7 @@ Big5, KOI8-R, etc (see charset-list)
 
 Changes since 0.5.3
 -------------------
-* Use libtls from [libressl](http://libressl.org) to implement
+* Use libtls from [LibreSSL](http://libressl.org) to implement
 Transport Layer Security (HTTPS) cleanly.
 * NULL pointer dereference and buffer overflow bugs fixed.
 * Format string fixes (including Y2038 fixes).
@@ -31,12 +31,12 @@ Transport Layer Security (HTTPS) cleanly.
 * Use asprintf() to implement gc-based Sprintf() instead of
 hand-rolled evilness.
 * Thousands of lines of codes removed:
- * Support for old revisions of POSIX and DOS are gone.
- * Usenet (NNTP) support has been removed.
- * Improperly licensed MATRIX table rendering code that wasn't
- doing anything useful beyond the non-MATRIX code.
- * Unused character encodings (UTF-7, Johab...)
- * Replacements for standard interfaces (curses, C library stuff...)
+	* Support for old revisions of POSIX and DOS are gone.
+	* Usenet (NNTP) support has been removed.
+	* Improperly licensed MATRIX table rendering code that wasn't
+	doing anything useful beyond the non-MATRIX code.
+	* Unused character encodings (UTF-7, Johab...)
+	* Replacements for standard interfaces (curses, C library stuff...)
 * Use modern C features (size_t, const, enums, snprintf, memcpy 
 instead of bcopy, etc).
 * Formatted the code to a more readable style where every block
