@@ -33,7 +33,8 @@ Transport Layer Security (HTTPS) cleanly.
 hand-rolled evilness.
 * Removed DOS, usenet support, improperly licensed MATRIX code
 which didn't seem to be doing anything noticeably better than
-non-MATRIX code.
+non-MATRIX code, unused character encodings, replacements for
+standard interfaces... in total, thousands of lines of code.
 * Use modern C features (size_t, const, enums, snprintf, memcpy 
 instead of bcopy, etc).
 * Formatted the code to a more readable style where every block
