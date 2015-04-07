@@ -22,7 +22,7 @@ Big5, KOI8-R, etc (see charset-list)
 * and cookies.
 
 Changes since 0.5.3
------
+-------------------
 * Use libtls from [libressl](http://libressl.org) to implement
 Transport Layer Security (HTTPS) cleanly.
 * Reduced terms.c in favor of libcurses.
@@ -40,10 +40,24 @@ instead of bcopy, etc).
 is indented.
 * Improved Gopher support.
 
-Still TODO
------
+Work that still needs to be done
+--------------------------------
 * Privilege separation: decode images and do other nasty
 stuff in a jail.
 * Lots of compiler warnings need to be fixed.
-* Minimal compilation without image support needs to be made easy.
 * Remove and clean up more code!
+
+Building and installing
+-----------------------
+# pkg_add boehm-gc imlib2
+# make
+# make install
+$ w3m https://en.wikipedia.org
+
+Additionally, it's possible to build without m17n and/or image
+support:
+
+# pkg_add boehm-gc
+# USE_IMAGE=no USE_M17N=no make
+# make install
+$ w3m https://en.wikipedia.org
