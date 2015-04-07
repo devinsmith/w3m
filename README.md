@@ -25,16 +25,18 @@ Changes since 0.5.3
 -------------------
 * Use libtls from [libressl](http://libressl.org) to implement
 Transport Layer Security (HTTPS) cleanly.
-* Reduced terms.c in favor of libcurses.
 * NULL pointer dereference and buffer overflow bugs fixed.
 * Format string fixes (including Y2038 fixes).
 * Inserted checks for integer overflow in allocation functions.
 * Use asprintf() to implement gc-based Sprintf() instead of
 hand-rolled evilness.
-* Removed DOS, usenet support, improperly licensed MATRIX code
-which didn't seem to be doing anything noticeably better than
-non-MATRIX code, unused character encodings, replacements for
-standard interfaces... in total, thousands of lines of code.
+* Thousands of lines of codes removed:
+ * Support for old revisions of POSIX and DOS are gone.
+ * Usenet (NNTP) support has been removed.
+ * Improperly licensed MATRIX table rendering code that wasn't
+ doing anything useful beyond the non-MATRIX code.
+ * Unused character encodings (UTF-7, Johab...)
+ * Replacements for standard interfaces (curses, C library stuff...)
 * Use modern C features (size_t, const, enums, snprintf, memcpy 
 instead of bcopy, etc).
 * Formatted the code to a more readable style where every block
