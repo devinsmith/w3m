@@ -52,7 +52,6 @@ enum Scheme {
 	SCM_FTPDIR	= 3,
 	SCM_LOCAL	= 4,
 	SCM_LOCAL_CGI	= 5,
-	SCM_EXEC	= 6,
 	SCM_DATA	= 11,
 	SCM_MAILTO      = 12,
 	SCM_HTTPS       = 13

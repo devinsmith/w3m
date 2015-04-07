@@ -12,6 +12,7 @@
 #include <tls.h>
 #include <unistd.h>
 #include <curses.h>
+#include <assert.h>
 
 #include <sys/stat.h>
 
@@ -61,9 +62,10 @@ struct cmdtable schemetable[] = {
 	{"http", SCM_HTTP},
 	{"gopher", SCM_GOPHER},
 	{"ftp", SCM_FTP},
-	{"local", SCM_LOCAL},
+	{"ftp", SCM_FTPDIR},
 	{"file", SCM_LOCAL},
-	/* {"exec", SCM_EXEC}, */
+	{"file", SCM_LOCAL_CGI},
+	{"local", SCM_LOCAL},
 	{"data", SCM_DATA},
 #ifndef USE_W3MMAILER
 	{"mailto", SCM_MAILTO},
@@ -924,10 +926,7 @@ static Str
 _parsedURL2Str(ParsedURL * pu, int pass)
 {
 	Str tmp;
-	static char *scheme_str[] = {
-		"http", "gopher", "ftp", "ftp", "file", "file", "exec",
-		"data", "mailto", "https"
-	};
+	size_t i;
 
 	if (pu->scheme == SCM_MISSING) {
 		return Strnew_charp("???");
@@ -946,7 +945,14 @@ _parsedURL2Str(ParsedURL * pu, int pass)
 		}
 		return tmp;
 	}
-	tmp = Strnew_charp(scheme_str[pu->scheme]);
+	tmp = NULL;
+	for (i = 0; i < (sizeof(schemetable) / sizeof(*schemetable)); ++i) {
+		if (schemetable[i].cmd == pu->scheme) {
+			tmp = Strnew_charp(schemetable[i].cmdname);
+			break;
+		}
+	}
+	assert(tmp != NULL);
 	Strcat_char(tmp, ':');
 #ifndef USE_W3MMAILER
 	if (pu->scheme == SCM_MAILTO) {
