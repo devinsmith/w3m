@@ -3,7 +3,6 @@
 #include "sjis.h"
 #include "big5.h"
 #include "hkscs.h"
-#include "johab.h"
 #include "jis.h"
 #include "viet.h"
 #include "gbk.h"
@@ -187,19 +186,7 @@ wtf_push(Str os, wc_ccs ccs, wc_uint32 code)
 	cc.ccs = ccs;
 	cc.code = code;
 	if (WcOption.pre_conv && !(cc.ccs & WC_CCS_A_UNKNOWN)) {
-		if ((ccs == WC_CCS_JOHAB || ccs == WC_CCS_JOHAB_1 ||
-		     ccs == WC_CCS_JOHAB_2 || ccs == WC_CCS_JOHAB_3) &&
-		    (wtf_major_ces == WC_CES_EUC_KR ||
-		     wtf_major_ces == WC_CES_ISO_2022_KR)) {
-			cc2 = wc_johab_to_ksx1001(cc);
-			if (!WC_CCS_IS_UNKNOWN(cc2.ccs))
-				cc = cc2;
-		} else if (ccs == WC_CCS_KS_X_1001 &&
-			   wtf_major_ces == WC_CES_JOHAB) {
-			cc2 = wc_ksx1001_to_johab(cc);
-			if (!WC_CCS_IS_UNKNOWN(cc2.ccs))
-				cc = cc2;
-		} else if (WcOption.ucs_conv) {
+		if (WcOption.ucs_conv) {
 			wc_bool fix_width_conv = WcOption.fix_width_conv;
 			WcOption.fix_width_conv = WC_FALSE;
 			wc_output_init(wtf_major_ces, &wtf_major_st);
@@ -315,9 +302,6 @@ wtf_push(Str os, wc_ccs ccs, wc_uint32 code)
 			break;
 		case WC_CCS_HKSCS:
 			cc = wc_hkscs_to_cs128w(cc);
-			break;
-		case WC_CCS_JOHAB:
-			cc = wc_johab_to_cs128w(cc);
 			break;
 		case WC_CCS_UHC:
 			cc = wc_uhc_to_cs128w(cc);
@@ -441,10 +425,6 @@ wtf_parse1(wc_uchar ** p)
 	case WC_CCS_HKSCS_1:
 	case WC_CCS_HKSCS_2:
 		return wc_cs128w_to_hkscs(cc);
-	case WC_CCS_JOHAB_1:
-	case WC_CCS_JOHAB_2:
-	case WC_CCS_JOHAB_3:
-		return wc_cs128w_to_johab(cc);
 	case WC_CCS_UHC_1:
 	case WC_CCS_UHC_2:
 		return wc_cs128w_to_uhc(cc);
@@ -528,13 +508,12 @@ wc_bool
 wtf_is_hangul(wc_uchar * p)
 {
 	if (*p > 0xa0)
-		return (wtf_gr_ccs == WC_CCS_KS_X_1001 || wtf_gr_ccs == WC_CCS_JOHAB_1);
+		return (wtf_gr_ccs == WC_CCS_KS_X_1001);
 	else if (*p == WTF_C_CS94W)
 		return ((*(p + 1) & 0x7f) == WC_F_KS_X_1001);
 	else if (*p == WTF_C_PCSW) {
 		wc_uchar f = *(p + 1) & 0x7f;
-		return (f == WC_F_JOHAB_1 || f == WC_F_JOHAB_2 || f == WC_F_JOHAB_3 ||
-			f == WC_F_UHC_1 || f == WC_F_UHC_2);
+		return (f == WC_F_UHC_1 || f == WC_F_UHC_2);
 	} else if (*p == WTF_C_WCS16W) {
 		wc_uchar f = (*(++p) & 0x7f) >> 2;
 		if (f == WC_F_UCS2)

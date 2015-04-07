@@ -42,7 +42,6 @@ static charset_symbol_set charset_symbol_list[] = {
 	{WC_CES_ISO_2022_JP_3, &eucjp_symbol_set},
 	{WC_CES_EUC_KR, &euckr_symbol_set},
 	{WC_CES_ISO_2022_KR, &euckr_symbol_set},
-	{WC_CES_JOHAB, &euckr_symbol_set},
 	{WC_CES_UHC, &euckr_symbol_set},
 	{WC_CES_EUC_CN, &euccn_symbol_set},
 	{WC_CES_GBK, &euccn_symbol_set},

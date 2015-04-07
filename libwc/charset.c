@@ -234,8 +234,6 @@ wc_charset_to_ces(char *charset)
 		}
 		break;
 	case 'j':
-		if (!strncmp(p, "johab", 5))
-			return WC_CES_JOHAB;
 		if (!strncmp(p, "jis", 3))
 			return WC_CES_ISO_2022_JP;
 		break;
@@ -372,8 +370,6 @@ wc_charset_short_to_ces(char *charset)
 		return WC_CES_EUC_JP;
 	case 'j':
 		p++;
-		if (*p == 'o')
-			return WC_CES_JOHAB;
 		if (*p == 'p')
 			p++;
 		if (*p == '2')

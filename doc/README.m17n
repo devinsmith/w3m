@@ -5,8 +5,8 @@ Muntilingualizaion of w3m
 Introduction
 
   Note: The patches described here have been integrated with some changes
-  for maintainance. Some features (e.g. UTF-7) have been removed from the
-  current code.
+  for maintainance. Some features (e.g. legacy encodings: Johab, UTF-7...)
+  have been removed from the current code.
 
   I have tried the muntilingualization of w3m (w3m-m17n).
   The patch for w3m-0.4.1 was available on the following site.

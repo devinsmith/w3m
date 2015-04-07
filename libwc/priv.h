@@ -1,4 +1,3 @@
-
 #ifndef _WC_PRIV_H
 #define _WC_PRIV_H
 
@@ -59,10 +58,6 @@
 #define WC_F_CNS_11643_16	0x0C
 #define WC_F_CNS_11643_X	0x0D
 #define WC_F_GB_12345		0x0E
-#define WC_F_JOHAB		0x0F
-#define WC_F_JOHAB_1		0x10
-#define WC_F_JOHAB_2		0x11
-#define WC_F_JOHAB_3		0x12
 #define WC_F_SJIS_EXT		0x13
 #define WC_F_SJIS_EXT_1		0x14
 #define WC_F_SJIS_EXT_2		0x15

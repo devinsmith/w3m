@@ -4,7 +4,6 @@
 #include "hz.h"
 #include "big5.h"
 #include "hkscs.h"
-#include "johab.h"
 #include "gbk.h"
 #include "gb18030.h"
 #include "uhc.h"
@@ -189,14 +188,6 @@ static wc_gset gset_hkscs[] = {
 	{WC_CCS_HKSCS, 0x80, 1},
 	{0, 0, 0},
 };
-static wc_gset gset_johab[] = {
-	{WC_CCS_US_ASCII, 0, 1},
-	{WC_CCS_JOHAB_1, 0x80, 1},
-	{WC_CCS_JOHAB_2, 0x80, 1},
-	{WC_CCS_JOHAB_3, 0x80, 1},
-	{WC_CCS_JOHAB, 0x80, 1},
-	{0, 0, 0},
-};
 static wc_gset gset_gbk[] = {
 	{WC_CCS_US_ASCII, 0, 1},
 	{WC_CCS_GB_2312, 0x80, 1},
@@ -375,7 +366,6 @@ wc_ces_info WcCesInfo[] = {
 	ces_priv2(BIG5, "Big5", "Chinese Taiwan (Big5, CP950)", big5),
 	ces_priv2(HKSCS, "HKSCS", "Chinese Hong Kong (HKSCS)", hkscs),
 	ces_priv2(UHC, "UHC", "Korean (UHC, CP949)", uhc),
-	ces_priv2(JOHAB, "Johab", "Korean (Johab)", johab),
 
 	ces_priv2(CP1258, "CP1258", "Vietnamese (CP1258)", cp1258),
 	ces_priv2(TCVN_5712, "TCVN-5712", "Vietnamese (TCVN-5712)", tcvn5712),

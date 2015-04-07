@@ -2,7 +2,6 @@
 #include "iso2022.h"
 #include "jis.h"
 #include "big5.h"
-#include "johab.h"
 #include "wtf.h"
 #include "ucs.h"
 
@@ -473,15 +472,6 @@ wc_push_to_iso2022(Str os, wc_wchar_t cc, wc_status * st)
 			cc.code = (wc_uint32) WC_REPLACE[0];
 			break;
 		default:
-			if ((cc.ccs == WC_CCS_JOHAB || WC_CCS_JOHAB_1 ||
-			     cc.ccs == WC_CCS_JOHAB_2 || cc.ccs == WC_CCS_JOHAB_3) &&
-			    cs94w_gmap[WC_F_KS_X_1001 - WC_F_ISO_BASE]) {
-				wc_wchar_t cc2 = wc_johab_to_ksx1001(cc);
-				if (cc2.ccs == WC_CCS_KS_X_1001) {
-					cc = cc2;
-					continue;
-				}
-			}
 			if (WcOption.ucs_conv)
 				cc = wc_any_to_iso2022(cc, st);
 			else
@@ -587,14 +577,6 @@ wc_push_to_euc(Str os, wc_wchar_t cc, wc_status * st)
 			if (!WcOption.no_replace)
 				Strcat_charp(os, WC_REPLACE);
 			return;
-		case WC_CCS_JOHAB:
-		case WC_CCS_JOHAB_1:
-		case WC_CCS_JOHAB_2:
-		case WC_CCS_JOHAB_3:
-			if (st->ces_info->id == WC_CES_EUC_KR) {
-				cc = wc_johab_to_ksx1001(cc);
-				continue;
-			}
 		default:
 			if (WcOption.ucs_conv)
 				cc = wc_any_to_any_ces(cc, st);

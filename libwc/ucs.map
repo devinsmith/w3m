@@ -1,4 +1,3 @@
-
 #include "map/jisx0201k_ucs.map"
 #include "map/iso88591_ucs.map"
 #include "map/iso88592_ucs.map"
@@ -59,7 +58,6 @@
 #include "map/hkscs_ucs.map"
 #include "map/hkscs_ucs_p2.map"
 #include "map/gb12345_ucs.map"
-#include "map/johab_ucs.map"
 #include "map/sjis_ext_ucs.map"
 #include "map/gbk_ucs.map"
 #include "map/uhc_ucs.map"
@@ -212,10 +210,6 @@ static wc_uint16 *pcsw_ucs_map[] = {
   NULL,			/* CNS 11643-16 */
   NULL,			/* CNS 11643-X */
   gb12345_ucs_map,	/* GB 12345 */
-  NULL,			/* Johab (special conversion) */
-  NULL,			/* Johab-1 (special conversion) */
-  NULL,			/* Johab-2 (special conversion) */
-  ksx1001_ucs_map,	/* Johab-3 */
   sjis_ext_ucs_map,	/* Shift_JIS(CP932) ext */
   sjis_ext_ucs_map,	/* Shift_JIS(CP932) ext-1 */
   sjis_ext_ucs_map,	/* Shift_JIS(CP932) ext-2 */
@@ -312,31 +306,6 @@ ucs_big5_conv(wc_ccs cs, wc_uint16 c)
   cc.ccs = cs;
   cc.code = c;
   return wc_big5_to_cs94w(cc);
-}
-
-static wc_wchar_t
-ucs_johab2_conv(wc_ccs cs, wc_uint16 c)
-{
-  wc_wchar_t cc;
-
-  cc.ccs = cs;
-  cc.code = c;
-  return wc_johab_to_cs128w(cc);
-}
-
-static wc_wchar_t
-ucs_johab3_conv(wc_ccs cs, wc_uint16 c)
-{
-  wc_wchar_t cc;
-
-  if ((c >= 0x2121 && c <  0x2421) ||
-      (c >  0x2453 && c <= 0x2C7E) ||
-      (c >= 0x4A21 && c <= 0x7D7E))
-     cc.ccs = cs;
-  else
-     cc.ccs = WC_CCS_UNKNOWN_W;
-  cc.code = c;
-  return cc;
 }
 
 static wc_wchar_t
@@ -530,10 +499,6 @@ static wc_table ucs_pcsw_table[] = {
   null_table,		/* CNS 11643-X */
   /* use GB 12345 instead of GB 2312 */ 
   { WC_CCS_GB_2312, N_ucs_gb12345_map, ucs_gb12345_map, (void *)ucs_cs94w_conv },
-  null_table,		/* Johab (special conversion) */
-  null_table,		/* Johab-1 (special conversion) */
-  { WC_CCS_JOHAB_2, N_ucs_johab2_map, ucs_johab2_map, (void *)ucs_johab2_conv },
-  { WC_CCS_JOHAB_3, N_ucs_ksx1001_map, ucs_ksx1001_map, (void *)ucs_johab3_conv },
   { WC_CCS_SJIS_EXT,   N_ucs_sjis_ext_map, ucs_sjis_ext_map, (void *)ucs_cs94w_conv },
   { WC_CCS_SJIS_EXT_1, N_ucs_sjis_ext_map, ucs_sjis_ext_map, (void *)ucs_sjis_ext_conv },
   { WC_CCS_SJIS_EXT_2, N_ucs_sjis_ext_map, ucs_sjis_ext_map, (void *)ucs_sjis_ext_conv },

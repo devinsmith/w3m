@@ -5,7 +5,6 @@
 #include "big5.h"
 #include "hkscs.h"
 #include "sjis.h"
-#include "johab.h"
 #include "gbk.h"
 #include "gb18030.h"
 #include "uhc.h"
@@ -194,21 +193,6 @@ wc_any_to_ucs(wc_wchar_t cc)
 				return map2->code2 | WC_C_UCS4_PLANE2;
 			cc.code = wc_hkscs_to_N(cc.code);
 			break;
-		case WC_CCS_JOHAB:
-			return wc_any_to_ucs(wc_johab_to_cs128w(cc));
-		case WC_CCS_JOHAB_1:
-			return WC_CS94x128_N(cc.code) + WC_C_UCS2_HANGUL;
-		case WC_CCS_JOHAB_2:
-			cc.code = WC_CS128W_N(cc.code);
-			cc.code = WC_N_JOHAB2(cc.code);
-			map2 = wc_map_search((wc_uint16) cc.code,
-					  johab2_ucs_map, N_johab2_ucs_map);
-			if (map2)
-				return map2->code2;
-			return WC_C_UCS4_ERROR;
-		case WC_CCS_JOHAB_3:
-			if ((cc.code & 0x7f7f) < 0x2121)
-				return WC_C_UCS4_ERROR;
 		case WC_CCS_SJIS_EXT:
 			return wc_any_to_ucs(wc_sjis_ext_to_cs94w(cc));
 		case WC_CCS_SJIS_EXT_1:
@@ -328,11 +312,6 @@ wc_any_to_any_ces(wc_wchar_t cc, wc_status * st)
 		if (st->ces_info->id & WC_CES_T_UTF) {
 			cc.ccs = wc_ucs_to_ccs(ucs);
 			cc.code = ucs;
-			return cc;
-		} else if (st->ces_info->id == WC_CES_JOHAB) {
-			cc = wc_ucs_to_johab(ucs);
-			if (WC_CCS_IS_UNKNOWN(cc.ccs))
-				cc.ccs = is_wide ? WC_CCS_UNKNOWN_W : WC_CCS_UNKNOWN;
 			return cc;
 		}
 		cc = wc_ucs_to_any_list(ucs, is_wide ? st->tlistw : st->tlist);
