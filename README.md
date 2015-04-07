@@ -31,7 +31,7 @@ Transport Layer Security (HTTPS) cleanly.
 * Use asprintf() to implement gc-based Sprintf() instead of
 hand-rolled evilness.
 * Thousands of lines of codes removed:
-	* Support for old revisions of POSIX and DOS are gone.
+	* Support for old revisions of POSIX and DOS is gone.
 	* Usenet (NNTP) support has been removed.
 	* Improperly licensed MATRIX table rendering code that wasn't
 	doing anything useful beyond the non-MATRIX code.
