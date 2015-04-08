@@ -40,6 +40,47 @@ unsigned char QUOTE_MAP[0x100] = {
 	16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16,
 };
 
+static const unsigned char DIGITMAP[0x100] = {
+	/* NUL SOH STX ETX EOT ENQ ACK BEL   BS  HT  LF  VT  FF  CR  SO  SI */
+	255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+	255,
+	/* DLE DC1 DC2 DC3 DC4 NAK SYN ETB CAN   EM SUB ESC  FS  GS  RS  US */
+	255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+	255,
+	/* SPC   !   "   #   $   %   &   '    (   )   *   +   ,   -   .   / */
+	255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+	255,
+	/* 0   1   2   3   4   5   6   7    8   9   :   ;   <   =   >   ? */
+	0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 255, 255, 255, 255, 255, 255,
+	/* @   A   B   C   D   E   F   G    H   I   J   K   L   M   N   O */
+	255, 10, 11, 12, 13, 14, 15, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+	/* P   Q   R   S   T   U   V   W    X   Y   Z   [   \   ]   ^   _ */
+	255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+	255,
+	/* `   a   b   c   d   e   f   g    h   i   j   k   l   m   n   o */
+	255, 10, 11, 12, 13, 14, 15, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+	/* p   q   r   s   t   u   v   w    x   y   z   {   |   }   ~ DEL */
+
+	255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+	255,
+	255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+	255,
+	255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+	255,
+	255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+	255,
+	255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+	255,
+	255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+	255,
+	255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+	255,
+	255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+	255,
+	255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+	255,
+};
+
 char *HTML_QUOTE_MAP[] = {
 	NULL,
 	"&amp;",
@@ -295,8 +336,11 @@ getescapechar(char **str)
 				*str = p;
 				return -1;
 			}
-			for (dummy = GET_MYCDIGIT(*p), p++; isxdigit((unsigned char)*p); p++)
-				dummy = dummy * 0x10 + GET_MYCDIGIT(*p);
+			dummy = DIGITMAP[(unsigned char)*p];
+			for (p++; isxdigit((unsigned char)*p); p++) {
+				dummy = dummy * 0x10 +
+				    DIGITMAP[(unsigned char)*p];
+			}
 			if (*p == ';')
 				p++;
 			*str = p;
@@ -306,8 +350,11 @@ getescapechar(char **str)
 				*str = p;
 				return -1;
 			}
-			for (dummy = GET_MYCDIGIT(*p), p++; isdigit((unsigned char)*p); p++)
-				dummy = dummy * 10 + GET_MYCDIGIT(*p);
+			dummy = DIGITMAP[(unsigned char)*p];
+			for (p++; isdigit((unsigned char)*p); p++) {
+				dummy = dummy * 10 +
+				    DIGITMAP[(unsigned char)*p];
+			}
 			if (*p == ';')
 				p++;
 			*str = p;
@@ -410,9 +457,12 @@ html_unquote(char *str)
 static char xdigit[0x10] = "0123456789ABCDEF";
 
 #define url_unquote_char(pstr) \
-  ((isxdigit((unsigned char)(*(pstr))[1]) && isxdigit((unsigned char)(*(pstr))[2])) ? \
-    (*(pstr) += 3, (GET_MYCDIGIT((*(pstr))[-2]) << 4) | GET_MYCDIGIT((*(pstr))[-1])) : \
-   -1)
+  ((isxdigit((unsigned char)(*(pstr))[1]) && \
+    isxdigit((unsigned char)(*(pstr))[2])) ? \
+    (*(pstr) += 3, \
+    (DIGITMAP[(unsigned char)(*(pstr))[-2]] << 4) | \
+    DIGITMAP[(unsigned char)(*(pstr))[-1]]) \
+    : -1)
 
 char *
 url_quote(const char *str)

@@ -14,11 +14,9 @@
 #define MYCTYPE_XDIGIT (MYCTYPE_HEX|MYCTYPE_DIGIT)
 
 #define GET_MYCTYPE(x) (MYCTYPE_MAP[(int)(unsigned char)(x)])
-#define GET_MYCDIGIT(x) (MYCTYPE_DIGITMAP[(int)(unsigned char)(x)])
 
 #define IS_INTSPACE(x) (MYCTYPE_MAP[(unsigned char)(x)] & MYCTYPE_INTSPACE)
 
 extern unsigned char MYCTYPE_MAP[];
-extern unsigned char MYCTYPE_DIGITMAP[];
 
 #endif
