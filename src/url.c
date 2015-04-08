@@ -19,7 +19,6 @@
 
 #include "html.h"
 #include "Str.h"
-#include "myctype.h"
 #include "regex.h"
 #include "terms.h"
 

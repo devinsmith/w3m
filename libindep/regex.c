@@ -22,7 +22,6 @@
 #endif
 #include "regex.h"
 #include "config.h"
-#include "myctype.h"
 
 #ifndef NULL
 #define NULL	0

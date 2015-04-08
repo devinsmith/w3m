@@ -11,7 +11,6 @@
 #include "html.h"
 #include "parsetagx.h"
 #include "Str.h"
-#include "myctype.h"
 
 static int visible_length_offset = 0;
 int symbol_width = 0;

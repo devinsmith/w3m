@@ -7,7 +7,6 @@
 #include "fm.h"
 #include "menu.h"
 #include "func.h"
-#include "myctype.h"
 #include "regex.h"
 #include "terms.h"
 

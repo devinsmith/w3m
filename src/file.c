@@ -1,7 +1,6 @@
 /* $Id: file.c,v 1.265 2010/12/15 10:50:24 htrb Exp $ */
 #include "fm.h"
 #include <sys/types.h>
-#include "myctype.h"
 #include <signal.h>
 #include <setjmp.h>
 #include <sys/wait.h>
@@ -30,6 +29,10 @@
 #ifndef min
 #define min(a,b)		((a) > (b) ? (b) : (a))
 #endif				/* not min */
+
+#ifndef USE_M17N
+#define IS_INTSPACE(v)	(((unsigned char)v) > 127 && ((unsigned char)v) < 161)
+#endif
 
 static int frame_source = 0;
 

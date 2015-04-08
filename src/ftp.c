@@ -11,7 +11,6 @@
 
 #include "fm.h"
 #include "html.h"
-#include "myctype.h"
 #include "terms.h"
 
 #ifdef DEBUG

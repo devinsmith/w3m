@@ -1,10 +1,8 @@
 /* $Id: mktable.c,v 1.16 2010/12/15 10:50:24 htrb Exp $ */
 #include <stdio.h>
 #include <stdlib.h>
-#include "myctype.h"
 #include "config.h"
 #include "hash.h"
-#include "myctype.h"
 #include "Str.h"
 #include <gc.h>
 

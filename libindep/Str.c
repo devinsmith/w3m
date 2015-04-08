@@ -20,7 +20,6 @@
 #include <string.h>
 #include <ctype.h>
 #include "Str.h"
-#include "myctype.h"
 
 #define INITIAL_STR_SIZE 32
 

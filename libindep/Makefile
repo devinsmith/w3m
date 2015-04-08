@@ -5,7 +5,7 @@ SHLIB_MAJOR=	1
 SHLIB_MINOR=	0
 
 SRCS=		Str.c indep.c regex.c textlist.c parsetag.c \
-		myctype.c hash.c
+		hash.c
 
 CFLAGS+=	-Wall -I../include -I${PREFIX}/include
 

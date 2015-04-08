@@ -8,7 +8,6 @@
 
 #include "fm.h"
 #include "func.h"
-#include "myctype.h"
 
 #include "funcname.c"
 #include "functable.c"

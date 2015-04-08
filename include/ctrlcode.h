@@ -137,8 +137,6 @@
 #define ANSP		"\x9e"
 #define IMSP		"\x9f"
 
-#include "myctype.h"
-
 /* Local Variables:    */
 /* c-basic-offset: 4   */
 /* tab-width: 8        */

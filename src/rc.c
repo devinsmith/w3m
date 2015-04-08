@@ -3,7 +3,6 @@
  * Initialization file etc.
  */
 #include "fm.h"
-#include "myctype.h"
 #include "proto.h"
 #include <stdio.h>
 #include <errno.h>

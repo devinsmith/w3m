@@ -6,7 +6,6 @@
 #include <sys/types.h>
 #include <ctype.h>
 #include "fm.h"
-#include "myctype.h"
 #include "Str.h"
 
 #define MIME_ENCODED_LINE_LIMIT	80

@@ -12,7 +12,6 @@
 #include <curses.h>
 #include <locale.h>
 #include <ctype.h>
-#include "myctype.h"
 #include "regex.h"
 #ifdef USE_M17N
 #include "wc.h"

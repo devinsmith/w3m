@@ -9,7 +9,6 @@
 #include "indep.h"
 #include "textlist.h"
 #include "parsetag.h"
-#include "myctype.h"
 
 #if LANG == JA
 /* FIXME: gettextize here */

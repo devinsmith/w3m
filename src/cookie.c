@@ -17,7 +17,6 @@
 #include <ctype.h>
 #include "local.h"
 #include "regex.h"
-#include "myctype.h"
 
 static int is_saved = 1;
 static const char *special_domain[] = {
