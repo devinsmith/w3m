@@ -7016,10 +7016,10 @@ loadGopherDir(URLFile * uf, ParsedURL * pu, wc_ces * charset)
 			}
 
 			if (!begin_message) {
-				Strcat_charp(tmp, "<p>\n");
+				Strcat_charp(tmp, "<pre>\n");
 				begin_message = TRUE;
 			} else {
-				Strcat_charp(tmp, "<br>\n");
+				Strcat_charp(tmp, "\n");
 			}
 
 			Strcat_charp(tmp, html_quote(name->ptr + 1));
@@ -7030,7 +7030,7 @@ loadGopherDir(URLFile * uf, ParsedURL * pu, wc_ces * charset)
 
 			/* Link */
 			if (begin_message) {
-				Strcat_charp(tmp, "</p>\n");
+				Strcat_charp(tmp, "</pre>\n");
 				begin_message = FALSE;
 			}
 			if (!begin_list) {
