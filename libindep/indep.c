@@ -12,7 +12,7 @@
 #include "myctype.h"
 #include "entity.h"
 
-unsigned char QUOTE_MAP[0x100] = {
+const unsigned char QUOTE_MAP[0x100] = {
 	/* NUL SOH STX ETX EOT ENQ ACK BEL  BS  HT  LF  VT  FF  CR  SO  SI */
 	24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24,
 	/* DLE DC1 DC2 DC3 DC4 NAK SYN ETB CAN  EM SUB ESC  FS  GS  RS  US */
@@ -38,6 +38,17 @@ unsigned char QUOTE_MAP[0x100] = {
 	16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16,
 	16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16,
 	16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16,
+};
+
+const char *HTML_QUOTE_MAP[] = {
+	NULL,
+	"&amp;",
+	"&lt;",
+	"&gt;",
+	"&quot;",
+	NULL,
+	NULL,
+	NULL,
 };
 
 static const unsigned char DIGITMAP[0x100] = {
@@ -81,16 +92,7 @@ static const unsigned char DIGITMAP[0x100] = {
 	255,
 };
 
-char *HTML_QUOTE_MAP[] = {
-	NULL,
-	"&amp;",
-	"&lt;",
-	"&gt;",
-	"&quot;",
-	NULL,
-	NULL,
-	NULL,
-};
+static const char xdigit[0x10] = "0123456789ABCDEF";
 
 clen_t
 strtoclen(const char *s)
@@ -453,8 +455,6 @@ html_unquote(char *str)
 		return tmp->ptr;
 	return str;
 }
-
-static char xdigit[0x10] = "0123456789ABCDEF";
 
 #define url_unquote_char(pstr) \
   ((isxdigit((unsigned char)(*(pstr))[1]) && \

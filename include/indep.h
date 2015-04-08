@@ -17,8 +17,8 @@
 #define HTML_MODE	2
 #define HEADER_MODE	3
 
-extern unsigned char QUOTE_MAP[];
-extern char *HTML_QUOTE_MAP[];
+extern const unsigned char QUOTE_MAP[];
+extern const char *HTML_QUOTE_MAP[];
 #define HTML_QUOTE_MASK   0x07	/* &, <, >, " */
 #define SHELL_UNSAFE_MASK 0x08	/* [^A-Za-z0-9_./:\200-\377] */
 #define URL_QUOTE_MASK    0x10	/* [\0- \177-\377] */
