@@ -7,6 +7,7 @@
 #include <time.h>
 #include <unistd.h>
 #include <curses.h>
+#include <ctype.h>
 
 #include "fm.h"
 #include "html.h"
@@ -64,8 +65,8 @@ ftp_command(FTP ftp, char *cmd, char *arg, int *status)
 		return NULL;
 	*status = -1;		/* error */
 	tmp = StrISgets(ftp->rf);
-	if (IS_DIGIT(tmp->ptr[0]) && IS_DIGIT(tmp->ptr[1]) &&
-	    IS_DIGIT(tmp->ptr[2]) && tmp->ptr[3] == ' ')
+	if (isdigit((unsigned char)tmp->ptr[0]) && isdigit((unsigned char)tmp->ptr[1]) &&
+	    isdigit((unsigned char)tmp->ptr[2]) && tmp->ptr[3] == ' ')
 		sscanf(tmp->ptr, "%d", status);
 
 	if (tmp->ptr[3] != '-')
@@ -81,8 +82,10 @@ ftp_command(FTP ftp, char *cmd, char *arg, int *status)
 	 */
 	while (1) {
 		tmp = StrISgets(ftp->rf);
-		if (IS_DIGIT(tmp->ptr[0]) && IS_DIGIT(tmp->ptr[1]) &&
-		    IS_DIGIT(tmp->ptr[2]) && tmp->ptr[3] == ' ') {
+		if (isdigit((unsigned char)tmp->ptr[0]) &&
+		    isdigit((unsigned char)tmp->ptr[1]) &&
+		    isdigit((unsigned char)tmp->ptr[2]) &&
+		    tmp->ptr[3] == ' ') {
 			sscanf(tmp->ptr, "%d", status);
 			break;
 		}
@@ -248,7 +251,7 @@ ftp_pasv(FTP ftp)
 		tmp = ftp_command(ftp, "PASV", NULL, &status);
 		if (status != 227)
 			return -1;
-		for (p = tmp->ptr + 4; *p && !IS_DIGIT(*p); p++);
+		for (p = tmp->ptr + 4; *p && !isdigit((unsigned char)*p); p++);
 		if (*p == '\0')
 			return -1;
 		sscanf(p, "%d,%d,%d,%d,%d,%d", &n1, &n2, &n3, &n4, &p1, &p2);
@@ -629,18 +632,18 @@ disconnectFTP(void)
 }
 
 #define EX_SKIP_SPACE(cp) {\
-    while (IS_SPACE(*cp) && *cp != '\0') cp++;\
+    while (isspace((unsigned char)*cp) && *cp != '\0') cp++;\
     if (*cp == '\0')\
 	goto done;\
 }
 #define EX_SKIP_NONE_SPACE(cp) {\
-    while (!IS_SPACE(*cp) && *cp != '\0') cp++;\
+    while (!isspace((unsigned char)*cp) && *cp != '\0') cp++;\
     if (*cp == '\0')\
 	goto done;\
 }
 #define EX_COUNT_DIGIT(cp) {\
     size = 0;\
-    while (*cp && IS_DIGIT(*cp))\
+    while (*cp && isdigit((unsigned char)*cp))\
 	size = size * 10 + *(cp++) - '0';\
     if (*cp == '\0')\
 	goto done;\
@@ -660,7 +663,7 @@ ex_ftpdir_name_size_date(const char *line,
 		goto done;
 	/* skip permission */
 	cp += 10;
-	if (!IS_SPACE(*cp))
+	if (!isspace((unsigned char)*cp))
 		goto done;
 	cp++;
 

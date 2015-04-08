@@ -4,6 +4,7 @@
  */
 #include "fm.h"
 #include <math.h>
+#include <ctype.h>
 
 MapList *
 searchMapList(Buffer * buf, char *name)
@@ -341,9 +342,9 @@ newMapArea(char *url, char *target, char *alt, char *shape, char *coords)
 	}
 	max = a->ncoords;
 	for (i = 0, p = coords; (a->shape == SHAPE_POLY || i < a->ncoords) && *p;) {
-		while (IS_SPACE(*p))
+		while (isspace((unsigned char)*p))
 			p++;
-		if (!IS_DIGIT(*p) && *p != '-' && *p != '+')
+		if (!isdigit((unsigned char)*p) && *p != '-' && *p != '+')
 			break;
 		if (a->shape == SHAPE_POLY) {
 			if (max <= i) {
@@ -356,11 +357,11 @@ newMapArea(char *url, char *target, char *alt, char *shape, char *coords)
 		i++;
 		if (*p == '-' || *p == '+')
 			p++;
-		while (IS_DIGIT(*p))
+		while (isdigit((unsigned char)*p))
 			p++;
-		if (*p != ',' && !IS_SPACE(*p))
+		if (*p != ',' && !isspace((unsigned char)*p))
 			break;
-		while (IS_SPACE(*p))
+		while (isspace((unsigned char)*p))
 			p++;
 		if (*p == ',')
 			p++;

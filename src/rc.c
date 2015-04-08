@@ -10,6 +10,7 @@
 #include "parsetag.h"
 #include "local.h"
 #include <stdlib.h>
+#include <ctype.h>
 
 struct param_ptr {
 	char *name;
@@ -829,18 +830,18 @@ str_to_bool(char *value, int old)
 {
 	if (value == NULL)
 		return 1;
-	switch (TOLOWER(*value)) {
+	switch (tolower((unsigned char)*value)) {
 	case '0':
 	case 'f':		/* false */
 	case 'n':		/* no */
 	case 'u':		/* undef */
 		return 0;
 	case 'o':
-		if (TOLOWER(value[1]) == 'f')	/* off */
+		if (tolower((unsigned char)value[1]) == 'f') /* off */
 			return 0;
 		return 1;	/* on */
 	case 't':
-		if (TOLOWER(value[1]) == 'o')	/* toggle */
+		if (tolower((unsigned char)value[1]) == 'o') /* toggle */
 			return !old;
 		return 1;	/* true */
 	case '!':
@@ -857,7 +858,7 @@ str_to_color(char *value)
 {
 	if (value == NULL)
 		return 8;	/* terminal */
-	switch (TOLOWER(*value)) {
+	switch (tolower((unsigned char)*value)) {
 	case '0':
 		return 0;	/* black */
 	case '1':
@@ -972,13 +973,13 @@ set_param_option(char *option)
 	Str tmp = Strnew();
 	char *p = option, *q;
 
-	while (*p && !IS_SPACE(*p) && *p != '=')
+	while (*p && !isspace((unsigned char)*p) && *p != '=')
 		Strcat_char(tmp, *p++);
-	while (*p && IS_SPACE(*p))
+	while (*p && isspace((unsigned char)*p))
 		p++;
 	if (*p == '=') {
 		p++;
-		while (*p && IS_SPACE(*p))
+		while (*p && isspace((unsigned char)*p))
 			p++;
 	}
 	Strlower(tmp);
@@ -1028,9 +1029,9 @@ interpret_rc(FILE * f)
 			continue;
 		tmp = Strnew();
 		p = line->ptr;
-		while (*p && !IS_SPACE(*p))
+		while (*p && !isspace((unsigned char)*p))
 			Strcat_char(tmp, *p++);
-		while (*p && IS_SPACE(*p))
+		while (*p && isspace((unsigned char)*p))
 			p++;
 		Strlower(tmp);
 		set_param(tmp->ptr, p);

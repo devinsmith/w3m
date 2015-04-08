@@ -5,6 +5,7 @@
 #include "terms.h"
 
 #include <curses.h>
+#include <ctype.h>
 
 #ifdef USE_MOUSE
 #ifdef USE_GPM

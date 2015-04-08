@@ -4,6 +4,7 @@
  */
 
 #include <sys/types.h>
+#include <ctype.h>
 #include "fm.h"
 #include "myctype.h"
 #include "Str.h"
@@ -228,7 +229,7 @@ decodeWord0(char **ow)
 		goto convert_fail;
 	w++;
 	p = w;
-	switch (TOUPPER(method)) {
+	switch (toupper((unsigned char)method)) {
 	case 'B':
 		a = decodeB(&w);
 		break;

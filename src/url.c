@@ -13,6 +13,7 @@
 #include <unistd.h>
 #include <curses.h>
 #include <assert.h>
+#include <ctype.h>
 
 #include <sys/stat.h>
 
@@ -528,7 +529,7 @@ copyPath(char *orgpath, int length, int option)
 {
 	Str tmp = Strnew();
 	while (*orgpath && length != 0) {
-		if (IS_SPACE(*orgpath)) {
+		if (isspace((unsigned char)*orgpath)) {
 			switch (option) {
 			case COPYPATH_SPC_ALLOW:
 				Strcat_char(tmp, *orgpath);
@@ -1589,17 +1590,17 @@ make_domain_list(char *domain_list)
 	p = domain_list;
 	tmp = Strnew_size(64);
 	while (*p) {
-		while (*p && IS_SPACE(*p))
+		while (*p && isspace((unsigned char)*p))
 			p++;
 		Strclear(tmp);
-		while (*p && !IS_SPACE(*p) && *p != ',')
+		while (*p && !isspace((unsigned char)*p) && *p != ',')
 			Strcat_char(tmp, *p++);
 		if (tmp->length > 0) {
 			if (domains == NULL)
 				domains = newTextList();
 			pushText(domains, tmp->ptr);
 		}
-		while (*p && IS_SPACE(*p))
+		while (*p && isspace((unsigned char)*p))
 			p++;
 		if (*p == ',')
 			p++;
@@ -1787,7 +1788,7 @@ loadURIMethods(char *filename)
 	while (tmp = Strfgets(f), tmp->length > 0) {
 		if (tmp->ptr[0] == '#')
 			continue;
-		while (IS_SPACE(Strlastchar(tmp)))
+		while (isspace((unsigned char)Strlastchar(tmp)))
 			Strshrink(tmp, 1);
 		for (up = p = tmp->ptr; *p != '\0'; p++) {
 			if (*p == ':') {
@@ -1798,7 +1799,7 @@ loadURIMethods(char *filename)
 		}
 		if (*p == '\0')
 			continue;
-		while (*p != '\0' && IS_SPACE(*p))
+		while (*p != '\0' && isspace((unsigned char)*p))
 			p++;
 		um[i].item2 = Strnew_charp(p)->ptr;
 		i++;

@@ -15,6 +15,7 @@
 #include <math.h>
 #include <unistd.h>
 #include <curses.h>
+#include <ctype.h>
 /* foo */
 
 #include "html.h"
@@ -535,7 +536,7 @@ matchattr(char *p, char *attr, int len, Str * value)
 				SKIP_BLANKS(p);
 				quoted = 0;
 				while (!IS_ENDL(*p) && (quoted || *p != ';')) {
-					if (!IS_SPACE(*p))
+					if (!isspace((unsigned char)*p))
 						q = p;
 					if (*p == '"')
 						quoted = (quoted) ? 0 : 1;
@@ -719,9 +720,9 @@ readHeader(URLFile * uf, Buffer * newBuf, int thru, ParsedURL * pu)
 		if ((uf->scheme == SCM_HTTP || uf->scheme == SCM_HTTPS)
 		    && http_response_code == -1) {
 			p = lineBuf2->ptr;
-			while (*p && !IS_SPACE(*p))
+			while (*p && !isspace((unsigned char)*p))
 				p++;
-			while (*p && IS_SPACE(*p))
+			while (*p && isspace((unsigned char)*p))
 				p++;
 			http_response_code = atoi(p);
 			if (fmInitialized) {
@@ -731,7 +732,7 @@ readHeader(URLFile * uf, Buffer * newBuf, int thru, ParsedURL * pu)
 		}
 		if (!strncasecmp(lineBuf2->ptr, "content-transfer-encoding:", 26)) {
 			p = lineBuf2->ptr + 26;
-			while (IS_SPACE(*p))
+			while (isspace((unsigned char)*p))
 				p++;
 			if (!strncasecmp(p, "base64", 6))
 				uf->encoding = ENC_BASE64;
@@ -745,7 +746,7 @@ readHeader(URLFile * uf, Buffer * newBuf, int thru, ParsedURL * pu)
 		} else if (!strncasecmp(lineBuf2->ptr, "content-encoding:", 17)) {
 			struct compression_decoder *d;
 			p = lineBuf2->ptr + 17;
-			while (IS_SPACE(*p))
+			while (isspace((unsigned char)*p))
 				p++;
 			uf->compression = CMP_NOCOMPRESS;
 			for (d = compression_decoders; d->type != CMP_NOCOMPRESS; d++) {
@@ -792,7 +793,7 @@ readHeader(URLFile * uf, Buffer * newBuf, int thru, ParsedURL * pu)
 				SKIP_BLANKS(p);
 				quoted = 0;
 				while (!IS_ENDL(*p) && (quoted || *p != ';')) {
-					if (!IS_SPACE(*p))
+					if (!isspace((unsigned char)*p))
 						q = p;
 					if (*p == '"')
 						quoted = (quoted) ? 0 : 1;
@@ -870,7 +871,7 @@ readHeader(URLFile * uf, Buffer * newBuf, int thru, ParsedURL * pu)
 						Strcat_charp(msg, " (y/n)");
 						ans = inputAnswer(msg->ptr);
 					}
-					if (ans == NULL || TOLOWER(*ans) != 'y' ||
+					if (ans == NULL || tolower((unsigned char)*ans) != 'y' ||
 					    (err =
 					     add_cookie(pu, name, value, expires, domain, path,
 							flag | COO_OVERRIDE, comment, version,
@@ -902,7 +903,7 @@ readHeader(URLFile * uf, Buffer * newBuf, int thru, ParsedURL * pu)
 
 			p = lineBuf2->ptr + 12;
 			SKIP_BLANKS(p);
-			while (*p && !IS_SPACE(*p))
+			while (*p && !isspace((unsigned char)*p))
 				Strcat_char(funcname, *(p++));
 			SKIP_BLANKS(p);
 			f = getFuncList(funcname->ptr);
@@ -951,7 +952,7 @@ checkContentType(Buffer * buf)
 	if (p == NULL)
 		return NULL;
 	r = Strnew();
-	while (*p && *p != ';' && !IS_SPACE(*p))
+	while (*p && *p != ';' && !isspace((unsigned char)*p))
 		Strcat_char(r, *p++);
 #ifdef USE_M17N
 	if ((p = strcasestr(p, "charset")) != NULL) {
@@ -1128,7 +1129,8 @@ extract_auth_param(char *q, struct auth_param * auth)
 
 			len = strlen(ap->name);
 			if (strncasecmp(q, ap->name, len) == 0 &&
-			    (IS_SPACE(q[len]) || q[len] == '=')) {
+			    (isspace((unsigned char)q[len]) ||
+			    q[len] == '=')) {
 				p = q + len;
 				SKIP_BLANKS(p);
 				if (*p != '=')
@@ -1143,7 +1145,7 @@ extract_auth_param(char *q, struct auth_param * auth)
 			int token_type;
 			p = q;
 			if ((token_type = skip_auth_token(&q)) == AUTHCHR_TOKEN &&
-			    (IS_SPACE(*q) || *q == '=')) {
+			    (isspace((unsigned char)*q) || *q == '=')) {
 				SKIP_BLANKS(q);
 				if (*q != '=')
 					return p;
@@ -1478,7 +1480,8 @@ findAuthentication(struct http_auth * hauth, Buffer * buf, char *auth_field)
 				if (p0 == p) {
 					/* all unknown auth failed */
 					int token_type;
-					if ((token_type = skip_auth_token(&p)) == AUTHCHR_TOKEN && IS_SPACE(*p)) {
+					if ((token_type = skip_auth_token(&p)) == AUTHCHR_TOKEN &&
+					    isspace((unsigned char)*p)) {
 						SKIP_BLANKS(p);
 						p = extract_auth_param(p, none_auth_param);
 					} else
@@ -2201,7 +2204,7 @@ page_loaded:
 }
 
 #define TAG_IS(s,tag,len)\
-  (strncasecmp(s,tag,len)==0&&(s[len] == '>' || IS_SPACE((int)s[len])))
+  (strncasecmp(s,tag,len)==0&&(s[len] == '>' || isspace((unsigned char)s[len])))
 
 static char *
 has_hidden_link(struct readbuffer * obuf, int cmd)
@@ -2766,7 +2769,7 @@ flushline(struct html_feed_environ * h_env, struct readbuffer * obuf, int indent
 					int indent_here = 0;
 					d = rest / nspace;
 					p = line->ptr;
-					while (IS_SPACE(*p)) {
+					while (isspace((unsigned char)*p)) {
 						p++;
 						indent_here++;
 					}
@@ -3722,12 +3725,12 @@ feed_select(char *str)
 			}
 		} else if (cur_option) {
 			while (*p) {
-				if (IS_SPACE(*p) && prev_spaces != 0) {
+				if (isspace((unsigned char)*p) && prev_spaces != 0) {
 					p++;
 					if (prev_spaces > 0)
 						prev_spaces++;
 				} else {
-					if (IS_SPACE(*p))
+					if (isspace((unsigned char)*p))
 						prev_spaces = 1;
 					else
 						prev_spaces = 0;
@@ -3749,7 +3752,7 @@ process_option(void)
 
 	if (cur_select == NULL || cur_option == NULL)
 		return;
-	while (cur_option->length > 0 && IS_SPACE(Strlastchar(cur_option)))
+	while (cur_option->length > 0 && isspace((unsigned char)Strlastchar(cur_option)))
 		Strshrink(cur_option, 1);
 	if (cur_option_value == NULL)
 		cur_option_value = cur_option;
@@ -3952,12 +3955,12 @@ check_accept_charset(char *ac)
 	char *s = ac, *e;
 
 	while (*s) {
-		while (*s && (IS_SPACE(*s) || *s == ','))
+		while (*s && (isspace((unsigned char)*s) || *s == ','))
 			s++;
 		if (!*s)
 			break;
 		e = s;
-		while (*e && !(IS_SPACE(*e) || *e == ','))
+		while (*e && !(isspace((unsigned char)*e) || *e == ','))
 			e++;
 		if (wc_guess_charset(Strnew_charp_n(s, e - s)->ptr, 0))
 			return ac;
@@ -4180,7 +4183,7 @@ getMetaRefreshParam(char *q, Str * refresh_uri)
 			if (*q == '\"')	/* " */
 				q++;
 			r = q;
-			while (*r && !IS_SPACE(*r) && *r != ';')
+			while (*r && !isspace((unsigned char)*r) && *r != ';')
 				r++;
 			s_tmp = Strnew_charp_n(q, r - q);
 
@@ -6246,9 +6249,9 @@ proc_normal:
 				if (obuf->flag & (RB_SPECIAL & ~RB_PRE_INT))
 					continue;
 			} else {
-				if (!IS_SPACE(*str))
+				if (!isspace((unsigned char)*str))
 					obuf->flag &= ~RB_IGNORE_P;
-				if ((mode == PC_ASCII || mode == PC_CTRL) && IS_SPACE(*str)) {
+				if ((mode == PC_ASCII || mode == PC_CTRL) && isspace((unsigned char)*str)) {
 					if (*obuf->prevchar->ptr != ' ') {
 						PUSH(' ');
 					}
@@ -7829,7 +7832,7 @@ _doFileCopy(char *tmpf, char *defstr, int download)
 				return -1;
 			q = filen->ptr;
 		}
-		for (p = q + strlen(q) - 1; IS_SPACE(*p); p--);
+		for (p = q + strlen(q) - 1; isspace((unsigned char)*p); p--);
 		*(p + 1) = '\0';
 		if (*q == '\0')
 			return -1;
@@ -7933,7 +7936,7 @@ doFileSave(URLFile uf, char *defstr)
 				return -1;
 			q = filen->ptr;
 		}
-		for (p = q + strlen(q) - 1; IS_SPACE(*p); p--);
+		for (p = q + strlen(q) - 1; isspace((unsigned char)*p); p--);
 		*(p + 1) = '\0';
 		if (*q == '\0')
 			return -1;
@@ -8000,7 +8003,7 @@ checkOverWrite(const char *path)
 		return 0;
 	/* FIXME: gettextize? */
 	ans = inputAnswer("File exists. Overwrite? (y/n)");
-	if (ans && TOLOWER(*ans) == 'y')
+	if (ans && tolower((unsigned char)*ans) == 'y')
 		return 0;
 	else
 		return -1;
@@ -8213,12 +8216,12 @@ guess_save_name(Buffer * buf, char *path)
 		char *p, *q;
 		if ((p = checkHeader(buf, "Content-Disposition:")) != NULL &&
 		    (q = strcasestr(p, "filename")) != NULL &&
-		    (q == p || IS_SPACE(*(q - 1)) || *(q - 1) == ';') &&
+		    (q == p || isspace((unsigned char)*(q - 1)) || *(q - 1) == ';') &&
 		    matchattr(q, "filename", 8, &name))
 			path = name->ptr;
 		else if ((p = checkHeader(buf, "Content-Type:")) != NULL &&
 			 (q = strcasestr(p, "name")) != NULL &&
-			 (q == p || IS_SPACE(*(q - 1)) || *(q - 1) == ';') &&
+			 (q == p || isspace((unsigned char)*(q - 1)) || *(q - 1) == ';') &&
 			 matchattr(q, "name", 4, &name))
 			path = name->ptr;
 	}

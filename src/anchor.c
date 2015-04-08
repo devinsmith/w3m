@@ -2,6 +2,7 @@
 #include "fm.h"
 #include "myctype.h"
 #include "regex.h"
+#include <ctype.h>
 
 #define FIRST_ANCHOR_SIZE 30
 
@@ -632,7 +633,7 @@ getAnchorText(Buffer * buf, AnchorList * al, Anchor * a)
 			break;
 		p = l->lineBuf + a->start.pos;
 		ep = l->lineBuf + a->end.pos;
-		for (; p < ep && IS_SPACE(*p); p++);
+		for (; p < ep && isspace((unsigned char)*p); p++);
 		if (p == ep)
 			continue;
 		if (!tmp)

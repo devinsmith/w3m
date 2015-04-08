@@ -14,6 +14,7 @@
 
 #ifdef USE_COOKIE
 #include <time.h>
+#include <ctype.h>
 #include "local.h"
 #include "regex.h"
 #include "myctype.h"
@@ -101,10 +102,10 @@ make_portlist(Str port)
 
 	p = port->ptr;
 	while (*p) {
-		while (*p && !IS_DIGIT(*p))
+		while (*p && !isdigit((unsigned char)*p))
 			p++;
 		Strclear(tmp);
-		while (*p && IS_DIGIT(*p))
+		while (*p && isdigit((unsigned char)*p))
 			Strcat_char(tmp, *(p++));
 		if (tmp->length == 0)
 			break;

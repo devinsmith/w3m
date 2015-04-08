@@ -9,6 +9,7 @@
 #include "local.h"
 #include "regex.h"
 #include <unistd.h>
+#include <ctype.h>
 
 extern Str *textarea_str;
 #ifdef MENU_SELECT
@@ -897,7 +898,7 @@ loadPreForm(void)
 		if (line->length == 0)
 			break;
 		if (textarea && !(!strncmp(line->ptr, "/textarea", 9) &&
-				  IS_SPACE(line->ptr[9]))) {
+				  isspace((unsigned char)line->ptr[9]))) {
 			Strcat(textarea, line);
 			continue;
 		}

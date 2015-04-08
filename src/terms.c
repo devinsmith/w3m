@@ -12,6 +12,7 @@
 #include <poll.h>
 #include <string.h>
 #include <unistd.h>
+#include <ctype.h>
 #include "fm.h"
 #include "terms.h"
 #ifdef USE_M17N
@@ -281,7 +282,7 @@ skip_escseq(void)
 	c = getch();
 	if (c == '[' || c == 'O') {
 		c = getch();
-		while (IS_DIGIT(c))
+		while (isdigit((unsigned char)c))
 			c = getch();
 	}
 }

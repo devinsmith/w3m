@@ -1,6 +1,7 @@
 /* $Id: display.c,v 1.71 2010/07/18 14:10:09 htrb Exp $ */
 #include <math.h>
 #include <curses.h>
+#include <ctype.h>
 #include "terms.h"
 #include "fm.h"
 
@@ -234,8 +235,10 @@ make_lastline_link(Buffer * buf, char *title, char *url)
 	if (title && *title) {
 		s = Strnew_m_charp("[", title, "]", NULL);
 		for (p = s->ptr; *p; p++) {
-			if (IS_CNTRL(*p) || IS_SPACE(*p))
+			if (iscntrl((unsigned char)*p) ||
+			    isspace((unsigned char)*p)) {
 				*p = ' ';
+			}
 		}
 		if (url)
 			Strcat_charp(s, " ");

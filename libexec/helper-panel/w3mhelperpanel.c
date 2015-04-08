@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <ctype.h>
 #include "config.h"
 #include "Str.h"
 #include "indep.h"
@@ -36,15 +37,14 @@ extractMailcapEntry(char *mcap_entry, char **type, char **cmd)
 {
 	int j;
 
-	while (*mcap_entry && IS_SPACE(*mcap_entry))
+	while (*mcap_entry && isspace((unsigned char)*mcap_entry))
 		mcap_entry++;
-	for (j = 0;
-	  mcap_entry[j] && mcap_entry[j] != ';' && !IS_SPACE(mcap_entry[j]);
-	     j++);
+	for (j = 0; mcap_entry[j] && mcap_entry[j] != ';' &&
+	    !isspace((unsigned char)mcap_entry[j]); j++);
 	*type = allocStr(mcap_entry, j);
 	if (mcap_entry[j] == ';')
 		j++;
-	while (mcap_entry[j] && IS_SPACE(mcap_entry[j]))
+	while (mcap_entry[j] && isspace((unsigned char)mcap_entry[j]))
 		j++;
 	*cmd = allocStr(&mcap_entry[j], -1);
 }

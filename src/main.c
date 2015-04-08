@@ -11,6 +11,7 @@
 #include <time.h>
 #include <curses.h>
 #include <locale.h>
+#include <ctype.h>
 #include "myctype.h"
 #include "regex.h"
 #ifdef USE_M17N
@@ -1240,11 +1241,11 @@ DEFUN(escbmap, ESCBMAP, "ESC [ map")
 {
 	char c;
 	c = getch();
-	if (IS_DIGIT(c)) {
+	if (isdigit((unsigned char)c)) {
 		escdmap(c);
 		return;
 	}
-	if (IS_ASCII(c))
+	if (isascii((unsigned char)c))
 		escKeyProc((int) c, K_ESCB, EscBKeymap);
 }
 
@@ -1254,7 +1255,7 @@ escdmap(char c)
 	int d;
 	d = (int) c - (int) '0';
 	c = getch();
-	if (IS_DIGIT(c)) {
+	if (isdigit((unsigned char)c)) {
 		d = d * 10 + (int) c - (int) '0';
 		c = getch();
 	}
@@ -1266,7 +1267,7 @@ DEFUN(multimap, MULTIMAP, "multimap")
 {
 	char c;
 	c = getch();
-	if (IS_ASCII(c)) {
+	if (isascii((unsigned char)c)) {
 		CurrentKey = K_MULTI | (CurrentKey << 16) | c;
 		escKeyProc((int) c, 0, NULL);
 	}
@@ -2270,7 +2271,7 @@ _quitfm(int confirm)
 	else if (confirm)
 		/* FIXME: gettextize? */
 		ans = inputChar("Do you want to exit w3m? (y/n)");
-	if (!(ans && TOLOWER(*ans) == 'y')) {
+	if (!(ans && tolower((unsigned char)*ans) == 'y')) {
 		displayBuffer(Currentbuf, B_NORMAL);
 		return;
 	}

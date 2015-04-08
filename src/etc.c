@@ -14,7 +14,7 @@
 #include <signal.h>
 #include <unistd.h>
 #include <curses.h>
-
+#include <ctype.h>
 #include <assert.h>
 
 struct auth_pass {
@@ -126,14 +126,14 @@ gethtmlcmd(char **s)
 	(*s)++;
 	/* first character */
 	if (IS_ALNUM(**s) || **s == '_' || **s == '/') {
-		*(p++) = TOLOWER(**s);
+		*(p++) = tolower((unsigned char)**s);
 		(*s)++;
 	} else
 		return HTML_UNKNOWN;
 	if (p[-1] == '/')
 		SKIP_BLANKS(*s);
 	while ((IS_ALNUM(**s) || **s == '_') && p - cmdstr < MAX_CMD_LEN) {
-		*(p++) = TOLOWER(**s);
+		*(p++) = tolower((unsigned char)**s);
 		(*s)++;
 	}
 	if (p - cmdstr == MAX_CMD_LEN) {
@@ -494,7 +494,7 @@ next_status(char c, enum RTstatus *status)
 			*status = R_ST_DQUOTE;
 		else if (c == '\'')
 			*status = R_ST_QUOTE;
-		else if (IS_SPACE(c))
+		else if (isspace((unsigned char)c))
 			*status = R_ST_EQL;
 		else if (c == '>')
 			*status = R_ST_NORMAL;
@@ -512,14 +512,14 @@ next_status(char c, enum RTstatus *status)
 	case R_ST_VALUE:
 		if (c == '>')
 			*status = R_ST_NORMAL;
-		else if (IS_SPACE(c))
+		else if (isspace((unsigned char)c))
 			*status = R_ST_TAG;
 		return 0;
 	case R_ST_AMP:
 		if (c == ';') {
 			*status = R_ST_NORMAL;
 			return 0;
-		} else if (c != '#' && !IS_ALNUM(c) && c != '_') {
+		} else if (c != '#' && !isalnum((unsigned char)c) && c != '_') {
 			/* something's wrong! */
 			*status = R_ST_NORMAL;
 			return 0;
@@ -568,7 +568,7 @@ next_status(char c, enum RTstatus *status)
 			*status = R_ST_NCMNT2;
 			break;
 		default:
-			if (IS_SPACE(c))
+			if (isspace((unsigned char)c))
 				*status = R_ST_NCMNT3;
 			else
 				*status = R_ST_CMNT;
@@ -584,7 +584,7 @@ next_status(char c, enum RTstatus *status)
 			*status = R_ST_NCMNT1;
 			break;
 		default:
-			if (IS_SPACE(c))
+			if (isspace((unsigned char)c))
 				*status = R_ST_NCMNT3;
 			else
 				*status = R_ST_CMNT;
@@ -629,7 +629,7 @@ read_token(Str buf, char **instr, enum RTstatus *status, int pre, int append)
 				p++;
 				goto proc_end;
 			}
-			Strcat_char(buf, (!pre && IS_SPACE(*p)) ? ' ' : *p);
+			Strcat_char(buf, (!pre && isspace((unsigned char)*p)) ? ' ' : *p);
 			if (ST_IS_REAL_TAG(prev_status)) {
 				*instr = p + 1;
 				if (buf->length < 2 ||
@@ -1452,7 +1452,7 @@ get_day(char **s)
 	if (!**s)
 		return -1;
 
-	while (**s && IS_DIGIT(**s))
+	while (**s && isdigit((unsigned char)**s))
 		Strcat_char(tmp, *((*s)++));
 
 	day = atoi(tmp->ptr);
@@ -1474,7 +1474,7 @@ get_month(char **s)
 	if (!**s)
 		return -1;
 
-	while (**s && IS_DIGIT(**s))
+	while (**s && isdigit((unsigned char)**s))
 		Strcat_char(tmp, *((*s)++));
 	if (tmp->length > 0) {
 		mon = atoi(tmp->ptr);
@@ -1503,7 +1503,7 @@ get_year(char **s)
 	if (!**s)
 		return -1;
 
-	while (**s && IS_DIGIT(**s))
+	while (**s && isdigit((unsigned char)**s))
 		Strcat_char(tmp, *((*s)++));
 	if (tmp->length != 2 && tmp->length != 4) {
 		*s = ss;
@@ -1528,7 +1528,7 @@ get_time(char **s, int *hour, int *min, int *sec)
 	if (!**s)
 		return -1;
 
-	while (**s && IS_DIGIT(**s))
+	while (**s && isdigit((unsigned char)**s))
 		Strcat_char(tmp, *((*s)++));
 	if (**s != ':') {
 		*s = ss;
@@ -1538,7 +1538,7 @@ get_time(char **s, int *hour, int *min, int *sec)
 
 	(*s)++;
 	Strclear(tmp);
-	while (**s && IS_DIGIT(**s))
+	while (**s && isdigit((unsigned char)**s))
 		Strcat_char(tmp, *((*s)++));
 	if (**s != ':') {
 		*s = ss;
@@ -1548,7 +1548,7 @@ get_time(char **s, int *hour, int *min, int *sec)
 
 	(*s)++;
 	Strclear(tmp);
-	while (**s && IS_DIGIT(**s))
+	while (**s && isdigit((unsigned char)**s))
 		Strcat_char(tmp, *((*s)++));
 	*sec = atoi(tmp->ptr);
 
@@ -1572,9 +1572,9 @@ get_zone(char **s, int *z_hour, int *z_min)
 
 	if (**s == '+' || **s == '-')
 		Strcat_char(tmp, *((*s)++));
-	while (**s && IS_DIGIT(**s))
+	while (**s && isdigit((unsigned char)**s))
 		Strcat_char(tmp, *((*s)++));
-	if (!(tmp->length == 4 && IS_DIGIT(*ss)) &&
+	if (!(tmp->length == 4 && isdigit((unsigned char)*ss)) &&
 	    !(tmp->length == 5 && (*ss == '+' || *ss == '-'))) {
 		*s = ss;
 		return -1;
@@ -1600,27 +1600,27 @@ mymktime(char *timestr)
 	fprintf(stderr, "mktime: %s\n", timestr);
 #endif				/* DEBUG */
 
-	while (*s && IS_ALPHA(*s))
+	while (*s && isalpha((unsigned char)*s))
 		s++;
-	while (*s && !IS_ALNUM(*s))
+	while (*s && !isalnum((unsigned char)*s))
 		s++;
 
-	if (IS_DIGIT(*s)) {
+	if (isdigit((unsigned char)*s)) {
 		/* RFC 1123 or RFC 850 format */
 		if ((day = get_day(&s)) == -1)
 			return -1;
 
-		while (*s && !IS_ALNUM(*s))
+		while (*s && !isalnum((unsigned char)*s))
 			s++;
 		if ((mon = get_month(&s)) == -1)
 			return -1;
 
-		while (*s && !IS_DIGIT(*s))
+		while (*s && !isdigit((unsigned char)*s))
 			s++;
 		if ((year = get_year(&s)) == -1)
 			return -1;
 
-		while (*s && !IS_DIGIT(*s))
+		while (*s && !isdigit((unsigned char)*s))
 			s++;
 		if (!*s) {
 			hour = 0;
@@ -1629,28 +1629,28 @@ mymktime(char *timestr)
 		} else {
 			if (get_time(&s, &hour, &min, &sec) == -1)
 				return -1;
-			while (*s && !IS_DIGIT(*s) && *s != '+' && *s != '-')
+			while (*s && !isdigit((unsigned char)*s) && *s != '+' && *s != '-')
 				s++;
 			get_zone(&s, &z_hour, &z_min);
 		}
 	} else {
 		/* ANSI C asctime() format. */
-		while (*s && !IS_ALNUM(*s))
+		while (*s && !isalnum((unsigned char)*s))
 			s++;
 		if ((mon = get_month(&s)) == -1)
 			return -1;
 
-		while (*s && !IS_DIGIT(*s))
+		while (*s && !isdigit((unsigned char)*s))
 			s++;
 		if ((day = get_day(&s)) == -1)
 			return -1;
 
-		while (*s && !IS_DIGIT(*s))
+		while (*s && !isdigit((unsigned char)*s))
 			s++;
 		if (get_time(&s, &hour, &min, &sec) == -1)
 			return -1;
 
-		while (*s && !IS_DIGIT(*s))
+		while (*s && !isdigit((unsigned char)*s))
 			s++;
 		if ((year = get_year(&s)) == -1)
 			return -1;

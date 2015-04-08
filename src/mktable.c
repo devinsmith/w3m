@@ -79,11 +79,11 @@ defhashfunc(HashItem_ss *, int, hss_i)
 		Strremovetrailingspaces(s);
 		name = Strnew();
 		for (p = s->ptr; *p; p++) {
-			if (IS_SPACE(*p))
+			if (isspace((unsigned char)*p))
 				break;
 			Strcat_char(name, *p);
 		}
-		while (*p && IS_SPACE(*p))
+		while (*p && isspace((unsigned char)*p))
 			p++;
 		putHash_ss(hash, name->ptr, p);
 		n++;

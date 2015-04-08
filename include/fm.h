@@ -252,8 +252,8 @@ extern enum LinkBuffer REV_LB[];
 #define inputFilenameHist(p,d,h)	inputLineHist(p,d,IN_FILENAME,h)
 #define inputChar(p)		inputLine(p,"",IN_CHAR)
 
-#define SKIP_BLANKS(p) {while(*(p)&&IS_SPACE(*(p)))(p)++;}
-#define SKIP_NON_BLANKS(p) {while(*(p)&&!IS_SPACE(*(p)))(p)++;}
+#define SKIP_BLANKS(p) {while(*(p)&&isspace((unsigned char)*(p)))(p)++;}
+#define SKIP_NON_BLANKS(p) {while(*(p)&&!isspace((unsigned char)*(p)))(p)++;}
 #define IS_ENDL(c) ((c)=='\0'||(c)=='\r'||(c)=='\n')
 #define IS_ENDT(c) (IS_ENDL(c)||(c)==';')
 

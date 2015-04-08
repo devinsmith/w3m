@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 #include <gc.h>
 #include "config.h"
 #ifdef USE_M17N
@@ -56,12 +57,6 @@ int verbose;
 #define get_mclen(c) wtf_len1((wc_uchar *)(c))
 #else
 #define get_mclen(c) 1
-#endif
-
-#ifndef TOLOWER
-#include <ctype.h>
-#define TOLOWER(x) tolower(x)
-#define TOUPPER(x) toupper(x)
 #endif
 
 #define RE_TYPE_END     0
@@ -679,7 +674,8 @@ match_longchar(longchar * a, longchar * b, int ignore)
 	}
 #endif
 	if (ignore && IS_ALPHA(b->ch))
-		return (a->ch == TOLOWER(b->ch) || a->ch == TOUPPER(b->ch));
+		return (a->ch == tolower((unsigned char)b->ch) ||
+		    a->ch == toupper((unsigned char)b->ch));
 	else
 		return a->ch == b->ch;
 }
@@ -712,8 +708,10 @@ match_range_longchar(longchar * a, longchar * b, longchar * c, int ignore)
 	}
 #endif
 	if (ignore && IS_ALPHA(c->ch))
-		return ((a->ch <= TOLOWER(c->ch) && TOLOWER(c->ch) <= b->ch) ||
-		      (a->ch <= TOUPPER(c->ch) && TOUPPER(c->ch) <= b->ch));
+		return ((a->ch <= tolower((unsigned char)c->ch) &&
+			    tolower((unsigned char)c->ch) <= b->ch) ||
+			(a->ch <= toupper((unsigned char)c->ch) &&
+			    toupper((unsigned char)c->ch) <= b->ch));
 	else
 		return (a->ch <= c->ch && c->ch <= b->ch);
 }

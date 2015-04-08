@@ -18,6 +18,7 @@
 #include <gc.h>
 #include <stdarg.h>
 #include <string.h>
+#include <ctype.h>
 #include "Str.h"
 #include "myctype.h"
 
@@ -261,7 +262,7 @@ Strlower(Str s)
 	int i;
 	STR_LENGTH_CHECK(s);
 	for (i = 0; i < s->length; i++)
-		s->ptr[i] = TOLOWER(s->ptr[i]);
+		s->ptr[i] = tolower((unsigned char)s->ptr[i]);
 }
 
 void
@@ -270,7 +271,7 @@ Strupper(Str s)
 	int i;
 	STR_LENGTH_CHECK(s);
 	for (i = 0; i < s->length; i++)
-		s->ptr[i] = TOUPPER(s->ptr[i]);
+		s->ptr[i] = toupper((unsigned char)s->ptr[i]);
 }
 
 void
@@ -350,7 +351,7 @@ Strremovefirstspaces(Str s)
 	int i;
 
 	STR_LENGTH_CHECK(s);
-	for (i = 0; i < s->length && IS_SPACE(s->ptr[i]); i++);
+	for (i = 0; i < s->length && isspace((unsigned char)s->ptr[i]); i++);
 	if (i == 0)
 		return;
 	Strdelete(s, 0, i);
@@ -362,7 +363,7 @@ Strremovetrailingspaces(Str s)
 	int i;
 
 	STR_LENGTH_CHECK(s);
-	for (i = s->length - 1; i >= 0 && IS_SPACE(s->ptr[i]); i--);
+	for (i = s->length - 1; i >= 0 && isspace((unsigned char)s->ptr[i]); i--);
 	s->length = i + 1;
 	s->ptr[i + 1] = '\0';
 }

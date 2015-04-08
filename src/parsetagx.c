@@ -8,6 +8,8 @@
 
 #include "html.c"
 
+#include <ctype.h>
+
 /* parse HTML tag */
 
 static int noConv(char *, char **);
@@ -58,7 +60,7 @@ static int
 toLength(const char *oval, int *len)
 {
 	int w;
-	if (!IS_DIGIT(oval[0]))
+	if (!isdigit((unsigned char)oval[0]))
 		return 0;
 	w = atoi(oval);
 	if (w < 0)
@@ -125,13 +127,13 @@ parse_tag(char **s, int internal)
 		*(p++) = *(q++);
 		SKIP_BLANKS(q);
 	}
-	while (*q && !IS_SPACE(*q) && !(tagname[0] != '/' && *q == '/') &&
+	while (*q && !isspace((unsigned char)*q) && !(tagname[0] != '/' && *q == '/') &&
 	       *q != '>' && p - tagname < MAX_TAG_LEN - 1) {
-		*(p++) = TOLOWER(*q);
+		*(p++) = tolower((unsigned char)*q);
 		q++;
 	}
 	*p = '\0';
-	while (*q && !IS_SPACE(*q) && !(tagname[0] != '/' && *q == '/') &&
+	while (*q && !isspace((unsigned char)*q) && !(tagname[0] != '/' && *q == '/') &&
 	       *q != '>')
 		q++;
 
@@ -161,14 +163,16 @@ parse_tag(char **s, int internal)
 		if (*q == '>' || *q == '\0')
 			goto done_parse_tag;
 		p = attrname;
-		while (*q && *q != '=' && !IS_SPACE(*q) &&
-		       *q != '>' && p - attrname < MAX_TAG_LEN - 1) {
-			*(p++) = TOLOWER(*q);
+		while (*q && *q != '=' && !isspace((unsigned char)*q) &&
+		   *q != '>' && p - attrname < MAX_TAG_LEN - 1) {
+			*(p++) = tolower((unsigned char)*q);
 			q++;
 		}
 		*p = '\0';
-		while (*q && *q != '=' && !IS_SPACE(*q) && *q != '>')
+		while (*q && *q != '=' && *q != '>' &&
+		    !isspace((unsigned char)*q)) {
 			q++;
+		}
 		SKIP_BLANKS(q);
 		if (*q == '=') {
 			/* get value */
@@ -196,7 +200,8 @@ parse_tag(char **s, int internal)
 				if (*q == '\'')
 					q++;
 			} else if (*q) {
-				while (*q && !IS_SPACE(*q) && *q != '>') {
+				while (*q && *q != '>' &&
+				    !isspace((unsigned char)*q)) {
 					Strcat_char(value_tmp, *q);
 					if (!tag->need_reconstruct && is_html_quote(*q))
 						tag->need_reconstruct = TRUE;

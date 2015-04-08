@@ -3,6 +3,7 @@
 #include "myctype.h"
 #include <stdio.h>
 #include <errno.h>
+#include <ctype.h>
 #include "parsetag.h"
 #include "local.h"
 
@@ -21,7 +22,7 @@ mailcapMatch(struct mailcap * mcap, char *type)
 	char *cap = mcap->type, *p;
 	int level;
 	for (p = cap; *p != '/'; p++) {
-		if (TOLOWER(*p) != TOLOWER(*type))
+		if (tolower((unsigned char)*p) != tolower((unsigned char)*type))
 			return 0;
 		type++;
 	}
@@ -36,7 +37,7 @@ mailcapMatch(struct mailcap * mcap, char *type)
 	if (*p == '*')
 		return 10 + level;
 	while (*p) {
-		if (TOLOWER(*p) != TOLOWER(*type))
+		if (tolower((unsigned char)*p) != tolower((unsigned char)*type))
 			return 0;
 		p++;
 		type++;
@@ -87,7 +88,7 @@ matchMailcapAttr(char *p, char *attr, int len, Str * value)
 				SKIP_BLANKS(p);
 				quoted = 0;
 				while (*p && (quoted || *p != ';')) {
-					if (quoted || !IS_SPACE(*p))
+					if (quoted || !isspace((unsigned char)*p))
 						q = p;
 					if (quoted)
 						quoted = 0;
@@ -122,7 +123,7 @@ extractMailcapEntry(char *mcap_entry, struct mailcap * mcap)
 	SKIP_BLANKS(p);
 	k = -1;
 	for (j = 0; p[j] && p[j] != ';'; j++) {
-		if (!IS_SPACE(p[j]))
+		if (!isspace((unsigned char)p[j]))
 			k = j;
 	}
 	mcap->type = allocStr(p, (k >= 0) ? k + 1 : j);
@@ -134,7 +135,7 @@ extractMailcapEntry(char *mcap_entry, struct mailcap * mcap)
 	k = -1;
 	quoted = 0;
 	for (j = 0; p[j] && (quoted || p[j] != ';'); j++) {
-		if (quoted || !IS_SPACE(p[j]))
+		if (quoted || !isspace((unsigned char)p[j]))
 			k = j;
 		if (quoted)
 			quoted = 0;
@@ -197,7 +198,7 @@ loadMailcap(char *filename)
 		if (tmp->ptr[0] == '#')
 			continue;
 redo:
-		while (IS_SPACE(Strlastchar(tmp)))
+		while (isspace((unsigned char)Strlastchar(tmp)))
 			Strshrink(tmp, 1);
 		if (Strlastchar(tmp) == '\\') {
 			/* continuation */
@@ -435,8 +436,8 @@ unquote_mailcap_loop(char *qstr, char *type, char *name, char *attr,
 			} else if (*p == '}') {
 				char *q;
 				if (attr && (q = strcasestr(attr, tmp->ptr)) != NULL &&
-				    (q == attr || IS_SPACE(*(q - 1)) || *(q - 1) == ';') &&
-				matchattr(q, tmp->ptr, tmp->length, &tmp)) {
+				    (q == attr || isspace((unsigned char)*(q - 1)) || *(q - 1) == ';') &&
+				    matchattr(q, tmp->ptr, tmp->length, &tmp)) {
 					Strcat_charp(str, quote_mailcap(tmp->ptr, flag)->ptr);
 					if (mc_stat)
 						*mc_stat |= MCSTAT_REPPARAM;

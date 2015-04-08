@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
+#include <ctype.h>
 #include "fm.h"
 #include "html.h"
 #include "parsetagx.h"
@@ -40,7 +41,7 @@ int symbol_width0 = 0;
 #ifdef NOWRAP
 #define HTT_NOWRAP  4
 #endif				/* NOWRAP */
-#define TAG_IS(s,tag,len) (strncasecmp(s,tag,len)==0&&(s[len] == '>' || IS_SPACE((int)s[len])))
+#define TAG_IS(s,tag,len) (strncasecmp(s,tag,len)==0&&(s[len] == '>' || isspace((unsigned char)s[len])))
 
 #ifndef max
 #define max(a,b)        ((a) > (b) ? (a) : (b))
@@ -1666,7 +1667,7 @@ skip_space(struct table * t, char *line, struct table_linfo * linfo,
 
 		if (min < w)
 			min = w;
-		if (ctype == PC_ASCII && IS_SPACE(*c)) {
+		if (ctype == PC_ASCII && isspace((unsigned char)*c)) {
 			w = 0;
 			s++;
 		} else {
@@ -2609,7 +2610,7 @@ feed_table(struct table * tbl, char *line, struct table_mode * mode,
 	}
 	if (!(mode->pre_mode & (TBLM_SPECIAL & ~TBLM_NOBR))) {
 		if (!(tbl->flag & TBL_IN_COL) || linfo->prev_spaces != 0)
-			while (IS_SPACE(*line))
+			while (isspace((unsigned char)*line))
 				line++;
 		if (*line == '\0')
 			return -1;

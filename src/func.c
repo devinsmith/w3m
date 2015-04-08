@@ -4,6 +4,7 @@
  */
 
 #include <stdio.h>
+#include <ctype.h>
 
 #include "fm.h"
 #include "func.h"
@@ -273,10 +274,10 @@ getKey2(char **str)
 		else
 			return -1;
 	}
-	if (esc == K_ESCB && IS_DIGIT(*s)) {
+	if (esc == K_ESCB && isdigit((unsigned char)*s)) {
 		c = (int) (*s - '0');
 		s++;
-		if (IS_DIGIT(*s)) {
+		if (isdigit((unsigned char)*s)) {
 			c = c * 10 + (int) (*s - '0');
 			s++;
 		}
@@ -353,7 +354,7 @@ getWord(char **str)
 
 	p = *str;
 	SKIP_BLANKS(p);
-	for (s = p; *p && !IS_SPACE(*p) && *p != ';'; p++);
+	for (s = p; *p && !isspace((unsigned char)*p) && *p != ';'; p++);
 	*str = p;
 	return Strnew_charp_n(s, p - s)->ptr;
 }
@@ -377,7 +378,7 @@ getQWord(char **str)
 					Strcat_char(tmp, '\\');
 			} else {
 				if (*p != '\\' && *p != '\'' &&	/* ..\\.., ..\'.. */
-				    *p != '"' && !IS_SPACE(*p))	/* ..\".., ..\.. */
+				    *p != '"' && !isspace((unsigned char)*p))	/* ..\".., ..\.. */
 					Strcat_char(tmp, '\\');
 			}
 			Strcat_char(tmp, *p);
@@ -398,7 +399,7 @@ getQWord(char **str)
 			in_q = 1;
 		} else if (*p == '"') {
 			in_dq = 1;
-		} else if (IS_SPACE(*p) || *p == ';') {
+		} else if (isspace((unsigned char)*p) || *p == ';') {
 			break;
 		} else {
 			Strcat_char(tmp, *p);
@@ -476,11 +477,11 @@ setMouseAction1(MouseActionMap ** map, int width, char *p)
 	}
 	s = getWord(&p);
 	x = atoi(s);
-	if (!(IS_DIGIT(*s) && x >= 0 && x < width))
+	if (!(isdigit((unsigned char)*s) && x >= 0 && x < width))
 		return;		/* error */
 	s = getWord(&p);
 	x2 = atoi(s);
-	if (!(IS_DIGIT(*s) && x2 >= 0 && x2 < width))
+	if (!(isdigit((unsigned char)*s) && x2 >= 0 && x2 < width))
 		return;		/* error */
 	s = getWord(&p);
 	f = getFuncList(s);
@@ -542,7 +543,7 @@ interpret_mouse_action(FILE * mf)
 		if (!(b >= 0 && b <= 2))
 			continue;	/* error */
 		SKIP_BLANKS(p);
-		if (IS_DIGIT(*p))
+		if (isdigit((unsigned char)*p))
 			s = "menu";
 		else
 			s = getWord(&p);

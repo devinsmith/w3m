@@ -5,6 +5,7 @@
 #include <sys/param.h>
 #include <sys/types.h>
 #include <stdlib.h>
+#include <ctype.h>
 #include "indep.h"
 #include "Str.h"
 #include <gc.h>
@@ -204,7 +205,7 @@ strcasematch(const char *s1, const char *s2)
 	while (*s1) {
 		if (*s2 == '\0')
 			return 1;
-		x = TOLOWER(*s1) - TOLOWER(*s2);
+		x = tolower((unsigned char)*s1) - tolower((unsigned char)*s2);
 		if (x != 0)
 			break;
 		s1++;
@@ -236,9 +237,9 @@ remove_space(const char *str)
 {
 	const char *p, *q;
 
-	for (p = str; *p && IS_SPACE(*p); p++);
+	for (p = str; *p && isspace((unsigned char)*p); p++);
 	for (q = p; *q; q++);
-	for (; q > p && IS_SPACE(*(q - 1)); q--);
+	for (; q > p && isspace((unsigned char)*(q - 1)); q--);
 	if (*q != '\0')
 		return Strnew_charp_n(p, q - p)->ptr;
 	return Strnew_charp(p)->ptr;
@@ -250,7 +251,7 @@ non_null(const char *s)
 	if (s == NULL)
 		return FALSE;
 	while (*s) {
-		if (!IS_SPACE(*s))
+		if (!isspace((unsigned char)*s))
 			return TRUE;
 		s++;
 	}
@@ -301,11 +302,11 @@ getescapechar(char **str)
 			*str = p;
 			return dummy;
 		} else {
-			if (!IS_DIGIT(*p)) {
+			if (!isdigit((unsigned char)*p)) {
 				*str = p;
 				return -1;
 			}
-			for (dummy = GET_MYCDIGIT(*p), p++; IS_DIGIT(*p); p++)
+			for (dummy = GET_MYCDIGIT(*p), p++; isdigit((unsigned char)*p); p++)
 				dummy = dummy * 10 + GET_MYCDIGIT(*p);
 			if (*p == ';')
 				p++;
@@ -313,12 +314,12 @@ getescapechar(char **str)
 			return dummy;
 		}
 	}
-	if (!IS_ALPHA(*p)) {
+	if (!isalpha((unsigned char)*p)) {
 		*str = p;
 		return -1;
 	}
 	q = p;
-	for (p++; IS_ALNUM(*p); p++);
+	for (p++; isalnum((unsigned char)*p); p++);
 	q = allocStr(q, p - q);
 	if (strcasestr("lt gt amp quot nbsp", q) && *p != '=') {
 		/*

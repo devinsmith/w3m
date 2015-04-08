@@ -12,6 +12,7 @@
 #include "terms.h"
 
 #include <curses.h>
+#include <ctype.h>
 
 #ifdef USE_MOUSE
 #ifdef USE_GPM
@@ -674,7 +675,7 @@ static int
 mEscB(char c)
 {
 	c = getch();
-	if (IS_DIGIT(c))
+	if (isdigit((unsigned char)c))
 		return (mEscD(c));
 	else
 		return (MenuEscBKeymap[(int) c] (c));
@@ -687,7 +688,7 @@ mEscD(char c)
 
 	d = (int) c - (int) '0';
 	c = getch();
-	if (IS_DIGIT(c)) {
+	if (isdigit((unsigned char)c)) {
 		d = d * 10 + (int) c - (int) '0';
 		c = getch();
 	}
@@ -1835,12 +1836,12 @@ accesskey_menu(Buffer * buf)
 	}
 	for (j = 0; j < nitem; j++) {
 		c = ap[j]->accesskey;
-		if (!IS_ALPHA(c) || menu.keyselect[n] >= 0)
+		if (!isalpha((unsigned char)c) || menu.keyselect[n] >= 0)
 			continue;
-		c = TOLOWER(c);
+		c = tolower((unsigned char)c);
 		menu.keymap[c] = mSelect;
 		menu.keyselect[c] = j;
-		c = TOUPPER(c);
+		c = toupper((unsigned char)c);
 		menu.keymap[c] = mSelect;
 		menu.keyselect[c] = j;
 	}
