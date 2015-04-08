@@ -277,7 +277,7 @@ new_menu(Menu * menu, MenuItem * item)
 	for (i = 0; i < menu->nitem; i++) {
 		if ((p = item[i].keys) != NULL) {
 			while (*p) {
-				if (IS_ASCII(*p)) {
+				if (isascii((unsigned char)*p)) {
 					menu->keymap[(int) *p] = mSelect;
 					menu->keyselect[(int) *p] = i;
 				}
@@ -518,7 +518,7 @@ action_menu(Menu * menu)
 		}
 #endif				/* defined(USE_GPM) || defined(USE_SYSMOUSE) */
 #endif				/* USE_MOUSE */
-		if (IS_ASCII(c)) {	/* Ascii */
+		if (isascii((unsigned char)c)) {
 			mselect = (*menu->keymap[(int) c]) (c);
 			if (mselect != MENU_NOTHING)
 				break;
@@ -707,7 +707,7 @@ mNull(char c)
 static int
 mSelect(char c)
 {
-	if (IS_ASCII(c))
+	if (isascii((unsigned char)c))
 		return (select_menu(CurrentMenu, CurrentMenu->keyselect[(int) c]));
 	else
 		return (MENU_NOTHING);
@@ -1801,7 +1801,7 @@ accesskey_menu(Buffer * buf)
 		return NULL;
 	for (i = 0; i < al->nanchor; i++) {
 		a = &al->anchors[i];
-		if (!a->slave && a->accesskey && IS_ASCII(a->accesskey))
+		if (!a->slave && a->accesskey && isascii((unsigned char)a->accesskey))
 			nitem++;
 	}
 	if (!nitem)
@@ -1811,7 +1811,7 @@ accesskey_menu(Buffer * buf)
 	ap = New_N(Anchor *, nitem);
 	for (i = 0, n = 0; i < al->nanchor; i++) {
 		a = &al->anchors[i];
-		if (!a->slave && a->accesskey && IS_ASCII(a->accesskey)) {
+		if (!a->slave && a->accesskey && isascii((unsigned char)a->accesskey)) {
 			t = getAnchorText(buf, al, a);
 			label[n] = Sprintf("%c: %s", a->accesskey, t ? t : "")->ptr;
 			ap[n] = a;
@@ -1847,7 +1847,7 @@ accesskey_menu(Buffer * buf)
 	}
 
 	a = retrieveCurrentAnchor(buf);
-	if (a && a->accesskey && IS_ASCII(a->accesskey)) {
+	if (a && a->accesskey && isascii((unsigned char)a->accesskey)) {
 		for (j = 0; j < nitem; j++) {
 			if (a->hseq == ap[j]->hseq) {
 				menu.initial = j;
@@ -1868,7 +1868,8 @@ static char lmKeys2[] = "1234567890ABCDEFGHILMOPQRSTUVWXYZ";
 static int
 lmGoto(char c)
 {
-	if (IS_ASCII(c) && CurrentMenu->keyselect[(int) c] >= 0) {
+	if (isascii((unsigned char)c) &&
+	    CurrentMenu->keyselect[(int) c] >= 0) {
 		goto_menu(CurrentMenu, CurrentMenu->nitem - 1, -1);
 		goto_menu(CurrentMenu, CurrentMenu->keyselect[(int) c] * nlmKeys, 1);
 	}
@@ -1878,7 +1879,7 @@ lmGoto(char c)
 static int
 lmSelect(char c)
 {
-	if (IS_ASCII(c))
+	if (isascii((unsigned char)c))
 		return select_menu(CurrentMenu, (CurrentMenu->select / nlmKeys) *
 				 nlmKeys + CurrentMenu->keyselect[(int) c]);
 	else

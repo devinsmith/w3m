@@ -644,7 +644,7 @@ analyze_url:
 #ifdef INET6
 	if (*q == '[') {	/* rfc2732,rfc2373 compliance */
 		p++;
-		while (IS_XDIGIT(*p) || *p == ':' || *p == '.')
+		while (isxdigit((unsigned char)*p) || *p == ':' || *p == '.')
 			p++;
 		if (*p != ']' || (*(p + 1) && strchr(":/?#", *(p + 1)) == NULL))
 			p = q;
@@ -1014,8 +1014,10 @@ getURLScheme(char **url)
 	int i;
 	enum Scheme scheme = SCM_MISSING;
 
-	while (*p && (IS_ALNUM(*p) || *p == '.' || *p == '+' || *p == '-'))
+	while (*p && (isalnum((unsigned char)*p) ||
+	    *p == '.' || *p == '+' || *p == '-')) {
 		p++;
+	}
 	if (*p == ':') {	/* scheme found */
 		scheme = SCM_UNKNOWN;
 		for (i = 0; (q = schemetable[i].cmdname) != NULL; i++) {
@@ -1749,7 +1751,7 @@ filename_extension(char *path, int is_url)
 	}
 	if (*last_dot == '.') {
 		for (i = 1; last_dot[i] && i < 8; i++) {
-			if (is_url && !IS_ALNUM(last_dot[i]))
+			if (is_url && !isalnum((unsigned char)last_dot[i]))
 				break;
 		}
 		return allocStr(last_dot, i);

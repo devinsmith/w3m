@@ -16,12 +16,6 @@
 #define GET_MYCTYPE(x) (MYCTYPE_MAP[(int)(unsigned char)(x)])
 #define GET_MYCDIGIT(x) (MYCTYPE_DIGITMAP[(int)(unsigned char)(x)])
 
-#define IS_CNTRL(x) (GET_MYCTYPE(x) & MYCTYPE_CNTRL)
-#define IS_ALPHA(x) (GET_MYCTYPE(x) & MYCTYPE_ALPHA)
-#define IS_PRINT(x) (GET_MYCTYPE(x) & MYCTYPE_PRINT)
-#define IS_ASCII(x) (GET_MYCTYPE(x) & MYCTYPE_ASCII)
-#define IS_ALNUM(x) (GET_MYCTYPE(x) & MYCTYPE_ALNUM)
-#define IS_XDIGIT(x) (GET_MYCTYPE(x) & MYCTYPE_XDIGIT)
 #define IS_INTSPACE(x) (MYCTYPE_MAP[(unsigned char)(x)] & MYCTYPE_INTSPACE)
 
 extern unsigned char MYCTYPE_MAP[];

@@ -329,7 +329,7 @@ quote_mailcap(char *s, int flag)
 				break;
 			}
 		default:
-			if (!flag && !IS_ALNUM(*s))
+			if (!flag && !isalnum((unsigned char)*s))
 				Strcat_char(d, '\\');
 		case '_':
 		case '.':
@@ -393,7 +393,7 @@ unquote_mailcap_loop(char *qstr, char *type, char *name, char *attr,
 			}
 			break;
 		case MC_PREC:
-			if (IS_ALPHA(*p)) {
+			if (isalpha((unsigned char)*p)) {
 				switch (*p) {
 				case 's':
 					if (name) {

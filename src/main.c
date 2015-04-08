@@ -1061,7 +1061,7 @@ main(int argc, char **argv, char **envp)
 		if (use_mouse)
 			mouse_inactive();
 #endif				/* USE_MOUSE */
-		if (IS_ASCII(c)) {	/* Ascii */
+		if (isascii((unsigned char)c)) {
 			if (('0' <= c) && (c <= '9') &&
 			(prec_num || (GlobalKeymap[(uint8_t) c] ==
 			    FUNCNAME_nulcmd))) {
@@ -1233,7 +1233,7 @@ DEFUN(escmap, ESCMAP, "ESC map")
 {
 	char c;
 	c = getch();
-	if (IS_ASCII(c))
+	if (isascii((unsigned char)c))
 		escKeyProc((int) c, K_ESC, EscKeymap);
 }
 
@@ -2128,7 +2128,7 @@ is_wordchar(wc_uint32 c)
 static int
 is_wordchar(int c)
 {
-	return IS_ALNUM(c);
+	return isalnum((unsigned char)c);
 }
 #endif
 

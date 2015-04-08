@@ -151,7 +151,7 @@ expandPath(const char *name)
 	p = name;
 	if (*p == '~') {
 		p++;
-		if (IS_ALPHA(*p)) {
+		if (isalpha((unsigned char)*p)) {
 			char *q = strchr(p, '/');
 			if (q) {/* ~user/dir... */
 				passent = getpwnam(allocStr(p, q - p));
@@ -291,11 +291,11 @@ getescapechar(char **str)
 		p++;
 		if (*p == 'x' || *p == 'X') {
 			p++;
-			if (!IS_XDIGIT(*p)) {
+			if (!isxdigit((unsigned char)*p)) {
 				*str = p;
 				return -1;
 			}
-			for (dummy = GET_MYCDIGIT(*p), p++; IS_XDIGIT(*p); p++)
+			for (dummy = GET_MYCDIGIT(*p), p++; isxdigit((unsigned char)*p); p++)
 				dummy = dummy * 0x10 + GET_MYCDIGIT(*p);
 			if (*p == ';')
 				p++;
@@ -410,7 +410,7 @@ html_unquote(char *str)
 static char xdigit[0x10] = "0123456789ABCDEF";
 
 #define url_unquote_char(pstr) \
-  ((IS_XDIGIT((*(pstr))[1]) && IS_XDIGIT((*(pstr))[2])) ? \
+  ((isxdigit((unsigned char)(*(pstr))[1]) && isxdigit((unsigned char)(*(pstr))[2])) ? \
     (*(pstr) += 3, (GET_MYCDIGIT((*(pstr))[-2]) << 4) | GET_MYCDIGIT((*(pstr))[-1])) : \
    -1)
 
@@ -536,7 +536,7 @@ Str_url_unquote(Str x, int is_form, int safe)
 		} else if (*p == '%') {
 			q = p;
 			c = url_unquote_char(&q);
-			if (c >= 0 && (!safe || !IS_ASCII(c) || !is_file_quote(c))) {
+			if (c >= 0 && (!safe || !isascii((unsigned char)c) || !is_file_quote(c))) {
 				if (tmp == NULL)
 					tmp = Strnew_charp_n(x->ptr, (int) (p - x->ptr));
 				Strcat_char(tmp, (char) c);

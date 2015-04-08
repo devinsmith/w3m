@@ -635,7 +635,7 @@ enum RTstatus {
 
 /* is this '<' really means the beginning of a tag? */
 #define REALLY_THE_BEGINNING_OF_A_TAG(p) \
-	  (IS_ALPHA(p[1]) || p[1] == '/' || p[1] == '!' || p[1] == '?' || p[1] == '\0' || p[1] == '_')
+	  (isalpha((unsigned char)p[1]) || p[1] == '/' || p[1] == '!' || p[1] == '?' || p[1] == '\0' || p[1] == '_')
 
 /* flags for loadGeneralFile */
 #define RG_NOCACHE   1
@@ -1107,7 +1107,7 @@ global char *keymap_file init(KEYMAP_FILE);
 #define get_strwidth(c) wtf_strwidth((wc_uchar *)(c))
 #define get_Str_strwidth(c) wtf_strwidth((wc_uchar *)((c)->ptr))
 #else
-#define get_mctype(c) (IS_CNTRL(*(c)) ? PC_CTRL : PC_ASCII)
+#define get_mctype(c) (iscntrl((unsigned char)*(c)) ? PC_CTRL : PC_ASCII)
 #define get_mclen(c) 1
 #define get_mcwidth(c) 1
 #define get_strwidth(c) strlen(c)

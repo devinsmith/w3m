@@ -322,7 +322,7 @@ getKey2(char **str)
 		}
 	}
 	*str = s + 1;
-	if (IS_ASCII(*s))	/* Ascii */
+	if (isascii((unsigned char)*s))
 		return esc | *s;
 	else
 		return -1;

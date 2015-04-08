@@ -125,14 +125,15 @@ gethtmlcmd(char **s)
 
 	(*s)++;
 	/* first character */
-	if (IS_ALNUM(**s) || **s == '_' || **s == '/') {
+	if (isalnum((unsigned char)**s) || **s == '_' || **s == '/') {
 		*(p++) = tolower((unsigned char)**s);
 		(*s)++;
 	} else
 		return HTML_UNKNOWN;
 	if (p[-1] == '/')
 		SKIP_BLANKS(*s);
-	while ((IS_ALNUM(**s) || **s == '_') && p - cmdstr < MAX_CMD_LEN) {
+	while ((isalnum((unsigned char)**s) || **s == '_') &&
+	    p - cmdstr < MAX_CMD_LEN) {
 		*(p++) = tolower((unsigned char)**s);
 		(*s)++;
 	}
@@ -182,15 +183,19 @@ checkType(Str s, Lineprop ** oprop)
 			s = Strnew_size(s->length);
 			do_copy = TRUE;
 			ep = bs ? (bs - 2) : endp;
-			for (; str < ep && IS_ASCII(*str); str++) {
-				*(prop++) = PE_NORMAL | (IS_CNTRL(*str) ? PC_CTRL : PC_ASCII);
+			for (; str < ep && isascii((unsigned char)*str); str++) {
+				*(prop++) = PE_NORMAL |
+				    (iscntrl((unsigned char)*str) ?
+					PC_CTRL : PC_ASCII);
 			}
 			Strcat_charp_n(s, sp, (int) (str - sp));
 		}
 	}
 	if (!do_copy) {
-		for (; str < endp && IS_ASCII(*str); str++)
-			*(prop++) = PE_NORMAL | (IS_CNTRL(*str) ? PC_CTRL : PC_ASCII);
+		for (; str < endp && isascii((unsigned char)*str); str++)
+			*(prop++) = PE_NORMAL |
+			    (iscntrl((unsigned char)*str) ?
+				PC_CTRL : PC_ASCII);
 	}
 	while (str < endp) {
 		if (prop - prop_buffer >= prop_size)
@@ -1320,7 +1325,7 @@ expandName(char *name)
 		return NULL;
 	p = name;
 	if (*p == '/') {
-		if ((*(p + 1) == '~' && IS_ALPHA(*(p + 2)))
+		if ((*(p + 1) == '~' && isalpha((unsigned char)*(p + 2)))
 		    && personal_document_root) {
 			char *q;
 			p += 2;
@@ -1479,7 +1484,7 @@ get_month(char **s)
 	if (tmp->length > 0) {
 		mon = atoi(tmp->ptr);
 	} else {
-		while (**s && IS_ALPHA(**s))
+		while (**s && isalpha((unsigned char)**s))
 			Strcat_char(tmp, *((*s)++));
 		for (mon = 1; mon <= 12; mon++) {
 			if (strncmp(tmp->ptr, monthtbl[mon - 1], 3) == 0)

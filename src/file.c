@@ -2289,7 +2289,7 @@ is_word_char(unsigned char *ch)
 		return 0;
 #endif
 
-	if (IS_ALNUM(*ch))
+	if (isalnum((unsigned char)*ch))
 		return 1;
 
 	switch (*ch) {
@@ -3380,7 +3380,7 @@ process_img(struct parsed_tag * tag, int width)
 	n = 1;
 	p = q;
 	for (; *q; q++) {
-		if (!IS_ALNUM(*q) && *q != '_' && *q != '-') {
+		if (!isalnum((unsigned char)*q) && *q != '_' && *q != '-') {
 			break;
 		}
 		Strcat_char(tmp, *q);
@@ -5933,14 +5933,14 @@ proc_escape(struct readbuffer * obuf, char **str_return)
 		proc_mchar(obuf, obuf->flag & RB_SPECIAL, 1, str_return, PC_ASCII);
 		return;
 	}
-	mode = IS_CNTRL(ech) ? PC_CTRL : PC_ASCII;
+	mode = iscntrl((unsigned char)ech) ? PC_CTRL : PC_ASCII;
 
 	estr = conv_entity(ech);
 	check_breakpoint(obuf, obuf->flag & RB_SPECIAL, estr);
 	width = get_strwidth(estr);
 	if (width == 1 && ech == (unsigned char) *estr &&
 	    ech != '&' && ech != '<' && ech != '>') {
-		if (IS_CNTRL(ech))
+		if (iscntrl((unsigned char)ech))
 			mode = PC_CTRL;
 		push_charp(obuf, width, estr, mode);
 	} else

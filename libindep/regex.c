@@ -673,7 +673,7 @@ match_longchar(longchar * a, longchar * b, int ignore)
 		return (a->wch.ccs == b->wch.ccs) && (a->wch.code == b->wch.code);
 	}
 #endif
-	if (ignore && IS_ALPHA(b->ch))
+	if (ignore && isalpha((unsigned char)b->ch))
 		return (a->ch == tolower((unsigned char)b->ch) ||
 		    a->ch == toupper((unsigned char)b->ch));
 	else
@@ -707,7 +707,7 @@ match_range_longchar(longchar * a, longchar * b, longchar * c, int ignore)
 		return (a->wch.code <= c->wch.code && c->wch.code <= b->wch.code);
 	}
 #endif
-	if (ignore && IS_ALPHA(c->ch))
+	if (ignore && isalpha((unsigned char)c->ch))
 		return ((a->ch <= tolower((unsigned char)c->ch) &&
 			    tolower((unsigned char)c->ch) <= b->ch) ||
 			(a->ch <= toupper((unsigned char)c->ch) &&
