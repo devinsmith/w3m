@@ -38,9 +38,7 @@ static int RC_table_size;
 #define P_CHARINT  2
 #define P_CHAR     3
 #define P_STRING   4
-#ifdef USE_COLOR
 #define P_COLOR    6
-#endif
 #ifdef USE_M17N
 #define P_CODE     7
 #endif
@@ -227,7 +225,6 @@ struct sel_c {
 	char *text;
 };
 
-#ifdef USE_COLOR
 static struct sel_c colorstr[] = {
 	{0, "black", N_("black")},
 	{1, "red", N_("red")},
@@ -240,7 +237,6 @@ static struct sel_c colorstr[] = {
 	{8, "terminal", N_("terminal")},
 	{0, NULL, NULL}
 };
-#endif				/* USE_COLOR */
 
 #if 1				/* ANSI-C ? */
 #define N_STR(x)	#x
@@ -397,7 +393,6 @@ struct param_ptr params1[] = {
 	{NULL, 0, 0, NULL, NULL, NULL},
 };
 
-#ifdef USE_COLOR
 struct param_ptr params2[] = {
 	{"color", P_INT, PI_ONOFF, (void *) &useColor, CMT_COLOR, NULL},
 	{"basic_color", P_COLOR, PI_SEL_C, (void *) &basic_color, CMT_B_COLOR,
@@ -418,7 +413,6 @@ struct param_ptr params2[] = {
 	(void *) colorstr},
 	{NULL, 0, 0, NULL, NULL, NULL},
 };
-#endif				/* USE_COLOR */
 
 
 struct param_ptr params3[] = {
@@ -642,9 +636,7 @@ struct param_ptr params10[] = {
 
 struct param_section sections[] = {
 	{N_("Display Settings"), params1},
-#ifdef USE_COLOR
 	{N_("Color Settings"), params2},
-#endif				/* USE_COLOR */
 	{N_("Miscellaneous Settings"), params3},
 	{N_("Directory Settings"), params5},
 	{N_("External Program Settings"), params6},
@@ -789,11 +781,9 @@ show_params(FILE * fp)
 			case P_STRING:
 				t = "string";
 				break;
-#ifdef USE_COLOR
 			case P_COLOR:
 				t = "color";
 				break;
-#endif
 #ifdef USE_M17N
 			case P_CODE:
 				t = "charset";
@@ -851,7 +841,6 @@ str_to_bool(char *value, int old)
 	return 1;
 }
 
-#ifdef USE_COLOR
 static int
 str_to_color(char *value)
 {
@@ -891,7 +880,6 @@ str_to_color(char *value)
 	}
 	return 8;		/* terminal */
 }
-#endif
 
 static int
 set_param(char *name, char *value)
@@ -941,11 +929,9 @@ set_param(char *name, char *value)
 	case P_STRING:
 		*(char **) p->varptr = value;
 		break;
-#ifdef USE_COLOR
 	case P_COLOR:
 		*(int *) p->varptr = str_to_color(value);
 		break;
-#endif
 #ifdef USE_M17N
 	case P_CODE:
 		*(wc_ces *) p->varptr =
@@ -1216,9 +1202,7 @@ to_str(struct param_ptr * p)
 {
 	switch (p->type) {
 		case P_INT:
-#ifdef USE_COLOR
 		case P_COLOR:
-#endif
 #ifdef USE_M17N
 		case P_CODE:
 		return Sprintf("%d", (int) (*(wc_ces *) p->varptr));
@@ -1272,11 +1256,8 @@ load_option_panel(void)
 				p->comment =
 					wc_conv(_(p->comment), OptionCharset,
 						InnerCharset)->ptr;
-				if (p->inputtype == PI_SEL_C
-#ifdef USE_COLOR
-				    && p->select != colorstr
-#endif
-					) {
+				if (p->inputtype == PI_SEL_C &&
+				    p->select != colorstr) {
 					for (s = (struct sel_c *) p->select; s->text != NULL; s++) {
 						s->text =
 							wc_conv(_(s->text), OptionCharset,
@@ -1285,11 +1266,9 @@ load_option_panel(void)
 				}
 			}
 		}
-#ifdef USE_COLOR
 		for (s = colorstr; s->text; s++)
 			s->text = wc_conv(_(s->text), OptionCharset,
 					  InnerCharset)->ptr;
-#endif
 		OptionEncode = TRUE;
 	}
 #endif

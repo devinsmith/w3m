@@ -46,7 +46,6 @@
  */
 /* #define ENABLE_NLS 0 */
 
-#define USE_COLOR 1
 /* #undef USE_MIGEMO */
 #define USE_MARK
 /* #define USE_MOUSE */

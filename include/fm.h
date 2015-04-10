@@ -871,7 +871,6 @@ global int w3m_halfload init(FALSE);
 global Str header_string init(NULL);
 global int override_content_type init(FALSE);
 
-#ifdef USE_COLOR
 global int useColor init(TRUE);
 global int basic_color init(8);	/* don't change */
 global int anchor_color init(4);/* blue  */
@@ -881,7 +880,6 @@ global int useActiveColor init(FALSE);
 global int active_color init(6);/* cyan */
 global int useVisitedColor init(FALSE);
 global int visited_color init(5);	/* magenta  */
-#endif				/* USE_COLOR */
 global int confirm_on_quit init(TRUE);
 #ifdef USE_MARK
 global int use_mark init(FALSE);

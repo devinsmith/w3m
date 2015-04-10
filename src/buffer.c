@@ -333,13 +333,11 @@ listBuffer(Buffer * top, Buffer * current)
 
 	move(0, 0);
 #if 0 /* XXX */
-#ifdef USE_COLOR
 	if (useColor) {
 		setfcolor(basic_color);
 		setbcolor(bg_color);
 	}
 #endif
-#endif				/* USE_COLOR */
 	clrtobot();
 	for (i = 0; i < LASTLINE; i++) {
 		if (buf == current) {

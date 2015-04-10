@@ -6,7 +6,6 @@
 #include "fm.h"
 
 /* *INDENT-OFF* */
-#ifdef USE_COLOR
 
 #define EFFECT_ANCHOR_START       effect_anchor_start()
 #define EFFECT_ANCHOR_END         effect_anchor_end()
@@ -128,21 +127,6 @@ static void
 	}
 }
 
-#else				/* not USE_COLOR */
-
-#define EFFECT_ANCHOR_START       attron(A_UNDERLINE)
-#define EFFECT_ANCHOR_END         attroff(A_UNDERLINE)
-#define EFFECT_IMAGE_START        standout()
-#define EFFECT_IMAGE_END          standend()
-#define EFFECT_FORM_START         standout()
-#define EFFECT_FORM_END           standend()
-#define EFFECT_ACTIVE_START       attron(A_BOLD)
-#define EFFECT_ACTIVE_END         attroff(A_BOLD)
-#define EFFECT_VISITED_START	/**/
-#define EFFECT_VISITED_END	/**/
-#define EFFECT_MARK_START         standout()
-#define EFFECT_MARK_END           standend()
-#endif				/* not USE_COLOR */
 /* *INDENT-ON* */
 
 void
@@ -175,7 +159,6 @@ fmInit(void)
 	if (!fmInitialized) {
 		initscr();
 		savetty();
-#ifdef USE_COLOR
 		if (useColor) {
 			if (has_colors()) {
 				start_color();
@@ -184,7 +167,6 @@ fmInit(void)
 				useColor = FALSE;
 			}
 		}
-#endif
 		raw();
 		noecho();
 #ifdef USE_IMAGE
@@ -576,11 +558,9 @@ redrawNLine(Buffer * buf, int n)
 	Line *line;
 	int i;
 
-#ifdef USE_COLOR
 	if (useColor) {
 		EFFECT_ANCHOR_END_C;
 	}
-#endif				/* USE_COLOR */
 	if (nTab > 1
 #ifdef USE_MOUSE
 	    || mouse_action.menu_str
@@ -656,11 +636,9 @@ redrawLine(Buffer * buf, Line * l, int i)
 	int column = buf->currentColumn;
 	char *p;
 	Lineprop *pr;
-#ifdef USE_COLOR
 	Anchor *a;
 	ParsedURL url;
 	int k, vpos = -1;
-#endif
 
 	if (l == NULL) {
 		if (buf->pagerSource) {
@@ -708,7 +686,6 @@ redrawLine(Buffer * buf, Line * l, int i)
 	rcol = COLPOS(l, pos);
 
 	for (j = 0; rcol - column < buf->COLS && pos + j < l->len; j += delta) {
-#ifdef USE_COLOR
 		if (useVisitedColor && vpos <= pos + j && !(pr[j] & PE_VISITED)) {
 			a = retrieveAnchor(buf->href, l->linenumber, pos + j);
 			if (a) {
@@ -720,7 +697,6 @@ redrawLine(Buffer * buf, Line * l, int i)
 				vpos = a->end.pos;
 			}
 		}
-#endif
 #ifdef USE_M17N
 		delta = wtf_len((wc_uchar *) & p[j]);
 #endif
@@ -872,11 +848,9 @@ redrawLineRegion(Buffer * buf, Line * l, int i, int bpos, int epos)
 	char *p;
 	Lineprop *pr;
 	int bcol, ecol;
-#ifdef USE_COLOR
 	Anchor *a;
 	ParsedURL url;
 	int k, vpos = -1;
-#endif
 
 	if (l == NULL)
 		return 0;
@@ -888,7 +862,6 @@ redrawLineRegion(Buffer * buf, Line * l, int i, int bpos, int epos)
 	ecol = epos - pos;
 
 	for (j = 0; rcol - column < buf->COLS && pos + j < l->len; j += delta) {
-#ifdef USE_COLOR
 		if (useVisitedColor && vpos <= pos + j && !(pr[j] & PE_VISITED)) {
 			a = retrieveAnchor(buf->href, l->linenumber, pos + j);
 			if (a) {
@@ -900,7 +873,6 @@ redrawLineRegion(Buffer * buf, Line * l, int i, int bpos, int epos)
 				vpos = a->end.pos;
 			}
 		}
-#endif
 #ifdef USE_M17N
 		delta = wtf_len((wc_uchar *) & p[j]);
 #endif
