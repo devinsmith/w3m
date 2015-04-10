@@ -63,7 +63,7 @@ static char *MarkString = NULL;
 static char *SearchString = NULL;
 int (*searchRoutine) (Buffer *, char *);
 
-JMP_BUF IntReturn;
+sigjmp_buf IntReturn;
 
 static void delBuffer(Buffer * buf);
 static void cmd_loadfile(char *path);
@@ -1153,7 +1153,7 @@ do_dump(Buffer * buf)
 	MySignalHandler(*volatile prevtrap) (SIGNAL_ARG) = NULL;
 
 	prevtrap = mySignal(SIGINT, intTrap);
-	if (SETJMP(IntReturn) != 0) {
+	if (sigsetjmp(IntReturn, 1) != 0) {
 		mySignal(SIGINT, prevtrap);
 		return;
 	}
@@ -1342,7 +1342,7 @@ repBuffer(Buffer * oldbuf, Buffer * buf)
 MySignalHandler
 intTrap(SIGNAL_ARG)
 {				/* Interrupt catcher */
-	LONGJMP(IntReturn, 0);
+	siglongjmp(IntReturn, 0);
 	SIGNAL_RETURN;
 }
 
@@ -1515,7 +1515,7 @@ srchcore(char *volatile str, int (*func) (Buffer *, char *))
 	str = conv_search_string(SearchString, DisplayCharset);
 	prevtrap = mySignal(SIGINT, intTrap);
 	crmode();
-	if (SETJMP(IntReturn) == 0) {
+	if (sigsetjmp(IntReturn, 1) == 0) {
 		for (i = 0; i < PREC_NUM; i++) {
 			result = func(Currentbuf, str);
 			if (i < PREC_NUM - 1 && result & SR_FOUND)

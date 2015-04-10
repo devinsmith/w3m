@@ -7,13 +7,13 @@
 #include <ctype.h>
 #include <curses.h>
 
-static JMP_BUF AbortLoading;
+static sigjmp_buf AbortLoading;
 struct frameset *renderFrameSet = NULL;
 
 static MySignalHandler
 KeyAbort(SIGNAL_ARG)
 {
-	LONGJMP(AbortLoading, 1);
+	longjmp(AbortLoading, 1);
 }
 
 static int
@@ -409,7 +409,7 @@ createFrameFile(struct frameset * f, FILE * f1, Buffer * current, int level,
 		return -1;
 
 	if (level == 0) {
-		if (SETJMP(AbortLoading) != 0) {
+		if (sigsetjmp(AbortLoading, 1) != 0) {
 			TRAP_OFF;
 			return -1;
 		}

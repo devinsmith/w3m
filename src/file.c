@@ -48,7 +48,7 @@ loadcmdout(char *cmd,
 			 int pos, int width, int nlines);
 	static void addLink(Buffer * buf, struct parsed_tag * tag);
 
-	static JMP_BUF AbortLoading;
+	static sigjmp_buf AbortLoading;
 
 	static struct table *tables[MAX_TABLE];
 	static struct table_mode table_mode[MAX_TABLE];
@@ -207,7 +207,7 @@ static struct gopher_type {
 static MySignalHandler
 KeyAbort(SIGNAL_ARG)
 {
-	LONGJMP(AbortLoading, 1);
+	siglongjmp(AbortLoading, 1);
 	SIGNAL_RETURN;
 }
 
@@ -1756,7 +1756,7 @@ load_doc:
 		return NULL;
 	}
 	/* openURL() succeeded */
-	if (SETJMP(AbortLoading) != 0) {
+	if (sigsetjmp(AbortLoading, 1) != 0) {
 		/* transfer interrupted */
 		TRAP_OFF;
 		if (b)
@@ -6830,7 +6830,7 @@ loadHTMLstream(URLFile * f, Buffer * newBuf, FILE * src, int internal)
 	else
 		htmlenv1.buf = newTextLineList();
 
-	if (SETJMP(AbortLoading) != 0) {
+	if (sigsetjmp(AbortLoading, 1) != 0) {
 		HTMLlineproc1("<br>Transfer Interrupted!<br>", &htmlenv1);
 		goto phase2;
 	}
@@ -6927,7 +6927,7 @@ loadHTMLString(Str page)
 	Buffer *newBuf;
 
 	newBuf = newBuffer(INIT_BUFFER_WIDTH);
-	if (SETJMP(AbortLoading) != 0) {
+	if (sigsetjmp(AbortLoading, 1) != 0) {
 		TRAP_OFF;
 		discardBuffer(newBuf);
 		return NULL;
@@ -6983,7 +6983,7 @@ loadGopherDir(URLFile * uf, ParsedURL * pu, wc_ces * charset)
 		"<title>", q, "</title>\n</head>\n<body>\n"
 		"<h1>Index of ", q, "</h1>\n", NULL);
 
-	if (SETJMP(AbortLoading) != 0)
+	if (sigsetjmp(AbortLoading, 1) != 0)
 		goto gopher_end;
 	TRAP_ON;
 
@@ -7106,7 +7106,7 @@ loadBuffer(URLFile * uf, Buffer * volatile newBuf)
 		newBuf = newBuffer(INIT_BUFFER_WIDTH);
 	lineBuf2 = Strnew();
 
-	if (SETJMP(AbortLoading) != 0) {
+	if (sigsetjmp(AbortLoading, 1) != 0) {
 		goto _end;
 	}
 	TRAP_ON;
@@ -7512,7 +7512,7 @@ getNextPage(Buffer * buf, int plen)
 	WcOption.auto_detect = buf->auto_detect;
 #endif
 
-	if (SETJMP(AbortLoading) != 0) {
+	if (sigsetjmp(AbortLoading, 1) != 0) {
 		goto pager_end;
 	}
 	TRAP_ON;
@@ -7595,22 +7595,22 @@ save2tmp(URLFile uf, char *tmpf)
 	clen_t linelen = 0, trbyte = 0;
 	Str buf;
 	MySignalHandler(*volatile prevtrap) (SIGNAL_ARG) = NULL;
-	static JMP_BUF env_bak;
+	static sigjmp_buf env_bak;
 
 	ff = fopen(tmpf, "wb");
 	if (ff == NULL) {
 		/* fclose(f); */
 		return -1;
 	}
-	memcpy(env_bak, AbortLoading, sizeof(JMP_BUF));
-	if (SETJMP(AbortLoading) != 0) {
+	memcpy(env_bak, AbortLoading, sizeof(sigjmp_buf));
+	if (sigsetjmp(AbortLoading, 1) != 0) {
 		goto _end;
 	}
 	TRAP_ON;
 	buf = Strnew_size(SAVE_BUF_SIZE);
 	while (UFread(&uf, buf, SAVE_BUF_SIZE)) {
 		if (Strfputs(buf, ff) != buf->length) {
-			memcpy(AbortLoading, env_bak, sizeof(JMP_BUF));
+			memcpy(AbortLoading, env_bak, sizeof(sigjmp_buf));
 			TRAP_OFF;
 			fclose(ff);
 			current_content_length = 0;
@@ -7620,7 +7620,7 @@ save2tmp(URLFile uf, char *tmpf)
 		showProgress(&linelen, &trbyte);
 	}
 _end:
-	memcpy(AbortLoading, env_bak, sizeof(JMP_BUF));
+	memcpy(AbortLoading, env_bak, sizeof(sigjmp_buf));
 	TRAP_OFF;
 	fclose(ff);
 	current_content_length = 0;

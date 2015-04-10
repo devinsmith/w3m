@@ -37,7 +37,7 @@ int ai_family_order_table[7][3] = {
 };
 #endif				/* INET6 */
 
-static JMP_BUF AbortLoading;
+static sigjmp_buf AbortLoading;
 
 /* XXX: note html.h SCM_ */
 static int
@@ -222,7 +222,7 @@ DefaultFile(enum Scheme scheme)
 static MySignalHandler
 KeyAbort(SIGNAL_ARG)
 {
-	LONGJMP(AbortLoading, 1);
+	siglongjmp(AbortLoading, 1);
 	SIGNAL_RETURN;
 }
 
@@ -360,7 +360,7 @@ openSocket(char *const hostname,
 		message(Sprintf("Opening socket...")->ptr, 0, 0);
 		refresh();
 	}
-	if (SETJMP(AbortLoading) != 0) {
+	if (sigsetjmp(AbortLoading, 1) != 0) {
 #ifdef SOCK_DEBUG
 		sock_log("openSocket() failed. reason: user abort\n");
 #endif
@@ -1646,7 +1646,7 @@ check_no_proxy(char *domain)
 	/*
 	 * to check noproxy by network addr
 	 */
-	if (SETJMP(AbortLoading) != 0) {
+	if (sigsetjmp(AbortLoading, 1) != 0) {
 		ret = 0;
 		goto end;
 	}

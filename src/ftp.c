@@ -36,12 +36,12 @@ static struct _FTP current_ftp = {
 	NULL, 0, NULL, NULL, NULL, NULL, NULL
 };
 
-static JMP_BUF AbortLoading;
+static sigjmp_buf AbortLoading;
 
 static MySignalHandler
 KeyAbort(SIGNAL_ARG)
 {
-	LONGJMP(AbortLoading, 1);
+	siglongjmp(AbortLoading, 1);
 	SIGNAL_RETURN;
 }
 
@@ -504,7 +504,7 @@ loadFTPDir0(ParsedURL * pu)
 			      "</title>\n</head>\n<body>\n<h1>Index of ", q,
 				   "</h1>\n", NULL);
 
-	if (SETJMP(AbortLoading) != 0) {
+	if (sigsetjmp(AbortLoading, 1) != 0) {
 		if (sv_type == UNIXLIKE_SERVER)
 			Strcat_charp(FTPDIRtmp, "</a></pre>\n");
 		else
