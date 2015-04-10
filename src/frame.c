@@ -13,7 +13,7 @@ struct frameset *renderFrameSet = NULL;
 static MySignalHandler
 KeyAbort(SIGNAL_ARG)
 {
-	longjmp(AbortLoading, 1);
+	siglongjmp(AbortLoading, 1);
 }
 
 static int
