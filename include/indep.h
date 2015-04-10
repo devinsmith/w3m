@@ -32,7 +32,6 @@ extern const char *HTML_QUOTE_MAP[];
 #define is_url_unsafe(c)   (GET_QUOTE_TYPE(c) & URL_UNSAFE_MASK)
 #define html_quote_char(c) HTML_QUOTE_MAP[(int)is_html_quote(c)]
 
-extern clen_t strtoclen(const char *s);
 extern char *conv_entity(unsigned int ch);
 extern int getescapechar(char **s);
 extern char *getescapecmd(char **s);

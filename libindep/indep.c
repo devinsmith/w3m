@@ -93,12 +93,6 @@ static const unsigned char DIGITMAP[0x100] = {
 
 static const char xdigit[0x10] = "0123456789ABCDEF";
 
-clen_t
-strtoclen(const char *s)
-{
-	return strtoll(s, NULL, 10);
-}
-
 char *
 allocStr(const char *s, int len)
 {
