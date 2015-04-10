@@ -99,8 +99,6 @@ typedef long clen_t;
 /* #undef HAVE_GETPASSPHRASE */
 #define HAVE_LANGINFO_CODESET 1
 
-#define HAVE_FLOAT_H 1
-
 #define RETSIGTYPE void
 typedef RETSIGTYPE MySignalHandler;
 #define SIGNAL_ARG int _dummy	/* XXX */
