@@ -4,7 +4,6 @@
  * revised by Akinori ITO, January 1995
  * gutted by Scarlett, April 2015
  */
-#define _XOPEN_SOURCE_EXTENDED
 #include <termios.h>
 #include <curses.h>
 #include <limits.h>
@@ -141,8 +140,11 @@ addmch(const char *pc, size_t len)
 	} else if (len == 1) {
 		addch(*pc);
 	} else {
-		(void)strlcpy(str, pc, sizeof(str));
-		wc_putc(str);
+		if (len < sizeof(str)) {
+			(void)memcpy(str, pc, len);
+			str[len] = '\0';
+			wc_putc(str);
+		}
 	}
 }
 #endif
