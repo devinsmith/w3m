@@ -85,9 +85,6 @@
 #define DEF_MIGEMO_COMMAND "migemo -t egrep /usr/local/share/migemo/migemo-dict"
 
 /* #undef USE_BINMODE_STREAM */
-#define HAVE_TERMIOS_H 1
-/* #undef HAVE_TERMIO_H */
-/* #undef HAVE_SGTTY_H */
 #define SIZEOF_LONG_LONG 8
 #if SIZEOF_LONG_LONG > 0
 typedef long long clen_t;
