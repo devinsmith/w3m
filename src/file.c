@@ -204,11 +204,10 @@ static struct gopher_type {
 
 #define SAVE_BUF_SIZE 1536
 
-static MySignalHandler
-KeyAbort(SIGNAL_ARG)
+static void
+KeyAbort(int sig)
 {
 	siglongjmp(AbortLoading, 1);
-	SIGNAL_RETURN;
 }
 
 static void
@@ -1678,7 +1677,7 @@ loadGeneralFile(char *path, ParsedURL * volatile current, char *referer,
 	Buffer *volatile t_buf = NULL;
 	int volatile searchHeader = SearchHeader;
 	int volatile searchHeader_through = TRUE;
-	MySignalHandler(*volatile prevtrap) (SIGNAL_ARG) = NULL;
+	void(*volatile prevtrap) (int sig) = NULL;
 	TextList *extra_header = newTextList();
 	volatile Str uname = NULL;
 	volatile Str pwd = NULL;
@@ -6768,7 +6767,7 @@ loadHTMLstream(URLFile * f, Buffer * newBuf, FILE * src, int internal)
 #ifdef USE_IMAGE
 	int volatile image_flag;
 #endif
-	MySignalHandler(*volatile prevtrap) (SIGNAL_ARG) = NULL;
+	void(*volatile prevtrap) (int sig) = NULL;
 
 #ifdef USE_M17N
 	if (fmInitialized && graph_ok()) {
@@ -6923,7 +6922,7 @@ Buffer *
 loadHTMLString(Str page)
 {
 	URLFile f;
-	MySignalHandler(*volatile prevtrap) (SIGNAL_ARG) = NULL;
+	void(*volatile prevtrap) (int sig) = NULL;
 	Buffer *newBuf;
 
 	newBuf = newBuffer(INIT_BUFFER_WIDTH);
@@ -6969,7 +6968,7 @@ loadGopherDir(URLFile * uf, ParsedURL * pu, wc_ces * charset)
 	Str volatile tmp;
 	Str lbuf, name, file, host, port;
 	char *volatile p, *volatile q;
-	MySignalHandler(*volatile prevtrap) (SIGNAL_ARG) = NULL;
+	void(*volatile prevtrap) (int sig) = NULL;
 #ifdef USE_M17N
 	wc_ces doc_charset = DocumentCharset;
 #endif
@@ -7100,7 +7099,7 @@ loadBuffer(URLFile * uf, Buffer * volatile newBuf)
 	Str tmpf;
 	clen_t linelen = 0, trbyte = 0;
 	Lineprop *propBuffer = NULL;
-	MySignalHandler(*volatile prevtrap) (SIGNAL_ARG) = NULL;
+	void(*volatile prevtrap) (int sig) = NULL;
 
 	if (newBuf == NULL)
 		newBuf = newBuffer(INIT_BUFFER_WIDTH);
@@ -7178,7 +7177,7 @@ loadImageBuffer(URLFile * uf, Buffer * newBuf)
 	Str tmp, tmpf;
 	FILE *src = NULL;
 	URLFile f;
-	MySignalHandler(*volatile prevtrap) (SIGNAL_ARG) = NULL;
+	void(*volatile prevtrap) (int sig) = NULL;
 	struct stat st;
 
 	loadImage(newBuf, IMG_FLAG_STOP);
@@ -7487,7 +7486,7 @@ getNextPage(Buffer * buf, int plen)
 	int volatile squeeze_flag = FALSE;
 	Lineprop *propBuffer = NULL;
 
-	MySignalHandler(*volatile prevtrap) (SIGNAL_ARG) = NULL;
+	void(*volatile prevtrap) (int sig) = NULL;
 
 	if (buf->pagerSource == NULL)
 		return NULL;
@@ -7594,7 +7593,7 @@ save2tmp(URLFile uf, char *tmpf)
 	FILE *ff;
 	clen_t linelen = 0, trbyte = 0;
 	Str buf;
-	MySignalHandler(*volatile prevtrap) (SIGNAL_ARG) = NULL;
+	void(*volatile prevtrap) (int sig) = NULL;
 	static sigjmp_buf env_bak;
 
 	ff = fopen(tmpf, "wb");

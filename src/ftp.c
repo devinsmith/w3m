@@ -38,11 +38,10 @@ static struct _FTP current_ftp = {
 
 static sigjmp_buf AbortLoading;
 
-static MySignalHandler
-KeyAbort(SIGNAL_ARG)
+static void
+KeyAbort(int sig)
 {
 	siglongjmp(AbortLoading, 1);
-	SIGNAL_RETURN;
 }
 
 static Str
@@ -456,7 +455,7 @@ loadFTPDir0(ParsedURL * pu)
 	char *realpathname, *fn, *q;
 	char **flist;
 	int i, nfile, nfile_max;
-	MySignalHandler(*volatile prevtrap) (SIGNAL_ARG) = NULL;
+	void(*volatile prevtrap) (int sig) = NULL;
 #ifdef USE_M17N
 	wc_ces doc_charset = DocumentCharset;
 

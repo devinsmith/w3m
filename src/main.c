@@ -50,11 +50,11 @@ static AlarmEvent DefaultAlarm = {
 	0, AL_UNSET, FUNCNAME_nulcmd, NULL
 };
 static AlarmEvent *CurrentAlarm = &DefaultAlarm;
-static MySignalHandler SigAlarm(SIGNAL_ARG);
+static void SigAlarm(int sig);
 #endif
 
 #ifdef SIGPIPE
-static MySignalHandler SigPipe(SIGNAL_ARG);
+static void SigPipe(int sig);
 #endif
 
 #ifdef USE_MARK
@@ -1150,7 +1150,7 @@ dump_extra(Buffer * buf)
 static void
 do_dump(Buffer * buf)
 {
-	MySignalHandler(*volatile prevtrap) (SIGNAL_ARG) = NULL;
+	void(*volatile prevtrap) (int sig) = NULL;
 
 	prevtrap = mySignal(SIGINT, intTrap);
 	if (sigsetjmp(IntReturn, 1) != 0) {
@@ -1338,23 +1338,20 @@ repBuffer(Buffer * oldbuf, Buffer * buf)
 	Currentbuf = buf;
 }
 
-
-MySignalHandler
-intTrap(SIGNAL_ARG)
+void
+intTrap(int sig)
 {				/* Interrupt catcher */
 	siglongjmp(IntReturn, 0);
-	SIGNAL_RETURN;
 }
 
 #ifdef SIGPIPE
-static MySignalHandler
-SigPipe(SIGNAL_ARG)
+static void
+SigPipe(int sig)
 {
 #ifdef USE_MIGEMO
 	init_migemo();
 #endif
 	mySignal(SIGPIPE, SigPipe);
-	SIGNAL_RETURN;
 }
 #endif
 
@@ -1504,7 +1501,7 @@ clear_mark(Line * l)
 static int
 srchcore(char *volatile str, int (*func) (Buffer *, char *))
 {
-	MySignalHandler(*prevtrap) ();
+	void(*prevtrap) ();
 	volatile int i, result = SR_NOTFOUND;
 
 	if (str != NULL && str != SearchString)
@@ -1899,7 +1896,7 @@ DEFUN(pipesh, PIPE_SHELL, "Execute shell command and browse")
 DEFUN(readsh, READ_SHELL, "Execute shell command and load")
 {
 	Buffer *buf;
-	MySignalHandler(*prevtrap) ();
+	void(*prevtrap) ();
 	char *cmd;
 
 	CurrentKeyData = NULL;	/* not allowed in w3m-control: */
@@ -5541,8 +5538,8 @@ DEFUN(execCmd, COMMAND, "Execute w3m command(s)")
 }
 
 #ifdef USE_ALARM
-static MySignalHandler
-SigAlarm(SIGNAL_ARG)
+static void
+SigAlarm(int sig)
 {
 	char *data;
 
@@ -5577,7 +5574,6 @@ SigAlarm(SIGNAL_ARG)
 			alarm(CurrentAlarm->sec);
 		}
 	}
-	SIGNAL_RETURN;
 }
 
 

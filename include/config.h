@@ -96,12 +96,6 @@ typedef long clen_t;
 /* #undef HAVE_GETPASSPHRASE */
 #define HAVE_LANGINFO_CODESET 1
 
-#define RETSIGTYPE void
-typedef RETSIGTYPE MySignalHandler;
-#define SIGNAL_ARG int _dummy	/* XXX */
-#define SIGNAL_ARGLIST 0	/* XXX */
-#define SIGNAL_RETURN return
-
 #define DEFAULT_TERM	0	/* XXX */
 
 #define GUNZIP_CMDNAME  "gunzip"

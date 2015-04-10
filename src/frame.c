@@ -10,8 +10,8 @@
 static sigjmp_buf AbortLoading;
 struct frameset *renderFrameSet = NULL;
 
-static MySignalHandler
-KeyAbort(SIGNAL_ARG)
+static void
+KeyAbort(int sig)
 {
 	siglongjmp(AbortLoading, 1);
 }
@@ -402,7 +402,7 @@ createFrameFile(struct frameset * f, FILE * f1, Buffer * current, int level,
 #endif
 	char *d_target, *p_target, *s_target, *t_target;
 	ParsedURL *currentURL, base;
-	MySignalHandler(*volatile prevtrap) (SIGNAL_ARG) = NULL;
+	void(*volatile prevtrap) (int sig) = NULL;
 	int flag;
 
 	if (f == NULL)

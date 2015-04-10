@@ -219,11 +219,10 @@ DefaultFile(enum Scheme scheme)
 	}
 }
 
-static MySignalHandler
-KeyAbort(SIGNAL_ARG)
+static void
+KeyAbort(int sig)
 {
 	siglongjmp(AbortLoading, 1);
-	SIGNAL_RETURN;
 }
 
 static int
@@ -353,7 +352,7 @@ openSocket(char *const hostname,
 	int a1, a2, a3, a4;
 	unsigned long adr;
 #endif				/* not INET6 */
-	MySignalHandler(*volatile prevtrap) (SIGNAL_ARG) = NULL;
+	void(*volatile prevtrap) (int sig) = NULL;
 
 	if (fmInitialized) {
 		/* FIXME: gettextize? */
@@ -1631,7 +1630,7 @@ check_no_proxy(char *domain)
 {
 	TextListItem *tl;
 	volatile int ret = 0;
-	MySignalHandler(*volatile prevtrap) (SIGNAL_ARG) = NULL;
+	void(*volatile prevtrap) (int sig) = NULL;
 
 	if (NO_proxy_domains == NULL || NO_proxy_domains->nitem == 0 ||
 	    domain == NULL)
