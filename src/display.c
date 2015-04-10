@@ -36,27 +36,29 @@
 #define EFFECT_ANCHOR_START_C	attron(COLOR_PAIR(anchor_color))
 #define EFFECT_IMAGE_START_C	attron(COLOR_PAIR(image_color))
 #define EFFECT_FORM_START_C	attron(COLOR_PAIR(form_color))
-#define EFFECT_ACTIVE_START_C	(attron(COLOR_PAIR(active_color)), underline())
+#define EFFECT_ACTIVE_START_C	(attron(COLOR_PAIR(active_color)), \
+    attron(A_UNDERLINE))
 #define EFFECT_VISITED_START_C	attron(COLOR_PAIR(visited_color))
 #define EFFECT_MARK_START_C	standout()
 
 #define EFFECT_ANCHOR_END_C	attroff(COLOR_PAIR(anchor_color))
 #define EFFECT_IMAGE_END_C	attroff(COLOR_PAIR(image_color))
 #define EFFECT_FORM_END_C	attroff(COLOR_PAIR(form_color))
-#define EFFECT_ACTIVE_END_C	(attroff(COLOR_PAIR(active_color)), underlineend())
+#define EFFECT_ACTIVE_END_C	(attroff(COLOR_PAIR(active_color)), \
+    attroff(A_UNDERLINE))
 #define EFFECT_VISITED_END_C	attroff(COLOR_PAIR(visited_color))
 #define EFFECT_MARK_END_C	standend()
 
-#define EFFECT_ANCHOR_START_M       underline()
-#define EFFECT_ANCHOR_END_M         underlineend()
+#define EFFECT_ANCHOR_START_M       attron(A_UNDERLINE)
+#define EFFECT_ANCHOR_END_M         attroff(A_UNDERLINE)
 #define EFFECT_IMAGE_START_M        standout()
 #define EFFECT_IMAGE_END_M          standend()
 #define EFFECT_FORM_START_M         standout()
 #define EFFECT_FORM_END_M           standend()
-#define EFFECT_ACTIVE_START_NC      underline()
-#define EFFECT_ACTIVE_END_NC        underlineend()
-#define EFFECT_ACTIVE_START_M       bold()
-#define EFFECT_ACTIVE_END_M         boldend()
+#define EFFECT_ACTIVE_START_NC      attron(A_UNDERLINE)
+#define EFFECT_ACTIVE_END_NC        attroff(A_UNDERLINE)
+#define EFFECT_ACTIVE_START_M       attron(A_BOLD)
+#define EFFECT_ACTIVE_END_M         attroff(A_BOLD)
 #define EFFECT_VISITED_START_M	/**/
 #define EFFECT_VISITED_END_M	/**/
 #define EFFECT_MARK_START_M         standout()
@@ -128,14 +130,14 @@ static void
 
 #else				/* not USE_COLOR */
 
-#define EFFECT_ANCHOR_START       underline()
-#define EFFECT_ANCHOR_END         underlineend()
+#define EFFECT_ANCHOR_START       attron(A_UNDERLINE)
+#define EFFECT_ANCHOR_END         attroff(A_UNDERLINE)
 #define EFFECT_IMAGE_START        standout()
 #define EFFECT_IMAGE_END          standend()
 #define EFFECT_FORM_START         standout()
 #define EFFECT_FORM_END           standend()
-#define EFFECT_ACTIVE_START       bold()
-#define EFFECT_ACTIVE_END         boldend()
+#define EFFECT_ACTIVE_START       attron(A_BOLD)
+#define EFFECT_ACTIVE_END         attroff(A_BOLD)
 #define EFFECT_VISITED_START	/**/
 #define EFFECT_VISITED_END	/**/
 #define EFFECT_MARK_START         standout()
@@ -148,7 +150,7 @@ fmTerm(void)
 {
 	if (fmInitialized) {
 		move(LASTLINE, 0);
-		clrtoeolx();
+		clrtoeol();
 		refresh();
 #ifdef USE_IMAGE
 		if (activeImage)
@@ -183,8 +185,8 @@ fmInit(void)
 			}
 		}
 #endif
-		term_raw();
-		term_noecho();
+		raw();
+		noecho();
 #ifdef USE_IMAGE
 		if (displayImage)
 			initImage();
@@ -422,7 +424,7 @@ displayBuffer(Buffer * buf, enum DBmode mode)
 			int n = buf->topLine->linenumber - cline->linenumber;
 			if (n > 0 && n < buf->LINES) {
 				move(LASTLINE, 0);
-				clrtoeolx();
+				clrtoeol();
 				refresh();
 				scroll(n);
 			} else if (n < 0 && n > -buf->LINES) {
@@ -592,11 +594,11 @@ redrawNLine(Buffer * buf, int n)
 		if (mouse_action.menu_str)
 			addstr(mouse_action.menu_str);
 #endif
-		clrtoeolx();
+		clrtoeol();
 		for (t = FirstTab; t; t = t->nextTab) {
 			move(t->y, t->x1);
 			if (t == CurrentTab)
-				bold();
+				attron(A_BOLD);
 			addch('[');
 			l = t->x2 - t->x1 - 1 - get_strwidth(t->currentBuffer->buffername);
 			if (l < 0)
@@ -613,7 +615,7 @@ redrawNLine(Buffer * buf, int n)
 			move(t->y, t->x2);
 			addch(']');
 			if (t == CurrentTab)
-				boldend();
+				attroff(A_BOLD);
 		}
 #if 0
 		move(0, COLS - 2);
@@ -632,7 +634,7 @@ redrawNLine(Buffer * buf, int n)
 	}
 	if (n > 0) {
 		move(i + buf->rootY, 0);
-		clrtobotx();
+		clrtobot();
 	}
 #ifdef USE_IMAGE
 	if (!(activeImage && displayImage && buf->img))
@@ -696,7 +698,7 @@ redrawLine(Buffer * buf, Line * l, int i)
 	if (l->width < 0)
 		l->width = COLPOS(l, l->len);
 	if (l->len == 0 || l->width - 1 < column) {
-		clrtoeolx();
+		clrtoeol();
 		return l;
 	}
 	/* need_clrtoeol(); */
@@ -748,15 +750,15 @@ redrawLine(Buffer * buf, Line * l, int i)
 	}
 	if (ulmode) {
 		ulmode = FALSE;
-		underlineend();
+		attroff(A_UNDERLINE);
 	}
 	if (bomode) {
 		bomode = FALSE;
-		boldend();
+		attroff(A_BOLD);
 	}
 	if (emph_mode) {
 		emph_mode = FALSE;
-		boldend();
+		attroff(A_BOLD);
 	}
 	if (anch_mode) {
 		anch_mode = FALSE;
@@ -787,7 +789,7 @@ redrawLine(Buffer * buf, Line * l, int i)
 		graphend();
 	}
 	if (rcol - column < buf->COLS)
-		clrtoeolx();
+		clrtoeol();
 	return l;
 }
 
@@ -931,15 +933,15 @@ redrawLineRegion(Buffer * buf, Line * l, int i, int bpos, int epos)
 	}
 	if (ulmode) {
 		ulmode = FALSE;
-		underlineend();
+		attroff(A_UNDERLINE);
 	}
 	if (bomode) {
 		bomode = FALSE;
-		boldend();
+		attroff(A_BOLD);
 	}
 	if (emph_mode) {
 		emph_mode = FALSE;
-		boldend();
+		attroff(A_BOLD);
 	}
 	if (anch_mode) {
 		anch_mode = FALSE;
@@ -990,10 +992,10 @@ static void
 do_effects(Lineprop m)
 {
 	/* effect end */
-	do_effect2(PE_UNDER, ulmode, underline(), underlineend());
+	do_effect2(PE_UNDER, ulmode, attron(A_UNDERLINE), attroff(A_UNDERLINE));
 	do_effect2(PE_STAND, somode, standout(), standend());
-	do_effect2(PE_BOLD, bomode, bold(), boldend());
-	do_effect2(PE_EMPH, emph_mode, bold(), boldend());
+	do_effect2(PE_BOLD, bomode, attron(A_BOLD), attroff(A_BOLD));
+	do_effect2(PE_EMPH, emph_mode, attron(A_BOLD), attroff(A_BOLD));
 	do_effect2(PE_ANCHOR, anch_mode, EFFECT_ANCHOR_START, EFFECT_ANCHOR_END);
 	do_effect2(PE_IMAGE, imag_mode, EFFECT_IMAGE_START, EFFECT_IMAGE_END);
 	do_effect2(PE_FORM, form_mode, EFFECT_FORM_START, EFFECT_FORM_END);
@@ -1006,10 +1008,10 @@ do_effects(Lineprop m)
 		graph_mode = FALSE;
 	}
 	/* effect start */
-	do_effect1(PE_UNDER, ulmode, underline(), underlineend());
+	do_effect1(PE_UNDER, ulmode, attron(A_UNDERLINE), attroff(A_UNDERLINE));
 	do_effect1(PE_STAND, somode, standout(), standend());
-	do_effect1(PE_BOLD, bomode, bold(), boldend());
-	do_effect1(PE_EMPH, emph_mode, bold(), boldend());
+	do_effect1(PE_BOLD, bomode, attron(A_BOLD), attroff(A_BOLD));
+	do_effect1(PE_EMPH, emph_mode, attron(A_BOLD), attroff(A_BOLD));
 	do_effect1(PE_ANCHOR, anch_mode, EFFECT_ANCHOR_START, EFFECT_ANCHOR_END);
 	do_effect1(PE_IMAGE, imag_mode, EFFECT_IMAGE_START, EFFECT_IMAGE_END);
 	do_effect1(PE_FORM, form_mode, EFFECT_FORM_START, EFFECT_FORM_END);
@@ -1149,7 +1151,7 @@ message(const char *s, int return_x, int return_y)
 		return;
 	move(LASTLINE, 0);
 	addnstr_sup(s, COLS - 1);
-	clrtoeolx();
+	clrtoeol();
 	move(return_y, return_x);
 }
 

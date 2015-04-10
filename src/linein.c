@@ -156,7 +156,7 @@ inputLineHistSearch(char *prompt, char *def_str, int flag, Hist * hist,
 			addPasswd(strBuf->ptr, strProp, CLen, offset, COLS - opos);
 		else
 			addStr(strBuf->ptr, strProp, CLen, offset, COLS - opos);
-		clrtoeolx();
+		clrtoeol();
 		move(LASTLINE, opos + x - offset);
 		refresh();
 
@@ -629,7 +629,7 @@ next_compl(int next)
 		return;
 
 	if (status != CPL_OK && status != CPL_MENU)
-		bell();
+		addch('\a');
 	if (status == CPL_FAIL)
 		return;
 
@@ -737,15 +737,15 @@ disp_next:
 	}
 	if (y) {
 		move(y - 1, 0);
-		clrtoeolx();
+		clrtoeol();
 	}
 	if (comment) {
 		move(y, 0);
-		clrtoeolx();
-		bold();
+		clrtoeol();
+		attron(A_BOLD);
 		/* FIXME: gettextize? */
 		addstr("----- Completion list -----");
-		boldend();
+		attroff(A_BOLD);
 		y++;
 	}
 	for (i = 0; i < row; i++) {
@@ -754,7 +754,7 @@ disp_next:
 			if (n >= NCFileBuf)
 				break;
 			move(y, j * len);
-			clrtoeolx();
+			clrtoeol();
 			f = Strdup(d);
 			Strcat_charp(f, CFileBuf[n]);
 			addstr(conv_from_system(CFileBuf[n]));
@@ -765,15 +765,15 @@ disp_next:
 	}
 	if (comment && y == LASTLINE - 1) {
 		move(y, 0);
-		clrtoeolx();
-		bold();
+		clrtoeol();
+		attron(A_BOLD);
 		if (emacs_like_lineedit)
 			/* FIXME: gettextize? */
 			addstr("----- Press TAB to continue -----");
 		else
 			/* FIXME: gettextize? */
 			addstr("----- Press CTRL-D to continue -----");
-		boldend();
+		attroff(A_BOLD);
 	}
 }
 

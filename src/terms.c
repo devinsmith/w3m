@@ -110,42 +110,6 @@ reset_tty(void)
 }
 
 void
-clrtoeolx(void)
-{
-	clrtoeol();
-}
-
-void
-clrtobotx(void)
-{
-	clrtobot();
-}
-
-void
-bold(void)
-{
-	attron(A_BOLD);
-}
-
-void
-boldend(void)
-{
-	attroff(A_BOLD);
-}
-
-void
-underline(void)
-{
-	attron(A_UNDERLINE);
-}
-
-void
-underlineend(void)
-{
-	attroff(A_UNDERLINE);
-}
-
-void
 toggle_stand(int nchars)
 {
 	attr_t attrs = 0;
@@ -158,30 +122,6 @@ toggle_stand(int nchars)
 		attrs |= A_STANDOUT;
 	}
 	chgat(nchars, attrs, 0, NULL);
-}
-
-void
-bell(void)
-{
-	addch('\a');
-}
-
-void
-term_raw(void)
-{
-	raw();
-}
-
-void
-term_cbreak(void)
-{
-	cbreak();
-}
-
-void
-term_noecho(void)
-{
-	noecho();
 }
 
 void
@@ -255,7 +195,7 @@ sleep_till_anykey(int sec, int purge)
 	struct termios ioval;
 
 	tcgetattr(STDIN_FILENO, &ioval);
-	term_raw();
+	raw();
 
 	pfd[0].fd = STDIN_FILENO;
 	pfd[0].events = POLLIN;

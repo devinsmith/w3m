@@ -387,10 +387,10 @@ openFTPStream(ParsedURL * pu, URLFile * uf)
 		find_auth_user_passwd(pu, NULL, &uname, &pwd, 0);
 		if (pwd == NULL) {
 			if (fmInitialized) {
-				term_raw();
+				raw();
 				pwd = Strnew_charp(inputLine("Password: ", NULL, IN_PASSWORD));
 				pwd = Str_conv_to_system(pwd);
-				term_cbreak();
+				cbreak();
 			} else {
 				pwd = Strnew_charp((char *) getpass("Password: "));
 			}

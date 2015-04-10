@@ -1529,7 +1529,7 @@ srchcore(char *volatile str, int (*func) (Buffer *, char *))
 		}
 	}
 	mySignal(SIGINT, prevtrap);
-	term_raw();
+	raw();
 	return result;
 }
 
@@ -1923,7 +1923,7 @@ DEFUN(readsh, READ_SHELL, "Execute shell command and load")
 	crmode();
 	buf = getshell(cmd);
 	mySignal(SIGINT, prevtrap);
-	term_raw();
+	raw();
 	if (buf == NULL) {
 		/* FIXME: gettextize? */
 		disp_message("Execution failed", TRUE);
@@ -2357,7 +2357,7 @@ DEFUN(susp, INTERRUPT SUSPEND, "Stop loading document")
 	char *shell;
 #endif				/* not SIGSTOP */
 	move(LASTLINE, 0);
-	clrtoeolx();
+	clrtoeol();
 	refresh();
 	fmTerm();
 #ifndef SIGSTOP

@@ -1553,7 +1553,7 @@ getAuthCookie(struct http_auth * hauth, char *auth_header,
 		sleep(2);
 		if (fmInitialized) {
 			char *pp;
-			term_raw();
+			raw();
 			/* FIXME: gettextize? */
 			if ((pp = inputStr(Sprintf("Username for %s: ", realm)->ptr,
 					   NULL)) == NULL)
@@ -1565,7 +1565,7 @@ getAuthCookie(struct http_auth * hauth, char *auth_header,
 				return;
 			}
 			*pwd = Str_conv_to_system(Strnew_charp(pp));
-			term_cbreak();
+			cbreak();
 		} else {
 			/*
 			 * If post file is specified as '-', stdin is closed at this
@@ -1782,7 +1782,7 @@ load_doc:
 	      ) && !Do_not_use_proxy && !check_no_proxy(pu.host))) {
 
 		if (fmInitialized) {
-			term_cbreak();
+			cbreak();
 			/* FIXME: gettextize? */
 			message(Sprintf("%s contacted. Waiting for reply...", pu.host)->
 				ptr, 0, 0);
@@ -6519,7 +6519,7 @@ showProgress(clen_t * linelen, clen_t * trbyte)
 		cur_time = time(0);
 		if (*trbyte == 0) {
 			move(LASTLINE, 0);
-			clrtoeolx();
+			clrtoeol();
 			start_time = cur_time;
 		}
 		*trbyte += *linelen;
@@ -6559,7 +6559,7 @@ showProgress(clen_t * linelen, clen_t * trbyte)
 		cur_time = time(0);
 		if (*trbyte == 0) {
 			move(LASTLINE, 0);
-			clrtoeolx();
+			clrtoeol();
 			start_time = cur_time;
 		}
 		*trbyte += *linelen;
@@ -8020,7 +8020,7 @@ inputAnswer(char *prompt)
 	if (QuietMessage)
 		return "n";
 	if (fmInitialized) {
-		term_raw();
+		raw();
 		ans = inputChar(prompt);
 	} else {
 		printf("%s", prompt);

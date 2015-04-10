@@ -7,13 +7,6 @@ void close_tty(void);
 void flush_tty(void);
 void reset_tty(void);
 
-void clrtoeolx(void);
-void clrtobotx(void);
-
-void bold(void);
-void boldend(void);
-void underline(void);
-void underlineend(void);
 void toggle_stand(int);
 
 void bell(void);

@@ -784,11 +784,11 @@ global char TrapSignal init(TRUE);
 #define TRAP_ON if (TrapSignal) { \
     prevtrap = mySignal(SIGINT, KeyAbort); \
     if (fmInitialized) \
-	term_cbreak(); \
+	cbreak(); \
 }
 #define TRAP_OFF if (TrapSignal) { \
     if (fmInitialized) \
-	term_raw(); \
+	raw(); \
     if (prevtrap) \
 	mySignal(SIGINT, prevtrap); \
 }

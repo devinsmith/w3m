@@ -340,7 +340,7 @@ listBuffer(Buffer * top, Buffer * current)
 	}
 #endif
 #endif				/* USE_COLOR */
-	clrtobotx();
+	clrtobot();
 	for (i = 0; i < LASTLINE; i++) {
 		if (buf == current) {
 			c = i;
@@ -349,14 +349,14 @@ listBuffer(Buffer * top, Buffer * current)
 		writeBufferName(buf, i);
 		if (buf == current) {
 			standend();
-			clrtoeolx();
+			clrtoeol();
 			move(i, 0);
 			toggle_stand(-1);
 		} else
-			clrtoeolx();
+			clrtoeol();
 		if (buf->nextBuffer == NULL) {
 			move(i + 1, 0);
-			clrtobotx();
+			clrtobot();
 			break;
 		}
 		buf = buf->nextBuffer;
