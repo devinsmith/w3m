@@ -347,7 +347,7 @@ ISfileno(InputStream stream)
 	case IST_FILE:
 		return fileno(stream->file.handle->f);
 	case IST_TLS:
-		return stream->tls.handle->tls;
+		return stream->tls.handle->sock;
 	case IST_ENCODED:
 		return ISfileno(stream->ens.handle->is);
 	default:
