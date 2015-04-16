@@ -606,16 +606,16 @@ next_status(char c, enum RTstatus *status)
 }
 
 int
-read_token(Str buf, char **instr, enum RTstatus *status, int pre, int append)
+read_token(Str buf, char **in_str, enum RTstatus *status, int pre, int append)
 {
 	char *p;
 	enum RTstatus prev_status;
 
 	if (!append)
 		Strclear(buf);
-	if (**instr == '\0')
+	if (**in_str == '\0')
 		return 0;
-	for (p = *instr; *p; p++) {
+	for (p = *in_str; *p; p++) {
 		prev_status = *status;
 		next_status(*p, status);
 		switch (*status) {
@@ -635,7 +635,7 @@ read_token(Str buf, char **instr, enum RTstatus *status, int pre, int append)
 			}
 			Strcat_char(buf, (!pre && isspace((unsigned char)*p)) ? ' ' : *p);
 			if (ST_IS_REAL_TAG(prev_status)) {
-				*instr = p + 1;
+				*in_str = p + 1;
 				if (buf->length < 2 ||
 				    buf->ptr[buf->length - 2] != '<' ||
 				    buf->ptr[buf->length - 1] != '>')
@@ -645,8 +645,8 @@ read_token(Str buf, char **instr, enum RTstatus *status, int pre, int append)
 			break;
 		case R_ST_TAG0:
 		case R_ST_TAG:
-			if (prev_status == R_ST_NORMAL && p != *instr) {
-				*instr = p;
+			if (prev_status == R_ST_NORMAL && p != *in_str) {
+				*in_str = p;
 				*status = prev_status;
 				return 1;
 			}
@@ -692,7 +692,7 @@ read_token(Str buf, char **instr, enum RTstatus *status, int pre, int append)
 		}
 	}
 proc_end:
-	*instr = p;
+	*in_str = p;
 	return 1;
 }
 
