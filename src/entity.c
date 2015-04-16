@@ -35,11 +35,11 @@ conv_entity(unsigned int c)
 	char b = c & 0xff;
 
 	if (c < 0x20)		/* C0 */
-		return " ";
+		return Strnew_charp(" ")->ptr;
 	if (c < 0x7f)		/* ASCII */
 		return Strnew_charp_n(&b, 1)->ptr;
 	if (c < 0xa0)		/* DEL, C1 */
-		return " ";
+		return Strnew_charp(" ")->ptr;
 	if (c == 0xa0)
 		return NBSP;
 	if (c < 0x100) {	/* Latin1 (ISO 8859-1) */
@@ -58,5 +58,5 @@ conv_entity(unsigned int c)
 		return wc_conv((char *) utf8, WC_CES_UTF_8, InnerCharset)->ptr;
 	}
 #endif
-	return "?";
+	return Strnew_charp("?")->ptr;
 }

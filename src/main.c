@@ -2102,7 +2102,7 @@ DEFUN(movR1, MOVE_RIGHT1,
 static wc_uint32
 getChar(char *p)
 {
-	return wc_any_to_ucs(wtf_parse1(&p));
+	return wc_any_to_ucs(wtf_parse1((unsigned char **)&p));
 }
 
 static int

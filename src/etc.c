@@ -442,7 +442,7 @@ mydirname(char *s)
 	while (s != p && *p != '/')
 		p--;
 	if (*p != '/')
-		return ".";
+		return Strnew_charp(".")->ptr;
 	while (s != p && *p == '/')
 		p--;
 	return allocStr(s, strlen(s) - strlen(p) + 1);
@@ -1018,13 +1018,13 @@ last_modified(Buffer * buf)
 				return ti->ptr + 15;
 			}
 		}
-		return "unknown";
+		return Strnew_charp("unknown")->ptr;
 	} else if (buf->currentURL.scheme == SCM_LOCAL) {
 		if (stat(buf->currentURL.file, &st) < 0)
-			return "unknown";
+			return Strnew_charp("unknown")->ptr;
 		return ctime(&st.st_mtime);
 	}
-	return "unknown";
+	return Strnew_charp("unknown")->ptr;
 }
 
 static char roman_num1[] = {

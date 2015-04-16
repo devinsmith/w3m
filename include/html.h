@@ -78,7 +78,7 @@ typedef struct {
 	enum Scheme scheme;
 	int compression;
 	int content_encoding;
-	char *guess_type;
+	const char *guess_type;
 	char *url;
 	time_t modtime;
 } URLFile;

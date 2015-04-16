@@ -270,7 +270,7 @@ dir_exist(char *path)
 }
 
 static int
-is_dump_text_type(char *type)
+is_dump_text_type(const char *type)
 {
 	struct mailcap *mcap;
 	return (type && (mcap = searchExtViewer(type)) &&
@@ -288,7 +288,7 @@ is_text_type(const char *type)
 }
 
 static int
-is_plain_text_type(char *type)
+is_plain_text_type(const char *type)
 {
 	return ((type && strcasecmp(type, "text/plain") == 0) ||
 		(is_text_type(type) && !is_dump_text_type(type)));
@@ -302,7 +302,7 @@ is_html_type(const char *type)
 }
 
 static void
-check_compression(char *path, URLFile * uf)
+check_compression(const char *path, URLFile * uf)
 {
 	int len;
 	struct compression_decoder *d;
@@ -337,12 +337,12 @@ compress_application_type(int compression)
 	return NULL;
 }
 
-static char *
+static const char *
 uncompressed_file_type(const char *path, char **ext)
 {
 	int len, slen;
 	Str fn;
-	char *t0;
+	const char *t0;
 	struct compression_decoder *d;
 
 	if (path == NULL)
@@ -414,7 +414,7 @@ examineFile(const char *path, URLFile * uf)
 		check_compression(path, uf);
 		if (uf->compression != CMP_NOCOMPRESS) {
 			char *ext = uf->ext;
-			char *t0 = uncompressed_file_type(path, &ext);
+			const char *t0 = uncompressed_file_type(path, &ext);
 			uf->guess_type = t0;
 			uf->ext = ext;
 			uncompress_stream(uf, NULL);
@@ -1542,8 +1542,7 @@ getAuthCookie(struct http_auth * hauth, char *auth_header,
 	*uname = NULL;
 	*pwd = NULL;
 
-	if (!a_found && find_auth_user_passwd(pu, realm, (Str *) uname, (Str *) pwd,
-					      proxy)) {
+	if (!a_found && find_auth_user_passwd(pu, realm, uname, pwd, proxy)) {
 		 /* found username & password in passwd file */ ;
 	} else {
 		if (QuietMessage)
@@ -1673,7 +1672,9 @@ loadGeneralFile(char *path, ParsedURL * volatile current, char *referer,
 	ParsedURL pu;
 	Buffer *b = NULL, *(*volatile proc) () = loadBuffer;
 	char *volatile tpath;
-	char *volatile t = "text/plain", *p, *volatile real_type = NULL;
+	const char *volatile t = "text/plain";
+	char *p;
+	const char *volatile real_type = NULL;
 	Buffer *volatile t_buf = NULL;
 	int volatile searchHeader = SearchHeader;
 	int volatile searchHeader_through = TRUE;
@@ -1879,7 +1880,7 @@ load_doc:
 	}
 #ifdef USE_GOPHER
 	else if (pu.scheme == SCM_GOPHER) {
-		char *mime_type;
+		const char *mime_type;
 		if (pu.file[strlen(pu.file) - 1] == '/') {
 #ifdef USE_M17N
 			page = loadGopherDir(&f, &pu, &charset);
@@ -1913,7 +1914,7 @@ load_doc:
 	else if (pu.scheme == SCM_FTP) {
 		check_compression(path, &f);
 		if (f.compression != CMP_NOCOMPRESS) {
-			char *t1 = uncompressed_file_type(pu.file, NULL);
+			const char *t1 = uncompressed_file_type(pu.file, NULL);
 			real_type = f.guess_type;
 #if 0
 			if (t1 && strncasecmp(t1, "application/", 12) == 0) {
@@ -2455,7 +2456,7 @@ push_tag(struct readbuffer * obuf, char *cmdname, int cmd)
 
 static void
 push_nchars(struct readbuffer * obuf, int width,
-	    char *str, int len, Lineprop mode)
+	    const char *str, int len, Lineprop mode)
 {
 	append_tags(obuf);
 	Strcat_charp_n(obuf->line, str, len);
@@ -2903,7 +2904,7 @@ flushline(struct html_feed_environ * h_env, struct readbuffer * obuf, int indent
 			Strcat_charp(tmp, html_quote(obuf->anchor.title));
 		}
 		if (obuf->anchor.accesskey) {
-			char *c = html_quote_char(obuf->anchor.accesskey);
+			const char *c = html_quote_char(obuf->anchor.accesskey);
 			Strcat_charp(tmp, "\" ACCESSKEY=\"");
 			if (c)
 				Strcat_charp(tmp, c);
@@ -6234,7 +6235,7 @@ proc_normal:
 						 % Tabstop != 0);
 					str++;
 				} else if (obuf->flag & RB_PLAIN) {
-					char *ch_entity = html_quote_char(*str);
+					const char *ch_entity = html_quote_char(*str);
 					if (ch_entity) {
 						push_charp(obuf, 1,
 						    ch_entity, PC_ASCII);
@@ -7418,7 +7419,7 @@ Buffer *
 openGeneralPagerBuffer(InputStream stream)
 {
 	Buffer *buf;
-	char *t = "text/plain";
+	const char *t = "text/plain";
 	Buffer *t_buf = NULL;
 	URLFile uf;
 
@@ -7627,7 +7628,7 @@ _end:
 }
 
 int
-doExternal(URLFile uf, char *path, char *type, Buffer ** bufp,
+doExternal(URLFile uf, char *path, const char *type, Buffer ** bufp,
 	   Buffer * defaultbuf)
 {
 	Str tmpf, command;
@@ -8017,7 +8018,7 @@ inputAnswer(char *prompt)
 	char *ans;
 
 	if (QuietMessage)
-		return "n";
+		return Strnew_charp("n")->ptr;
 	if (fmInitialized) {
 		raw();
 		ans = inputChar(prompt);

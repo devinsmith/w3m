@@ -258,7 +258,7 @@ extern Buffer *openGeneralPagerBuffer(InputStream stream);
 extern Line *getNextPage(Buffer * buf, int plen);
 extern int save2tmp(URLFile uf, char *tmpf);
 extern int 
-doExternal(URLFile uf, char *path, char *type, Buffer ** bufp,
+doExternal(URLFile uf, char *path, const char *type, Buffer ** bufp,
 	   Buffer * defaultbuf);
 extern int _doFileCopy(char *tmpf, char *defstr, int download);
 #define doFileCopy(tmpf, defstr) _doFileCopy(tmpf, defstr, FALSE);
@@ -466,12 +466,12 @@ inputLineHistSearch(char *prompt, char *def_str, int flag,
 			        URLOption * option, FormList * request,
 			        TextList * extra_header, URLFile * ouf,
 			        HRequest * hr, unsigned char *status);
-	extern int mailcapMatch(struct mailcap * mcap, char *type);
-	extern struct mailcap *searchMailcap(struct mailcap * table, char *type);
+	extern int mailcapMatch(struct mailcap * mcap, const char *type);
+	extern struct mailcap *searchMailcap(struct mailcap * table, const char *type);
 	extern void initMailcap();
 	extern char *acceptableMimeTypes();
-	extern struct mailcap *searchExtViewer(char *type);
-	extern Str unquote_mailcap(char *qstr, char *type, char *name, char *attr,
+	extern struct mailcap *searchExtViewer(const char *type);
+	extern Str unquote_mailcap(char *qstr, const char *type, char *name, char *attr,
 				    int *mc_stat);
 	extern const char *guessContentType(const char *filename);
 	extern TextList *make_domain_list(char *domain_list);
