@@ -55,7 +55,7 @@ extern void wc_char_conv_init(wc_ces f_ces, wc_ces t_ces);
 extern Str wc_char_conv(char c);
 
 extern void wc_putc_init(wc_ces f_ces, wc_ces t_ces);
-extern void wc_putc(char *c);
+extern void wc_putc(const char *c);
 extern void wc_putc_end(void);
 extern void wc_putc_clear_status(void);
 

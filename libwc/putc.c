@@ -16,7 +16,7 @@ wc_putc_init(wc_ces f_ces, wc_ces t_ces)
 }
 
 void
-wc_putc(char *c)
+wc_putc(const char *c)
 {
 	wc_uchar *p;
 
