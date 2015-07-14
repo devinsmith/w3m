@@ -1,6 +1,7 @@
 /* $Id: istream.c,v 1.27 2010/07/18 13:43:23 htrb Exp $ */
 #include "fm.h"
 #include "istream.h"
+#include <limits.h>
 #include <unistd.h>
 #include <signal.h>
 #include <curses.h>

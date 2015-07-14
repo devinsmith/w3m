@@ -4,7 +4,7 @@
 #include <gc.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <limits.h>
+#include <stdint.h>
 
 static inline size_t
 z_mult_no_oflow_(size_t n, size_t size)

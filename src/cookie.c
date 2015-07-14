@@ -15,6 +15,7 @@
 #ifdef USE_COOKIE
 #include <time.h>
 #include <ctype.h>
+#include <limits.h>
 #include "local.h"
 #include "regex.h"
 

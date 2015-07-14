@@ -24,7 +24,6 @@ MAN=		../doc/w3m.1
 
 CFLAGS+=	-I${PREFIX}/include -I../include
 
-CFLAGS+=	-Wall
 CFLAGS+=	-Wshadow -Wpointer-arith -Wcast-qual
 CFLAGS+=	-Wsign-compare
 

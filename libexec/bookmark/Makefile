@@ -3,7 +3,7 @@
 PROG=		w3mbookmark
 MAN=
 
-CFLAGS+=	-Wall -I../../include -I${PREFIX}/include
+CFLAGS+=	-I../../include -I${PREFIX}/include
 
 LDADD+=		-L${PREFIX}/lib -lgc \
 		../../libindep/libindep.a \

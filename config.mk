@@ -1,3 +1,5 @@
+CFLAGS+=	-fPIC -Wall
+
 PREFIX?=	/usr/local
 
 USE_IMAGE?=	yes

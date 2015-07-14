@@ -10,6 +10,7 @@
 #include "local.h"
 #include <stdlib.h>
 #include <ctype.h>
+#include <limits.h>
 
 struct param_ptr {
 	char *name;

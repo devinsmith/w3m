@@ -7,7 +7,7 @@ SHLIB_MINOR=	0
 SRCS=		Str.c indep.c regex.c textlist.c parsetag.c \
 		hash.c
 
-CFLAGS+=	-Wall -I../include -I${PREFIX}/include
+CFLAGS+=	-I../include -I${PREFIX}/include
 
 LDADD+=		-L${PREFIX}/lib -lgc
 

@@ -14,7 +14,7 @@ HDRS=		big5.h ccs.h ces.h gb18030.h gbk.h hkscs.h hz.h \
 		iso2022.h jis.h priv.h search.h sjis.h ucs.h \
 		uhc.h utf8.h viet.h wc.h wc_types.h wtf.h
 
-CFLAGS+=	-Wall -I. -I../include -I${PREFIX}/include
+CFLAGS+=	-I. -I../include -I${PREFIX}/include
 
 LDADD+=		-L${PREFIX}/lib -lcurses -lgc
 
