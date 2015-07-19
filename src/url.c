@@ -946,7 +946,7 @@ _parsedURL2Str(ParsedURL * pu, int pass)
 	}
 	tmp = NULL;
 	for (i = 0; i < (sizeof(schemetable) / sizeof(*schemetable)); ++i) {
-		if (schemetable[i].cmd == pu->scheme) {
+		if ((enum Scheme)schemetable[i].cmd == pu->scheme) {
 			tmp = Strnew_charp(schemetable[i].cmdname);
 			break;
 		}
