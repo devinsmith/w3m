@@ -249,16 +249,16 @@ wrap_GC_warn_proc(char *msg, GC_word arg)
 			GC_word arg;
 		} msg_ring[GC_WARN_KEEP_MAX];
 		/* *INDENT-ON* */
-		static int i = 0;
-		static int n = 0;
+		static ssize_t i = 0;
+		static ssize_t n = 0;
 		static int lock = 0;
-		int j;
+		ssize_t j;
 
 		j = (i + n) % (sizeof(msg_ring) / sizeof(msg_ring[0]));
 		msg_ring[j].msg = msg;
 		msg_ring[j].arg = arg;
 
-		if (n < sizeof(msg_ring) / sizeof(msg_ring[0]))
+		if ((size_t)n < sizeof(msg_ring) / sizeof(msg_ring[0]))
 			++n;
 		else
 			++i;
