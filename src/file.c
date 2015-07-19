@@ -7609,7 +7609,7 @@ save2tmp(URLFile uf, char *tmpf)
 	TRAP_ON;
 	buf = Strnew_size(SAVE_BUF_SIZE);
 	while (UFread(&uf, buf, SAVE_BUF_SIZE)) {
-		if (Strfputs(buf, ff) != buf->length) {
+		if (Strfputs(buf, ff) != (size_t)buf->length) {
 			memcpy(AbortLoading, env_bak, sizeof(sigjmp_buf));
 			TRAP_OFF;
 			fclose(ff);
