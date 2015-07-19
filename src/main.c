@@ -106,6 +106,7 @@ static int searchKeyNum(void);
 static void
 fversion(FILE * f)
 {
+	endwin();
 	fprintf(f, "w3m version %s, options %s\n", w3m_version,
 #if LANG == JA
 		"lang=ja"
@@ -374,6 +375,7 @@ get_bookmark_file(const char *input)
 	}
 	return Strnew_charp(input)->ptr;
 fail:
+	endwin();
 	fprintf(stderr, "w3m: %s\n", error);
 	free(cwd);
 	exit(1);
@@ -707,6 +709,7 @@ main(int argc, char **argv, char **envp)
 				if (!set_param_option(argv[i])) {
 					/* option set failed */
 					/* FIXME: gettextize? */
+					endwin();
 					fprintf(stderr, "%s: bad option\n", argv[i]);
 					show_params_p = 1;
 					usage();
@@ -829,8 +832,10 @@ main(int argc, char **argv, char **envp)
 		if (newbuf == NULL) {
 			if (fmInitialized)
 				fmTerm();
-			if (err_msg->length)
+			if (err_msg->length) {
+				endwin();
 				fprintf(stderr, "%s", err_msg->ptr);
+			}
 			w3m_exit(2);
 		}
 		i = -1;
@@ -926,8 +931,10 @@ main(int argc, char **argv, char **envp)
 		}
 	}
 	if (w3m_dump) {
-		if (err_msg->length)
+		if (err_msg->length) {
+			endwin();
 			fprintf(stderr, "%s", err_msg->ptr);
+		}
 #ifdef USE_COOKIE
 		save_cookies();
 #endif				/* USE_COOKIE */
@@ -957,8 +964,10 @@ main(int argc, char **argv, char **envp)
 		}
 		if (fmInitialized)
 			fmTerm();
-		if (err_msg->length)
+		if (err_msg->length) {
+			endwin();
 			fprintf(stderr, "%s", err_msg->ptr);
+		}
 		if (newbuf == NO_BUFFER) {
 #ifdef USE_COOKIE
 			save_cookies();
