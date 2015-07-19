@@ -69,8 +69,9 @@ saveHistory(Hist * hist, size_t size)
 		disp_err_message("Can't open history", FALSE);
 		return;
 	}
-	for (item = hist->list->first; item && hist->list->nitem > size;
-	     item = item->next)
+	for (item = hist->list->first;
+	    item && (size_t)hist->list->nitem > size;
+	    item = item->next)
 		size++;
 	for (; item; item = item->next)
 		fprintf(f, "%s\n", (char *) item->ptr);
