@@ -174,9 +174,11 @@ static void
 post(TextList * argv)
 {
 	FormList *request;
-	char *p, *target = NULL, *charset = NULL, *enctype = NULL, *body = NULL, *boundary = NULL,
+	char *p, *target = NULL, *charset = NULL, *enctype = NULL,
+	    *body = NULL, *boundary = NULL,
 	*url = NULL;
-	int flag = FALSE, length = 0;
+	int flag = FALSE;
+	size_t length = 0;
 
 	while ((p = popText(argv))) {
 		if (!strcasecmp(p, "-download_only"))
@@ -191,17 +193,21 @@ post(TextList * argv)
 			body = popText(argv);
 		else if (!strcasecmp(p, "-boundary"))
 			boundary = popText(argv);
-		else if (!strcasecmp(p, "-length"))
-			length = atol(popText(argv));
-		else
+		else if (!strcasecmp(p, "-length")) {
+			const char *errstr;
+
+			length = (size_t)strtonum(popText(argv),
+			    0, SIZE_MAX, &errstr);
+		} else
 			url = p;
 	}
 	if (url) {
-		request =
-			newFormList(NULL, "post", charset, enctype, target, NULL, NULL);
+		request = newFormList(NULL, "post",
+		    charset, enctype, target, NULL, NULL);
 		request->body = body;
 		request->boundary = boundary;
-		request->length = (length > 0) ? length : (body ? strlen(body) : 0);
+		request->length = (length > 0) ? length :
+		    (body ? strlen(body) : 0);
 		internal_get(url, flag, request);
 	}
 }

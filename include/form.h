@@ -55,7 +55,7 @@ typedef struct form_list {
 	int nitems;
 	char *body;
 	char *boundary;
-	unsigned long length;
+	size_t length;
 } FormList;
 
 #ifdef MENU_SELECT
