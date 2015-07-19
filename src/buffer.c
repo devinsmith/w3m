@@ -633,9 +633,12 @@ writeBufferCache(Buffer * buf)
 		    fwrite1(l->bpos, cache) || fwrite1(l->bwidth, cache))
 			goto _error;
 		if (l->bpos == 0) {
-			if (fwrite(l->lineBuf, 1, l->size, cache) < l->size ||
-			    fwrite(l->propBuf, sizeof(Lineprop), l->size, cache) < l->size)
+			if (l->size < 0 || fwrite(l->lineBuf, 1,
+				l->size, cache) < (size_t)l->size ||
+			    fwrite(l->propBuf, sizeof(Lineprop),
+				l->size, cache) < (size_t)l->size) {
 				goto _error;
+			}
 		}
 	}
 
