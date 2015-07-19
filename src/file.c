@@ -326,7 +326,7 @@ check_compression(const char *path, URLFile * uf)
 }
 
 static char *
-compress_application_type(int compression)
+compress_application_type(enum CompressType compression)
 {
 	struct compression_decoder *d;
 

@@ -70,24 +70,24 @@ typedef struct _ParsedURL {
 	int is_nocache;
 } ParsedURL;
 
+enum CompressType {
+	CMP_NOCOMPRESS	= 0,
+	CMP_GZIP	= 1,
+	CMP_DEFLATE	= 2
+};
+
 typedef struct {
 	char is_cgi;
 	char encoding;
 	InputStream stream;
 	char *ext;
 	enum Scheme scheme;
-	int compression;
+	enum CompressType compression;
 	int content_encoding;
 	const char *guess_type;
 	char *url;
 	time_t modtime;
 } URLFile;
-
-enum CompressType {
-	CMP_NOCOMPRESS	= 0,
-	CMP_GZIP	= 1,
-	CMP_DEFLATE	= 2
-};
 
 #define ENC_7BIT	0
 #define ENC_BASE64	1
