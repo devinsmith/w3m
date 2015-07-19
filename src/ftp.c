@@ -647,7 +647,7 @@ disconnectFTP(void)
 	goto done;\
 }
 
-static Str size_int2str(long long);
+static Str size_int2str(off_t);
 
 static int
 ex_ftpdir_name_size_date(const char *line,
@@ -655,7 +655,7 @@ ex_ftpdir_name_size_date(const char *line,
 {
 	int ftype = FTPDIR_NONE;
 	const char *cp = line, *p;
-	long long size;
+	off_t size;
 
 	if (strlen(cp) < 11)
 		goto done;
@@ -735,7 +735,7 @@ done:
 }
 
 static Str
-size_int2str(long long size)
+size_int2str(off_t size)
 {
 	Str size_str;
 	int unit;

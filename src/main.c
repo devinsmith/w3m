@@ -6071,7 +6071,7 @@ DEFUN(tabL, TAB_LEFT, "Move current tab left")
 }
 
 void
-addDownloadList(pid_t pid, char *url, char *save, char *lock, long long size)
+addDownloadList(pid_t pid, char *url, char *save, char *lock, off_t size)
 {
 	DownloadList *d;
 
@@ -6119,7 +6119,7 @@ checkDownloadList(void)
 }
 
 static char *
-convert_size3(long long size)
+convert_size3(off_t size)
 {
 	Str tmp = Strnew();
 	int n;

@@ -229,9 +229,9 @@ HTMLlineproc0(char *istr, struct html_feed_environ * h_env,
 	      int internal);
 #define HTMLlineproc1(x,y) HTMLlineproc0(x,y,TRUE)
 extern Buffer *loadHTMLBuffer(URLFile * f, Buffer * newBuf);
-extern char *convert_size(long long size, int usefloat);
-extern char *convert_size2(long long size1, long long size2, int usefloat);
-extern void showProgress(long long * linelen, long long * trbyte);
+extern char *convert_size(off_t size, int usefloat);
+extern char *convert_size2(off_t size1, off_t size2, int usefloat);
+extern void showProgress(off_t *linelen, off_t *trbyte);
 extern void 
 init_henv(struct html_feed_environ *, struct readbuffer *,
 	  struct environment *, int, TextLineList *, int, int);
@@ -276,7 +276,7 @@ extern void calcTabPos(void);
 extern TabBuffer *deleteTab(TabBuffer * tab);
 extern void 
 addDownloadList(pid_t pid, char *url, char *save, char *lock,
-		long long size);
+		off_t size);
 extern void stopDownload(void);
 extern int checkDownloadList(void);
 extern void download_action(struct parsed_tagarg * arg);
