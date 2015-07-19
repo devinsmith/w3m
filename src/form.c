@@ -215,7 +215,7 @@ formtype(char *typestr)
 void
 formRecheckRadio(Anchor * a, Buffer * buf, FormItemList * fi)
 {
-	int i;
+	size_t i;
 	Anchor *a2;
 	FormItemList *f2;
 
@@ -235,7 +235,7 @@ formRecheckRadio(Anchor * a, Buffer * buf, FormItemList * fi)
 void
 formResetBuffer(Buffer * buf, AnchorList * formitem)
 {
-	int i;
+	size_t i;
 	Anchor *a;
 	FormItemList *f1, *f2;
 
@@ -980,7 +980,7 @@ preFormUpdateBuffer(Buffer * buf)
 {
 	struct pre_form *pf;
 	struct pre_form_item *pi;
-	int i;
+	size_t i;
 	Anchor *a;
 	FormList *fl;
 	FormItemList *fi;

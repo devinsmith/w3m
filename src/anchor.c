@@ -12,11 +12,12 @@ putAnchor(AnchorList * al, char *url, char *target, Anchor ** anchor_return,
 	int n, i, j;
 	Anchor *a;
 	BufferPoint bp = { 0 };
+
 	if (al == NULL) {
 		al = New(AnchorList);
 		al->anchors = NULL;
 		al->nanchor = al->anchormax = 0;
-		al->acache = -1;
+		al->acache = 0;
 	}
 	if (al->anchormax == 0) {
 		/* first time; allocate anchor buffer */
@@ -123,7 +124,7 @@ retrieveAnchor(AnchorList * al, int line, int pos)
 	if (al == NULL || al->nanchor == 0)
 		return NULL;
 
-	if (al->acache < 0 || al->acache >= al->nanchor)
+	if (al->acache >= al->nanchor)
 		al->acache = 0;
 
 	for (b = 0, e = al->nanchor - 1; b <= e; al->acache = (b + e) / 2) {
@@ -169,8 +170,9 @@ retrieveCurrentForm(Buffer * buf)
 Anchor *
 searchAnchor(AnchorList * al, char *str)
 {
-	int i;
+	size_t i;
 	Anchor *a;
+
 	if (al == NULL)
 		return NULL;
 	for (i = 0; i < al->nanchor; i++) {
@@ -203,7 +205,7 @@ _put_anchor_all(Buffer * buf, char *p1, char *p2, int line, int pos)
 static void
 reseq_anchor0(AnchorList * al, short *seqmap)
 {
-	int i;
+	size_t i;
 	Anchor *a;
 
 	if (!al)
@@ -221,7 +223,8 @@ reseq_anchor0(AnchorList * al, short *seqmap)
 static void
 reseq_anchor(Buffer * buf)
 {
-	int i, j, n, nmark = (buf->hmarklist) ? buf->hmarklist->nmark : 0;
+	size_t i;
+	int j, n, nmark = (buf->hmarklist) ? buf->hmarklist->nmark : 0;
 	short *seqmap;
 	Anchor *a, *a1;
 	HmarkerList *ml = NULL;
@@ -241,8 +244,8 @@ reseq_anchor(Buffer * buf)
 
 	seqmap = NewAtom_N(short, n);
 
-	for (i = 0; i < n; i++)
-		seqmap[i] = i;
+	for (j = 0; j < n; j++)
+		seqmap[j] = j;
 
 	n = nmark;
 	for (i = 0; i < buf->href->nanchor; i++) {
@@ -263,9 +266,9 @@ reseq_anchor(Buffer * buf)
 		}
 	}
 
-	for (i = 0; i < nmark; i++) {
-		ml = putHmarker(ml, buf->hmarklist->marks[i].line,
-				buf->hmarklist->marks[i].pos, seqmap[i]);
+	for (j = 0; j < nmark; j++) {
+		ml = putHmarker(ml, buf->hmarklist->marks[j].line,
+				buf->hmarklist->marks[j].pos, seqmap[j]);
 	}
 	buf->hmarklist = ml;
 
@@ -394,7 +397,7 @@ putHmarker(HmarkerList * ml, int line, int pos, int seq)
 Anchor *
 closest_next_anchor(AnchorList * a, Anchor * an, int x, int y)
 {
-	int i;
+	size_t i;
 
 	if (a == NULL || a->nanchor == 0)
 		return an;
@@ -415,7 +418,7 @@ closest_next_anchor(AnchorList * a, Anchor * an, int x, int y)
 Anchor *
 closest_prev_anchor(AnchorList * a, Anchor * an, int x, int y)
 {
-	int i;
+	size_t i;
 
 	if (a == NULL || a->nanchor == 0)
 		return an;
@@ -475,7 +478,8 @@ shiftAnchorPosition(AnchorList * al, HmarkerList * hl, int line, int pos,
 void
 addMultirowsImg(Buffer * buf, AnchorList * al)
 {
-	int i, j, k, col, ecol, pos;
+	size_t i;
+	int j, k, col, ecol, pos;
 	Image *img;
 	Anchor a_img = {0};
 	Anchor a_href = {0};
@@ -556,7 +560,8 @@ addMultirowsImg(Buffer * buf, AnchorList * al)
 void
 addMultirowsForm(Buffer * buf, AnchorList * al)
 {
-	int i, j, k, col, ecol, pos;
+	size_t i;
+	int j, k, col, ecol, pos;
 	Anchor a_form, *a;
 	Line *l, *ls;
 
@@ -611,7 +616,8 @@ addMultirowsForm(Buffer * buf, AnchorList * al)
 char *
 getAnchorText(Buffer * buf, AnchorList * al, Anchor * a)
 {
-	int hseq, i;
+	int hseq;
+	size_t i;
 	Line *l;
 	Str tmp = NULL;
 	char *p, *ep;
@@ -651,7 +657,7 @@ link_list_panel(Buffer * buf)
 	AnchorList *al;
 	Anchor *a;
 	FormItemList *fi;
-	int i;
+	size_t i;
 	char *t, *u, *p;
 	ParsedURL pu;
 	/* FIXME: gettextize? */

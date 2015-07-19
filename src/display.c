@@ -481,7 +481,8 @@ static void
 drawAnchorCursor0(Buffer * buf, AnchorList * al, int hseq, int prevhseq,
 		  int tline, int eline, int active)
 {
-	int i, j;
+	size_t j;
+	int i;
 	Line *l;
 	Anchor *an;
 

@@ -1790,7 +1790,8 @@ accesskey_menu(Buffer * buf)
 	AnchorList *al = buf->href;
 	Anchor *a;
 	Anchor **ap;
-	int i, key = -1;
+	size_t i;
+	int key = -1;
 	size_t j, n, nitem = 0;
 	char **label;
 	char *t;
@@ -1892,7 +1893,8 @@ list_menu(Buffer * buf)
 	AnchorList *al = buf->href;
 	Anchor *a;
 	Anchor **ap;
-	int i, key = -1, two = FALSE;
+	size_t i;
+	int key = -1, two = FALSE;
 	size_t n, nitem = 0;
 	char **label;
 	char *t;

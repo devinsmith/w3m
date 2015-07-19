@@ -256,7 +256,7 @@ deleteImage(Buffer * buf)
 {
 	AnchorList *al;
 	Anchor *a;
-	int i;
+	size_t i;
 
 	if (!buf)
 		return;
@@ -279,7 +279,7 @@ getAllImage(Buffer * buf)
 	AnchorList *al;
 	Anchor *a;
 	ParsedURL *current;
-	int i;
+	size_t i;
 
 	image_buffer = buf;
 	if (!buf)
@@ -304,7 +304,7 @@ showImageProgress(Buffer * buf)
 {
 	AnchorList *al;
 	Anchor *a;
-	int i, l, n;
+	size_t i, l, n;
 
 	if (!buf)
 		return;
@@ -319,7 +319,7 @@ showImageProgress(Buffer * buf)
 		}
 	}
 	if (n) {
-		message(Sprintf("%d/%d images loaded", l, n)->ptr,
+		message(Sprintf("%zu/%zu images loaded", l, n)->ptr,
 		      buf->cursorX + buf->rootX, buf->cursorY + buf->rootY);
 		refresh();
 	}

@@ -362,9 +362,9 @@ typedef struct _anchor {
 
 typedef struct _anchorList {
 	Anchor *anchors;
-	int nanchor;
-	int anchormax;
-	int acache;
+	size_t nanchor;
+	size_t anchormax;
+	size_t acache;
 } AnchorList;
 
 typedef struct {

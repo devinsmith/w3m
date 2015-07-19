@@ -1174,7 +1174,8 @@ do_dump(Buffer * buf)
 	if (w3m_dump & DUMP_SOURCE)
 		dump_source(buf);
 	if (w3m_dump == DUMP_BUFFER) {
-		int i;
+		size_t i;
+
 		saveBuffer(buf, stdout, FALSE);
 		if (displayLinkNumber && buf->href) {
 			printf("\nReferences:\n\n");
@@ -3148,7 +3149,8 @@ _followForm(int submit)
 	char *p;
 	FormItemList *fi, *f2;
 	Str tmp, tmp2;
-	int multipart = 0, i;
+	size_t i;
+	int multipart = 0;
 
 	if (Currentbuf->firstLine == NULL)
 		return;
