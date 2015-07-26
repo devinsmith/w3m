@@ -43,13 +43,6 @@ instead of bcopy, etc).
 is indented.
 * Improved Gopher support.
 
-Work that still needs to be done
---------------------------------
-* Privilege separation: decode images and do other nasty
-stuff in a jail.
-* Lots of compiler warnings need to be fixed.
-* Remove and clean up more code!
-
 Building and installing
 -----------------------
 	# pkg_add boehm-gc imlib2
