@@ -6,7 +6,7 @@ MAN=
 CFLAGS+=	-Wall -I${PREFIX}/include
 
 LDADD+=		-L${PREFIX}/lib -lz
-BINDIR=		${PREFIX}/libexec/w3m
+BINDIR=		${LIBEXEC_DIR}
 
 install:
 	install -d ${BINDIR}

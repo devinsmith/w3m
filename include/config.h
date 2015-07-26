@@ -10,8 +10,12 @@
 /* Name of package */
 #define PACKAGE "w3m"
 
+#define IMGDISPLAY   "imgdisplay"
+#define INFLATE_CMDNAME	"inflate"
+#define W3MBOOKMARK_CMDNAME	"bookmark"
+#define W3MHELPERPANEL_CMDNAME	"helperpanel"
+
 #define W3MCONFIG    "w3mconfig"
-#define IMGDISPLAY   "w3mimgdisplay"
 #define XFACE2XPM    "xface2xpm"
 
 #define BOOKMARK     "bookmark.html"
@@ -93,9 +97,6 @@
 #define DEFAULT_TERM	0	/* XXX */
 
 #define GUNZIP_CMDNAME  "gunzip"
-#define INFLATE_CMDNAME	"inflate"
-#define W3MBOOKMARK_CMDNAME	"w3mbookmark"
-#define W3MHELPERPANEL_CMDNAME	"w3mhelperpanel"
 #define DEV_TTY_PATH	"/dev/tty"
 #define CGI_EXTENSION	".cgi"
 

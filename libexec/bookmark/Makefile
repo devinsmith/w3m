@@ -1,6 +1,6 @@
 .include <../../config.mk>
 
-PROG=		w3mbookmark
+PROG=		bookmark
 MAN=
 
 CFLAGS+=	-I../../include -I${PREFIX}/include
@@ -9,10 +9,10 @@ LDADD+=		-L${PREFIX}/lib -lgc \
 		../../libindep/libindep.a \
 		../dep-dummy/dummy.o
 
-BINDIR=		${PREFIX}/libexec/w3m
+BINDIR=		${LIBEXEC_DIR}
 
 install:
 	install -d ${BINDIR}
-	install -m 755 w3mbookmark ${BINDIR}
+	install -m 755 bookmark ${BINDIR}
 
 .include <bsd.prog.mk>

@@ -1,6 +1,6 @@
 .include <../config.mk>
 
-PROG=		w3m
+PROG=		w3s
 
 SRCS=		anchor.c backend.c buffer.c cookie.c display.c \
 		entity.c etc.c file.c form.c frame.c ftp.c func.c \
@@ -20,7 +20,7 @@ CFLAGS+=	-DUSE_M17N -I../libwc
 
 SRCS+=		keybind.c
 
-MAN=		../doc/w3m.1
+MAN=		../doc/w3s.1
 
 CFLAGS+=	-I${PREFIX}/include -I../include
 
@@ -40,6 +40,6 @@ MANDIR=		${PREFIX}/man/man
 
 install:
 	install -d ${BINDIR}
-	install -m 755 w3m ${BINDIR}
+	install -m 755 w3s ${BINDIR}
 
 .include <bsd.prog.mk>

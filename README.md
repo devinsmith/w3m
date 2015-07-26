@@ -1,11 +1,11 @@
-w3m: terminal-based web browser & pager
+w3s: terminal-based web browser & pages
 =======================================
 
 This repository is for the continued development of the w3m web
 browser and pager, since upstream seems to have died down. It is
 based on w3m 0.5.3, released 2011-01-15.
 
-w3m is ideal for browsing content-focused websites where the
+w3s is ideal for browsing content-focused websites where the
 clutter displayed by graphical web browsers gets in the way of
 the actual content.
 
@@ -55,7 +55,7 @@ Building and installing
 	# pkg_add boehm-gc imlib2
 	# make
 	# make install
-	$ w3m https://en.wikipedia.org
+	$ w3s https://en.wikipedia.org
 
 Additionally, it's possible to build without m17n and/or image
 support:
@@ -63,4 +63,4 @@ support:
 	# pkg_add boehm-gc
 	# USE_IMAGE=no USE_M17N=no make
 	# make install
-	$ w3m https://en.wikipedia.org
+	$ w3s https://en.wikipedia.org
