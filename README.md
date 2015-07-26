@@ -1,4 +1,4 @@
-w3s: terminal-based web browser & pages
+w3s: terminal-based web browser & pager
 =======================================
 
 This repository is for the continued development of the w3m web
