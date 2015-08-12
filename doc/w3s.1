@@ -3,9 +3,9 @@
 .TH W3M 1 Local
 .UC 4
 .SH NAME
-w3m \- a text based Web browser and pager
+w3s \- a text based Web browser and pager
 .SH SYNOPSIS
-.B w3m
+.B w3s
 [options] [URL or filename]
 .PP
 .SH DESCRIPTION
@@ -18,28 +18,19 @@ w3m \- a text based Web browser and pager
 .if \nN==0 .nr N 10
 .if \nD==0 .nr D 5
 .I
-w3m
-is a World Wide Web (WWW) text based client. It has English and
-Japanese help files and an option menu and can be configured to
-use either language. It will display hypertext markup language
-(HTML) documents containing links to files residing on the local
-system, as well as files residing on remote systems. It can
-display HTML tables and frames.
-In addition, it can be used as a "pager" in much the same manner
-as "more" or "less".
-Current versions of
-.I
-w3m
-run on
-Unix (Solaris, SunOS, HP-UX, Linux, FreeBSD, and EWS4800)
-and on
-Microsoft Windows 9x/NT.
+w3s
+is a World Wide Web (WWW) text based client based on w3m.
+It will display hypertext markup language (HTML) documents
+containing links to files residing on the local system, as
+well as files residing on remote systems. It can display HTML
+tables and frames.  In addition, it can be used as a "pager"
+in much the same manner as "more" or "less".
 .PP
 .SH OPTIONS
-At start up, \fIw3m\fR will load any local
+At start up, \fIw3s\fR will load any local
 file or remote URL specified at the command
 line.  For help with runtime options, press \fB"H"\fR
-while running \fIw3m\fR.
+while running \fIw3s\fR.
 Command line options are:
 .PP
 .TP
@@ -169,7 +160,7 @@ specify config file
 show usage
 .TP
 .B -version
-show w3m version
+show w3s version
 .TP
 .B -reqlog
 write request logfile
@@ -178,75 +169,62 @@ write request logfile
 DO NOT USE
 .SH EXAMPLES
 .TP
-To use w3m as a pager:
+To use w3s as a pager:
 .br
-$ ls | w3m
+$ ls | w3s
 .br
 .TP
-To use w3m to translate HTML files:
+To use w3s to translate HTML files:
 .br
-$ cat foo.html | w3m -T text/html
+$ cat foo.html | w3s -T text/html
 .TP
 or
 .br
-$ cat foo.html | w3m -dump -T text/html >foo.txt
+$ cat foo.html | w3s -dump -T text/html >foo.txt
 .SH FILES
 .TP
-.I ${HOME}/.w3m/config
+.I ${HOME}/.w3s/config
 configuration file
 .TP
-.I ${HOME}/.w3m/keymap
+.I ${HOME}/.w3s/keymap
 key binding configuration file
 .\" .TP
-.\" .I ${HOME}/.w3m/menu
+.\" .I ${HOME}/.w3s/menu
 .\" ???
 .TP
-.I ${HOME}/.w3m/mouse
+.I ${HOME}/.w3s/mouse
 mouse configuration file
 .TP
-.I ${HOME}/.w3m/cookie
+.I ${HOME}/.w3s/cookie
 cookie file
 .TP
-.I ${HOME}/.w3m/history
+.I ${HOME}/.w3s/history
 history file
 .TP
-.I ${HOME}/.w3m/passwd
+.I ${HOME}/.w3s/passwd
 passowrd and username file
 .TP
-.I ${HOME}/.w3m/pre_form
+.I ${HOME}/.w3s/pre_form
 form parameters file
 .TP
-.I ${HOME}/.w3m/mailcap
+.I ${HOME}/.w3s/mailcap
 external viewer configuration file
 .TP
-.I ${HOME}/.w3m/mime.types
+.I ${HOME}/.w3s/mime.types
 MIME types file
 .\" .TP
-.\" .I ${HOME}/.w3m/urimethodmap
+.\" .I ${HOME}/.w3s/urimethodmap
 .\" ???
-.SH NOTES
-This is the
-.I
-w3m
-0.5.3 Release.
 .PP
-Please see the MANUAL.html file distributed with w3m for
+Please see the MANUAL.html file distributed with w3s for
 more detailed documentation.
 
-Additional information about
-.I
-w3m
-may be found on its Japanese language Web site located at:
-  http://w3m.sourceforge.net/index.ja.html
-.br
-or on its English version of the site at:
-  http://w3m.sourceforge.net/index.en.html
 .SH ACKNOWLEDGMENTS
 .I
 w3m
-has incorporated code from several sources.
+incorporated code from several sources.
 Hans J. Boehm, Alan J. Demers, Xerox Corp. and Silicon Graphics
-have the copyright of the GC library comes with w3m package.
+have the copyright of the GC library comes with w3s package.
 Users have contributed patches and suggestions over time.
 .SH AUTHOR
 Akinori ITO <aito@fw.ipsj.or.jp>
