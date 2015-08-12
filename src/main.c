@@ -604,15 +604,6 @@ main(int argc, char **argv, char **envp)
 				w3m_dump = 0;
 				w3m_halfload = TRUE;
 				DefaultType = default_type = "text/html";
-			} else if (!strcmp("-backend", argv[i])) {
-				w3m_backend = TRUE;
-			} else if (!strcmp("-backend_batch", argv[i])) {
-				w3m_backend = TRUE;
-				if (++i >= argc)
-					usage();
-				if (!backend_batch_commands)
-					backend_batch_commands = newTextList();
-				pushText(backend_batch_commands, argv[i]);
 			} else if (!strcmp("-cols", argv[i])) {
 				if (++i >= argc)
 					usage();
@@ -750,7 +741,7 @@ main(int argc, char **argv, char **envp)
 #ifdef USE_BINMODE_STREAM
 	setmode(fileno(stdout), O_BINARY);
 #endif
-	if (!w3m_dump && !w3m_backend) {
+	if (!w3m_dump) {
 		fmInit();
 	}
 #ifdef USE_IMAGE
@@ -773,9 +764,6 @@ main(int argc, char **argv, char **envp)
 	 * if (w3m_dump) WcOption.pre_conv = WC_TRUE;
 	 */
 #endif
-
-	if (w3m_backend)
-		backend();
 
 	if (w3m_dump)
 		mySignal(SIGINT, SIG_IGN);

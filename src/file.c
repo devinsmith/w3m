@@ -2115,7 +2115,6 @@ page_loaded:
 		proc = loadHTMLBuffer;
 	else if (is_plain_text_type(t))
 		proc = loadBuffer;
-	else if (w3m_backend);
 	else if (!(w3m_dump & ~DUMP_FRAME) || is_dump_text_type(t)) {
 		if (!do_download && doExternal(f,
 				      pu.real_file ? pu.real_file : pu.file,
@@ -2165,10 +2164,6 @@ page_loaded:
 			copyParsedURL(&b->currentURL, &pu);
 		if (is_html_type(t))
 			b->type = "text/html";
-		else if (w3m_backend) {
-			Str s = Strnew_charp(t);
-			b->type = s->ptr;
-		}
 #ifdef USE_IMAGE
 		else if (proc == loadImageBuffer)
 			b->type = "text/html";
@@ -6895,12 +6890,6 @@ loadHTMLstream(URLFile * f, Buffer * newBuf, FILE * src, int internal)
 	if (w3m_halfdump) {
 		TRAP_OFF;
 		print_internal_information(&htmlenv1);
-		return;
-	}
-	if (w3m_backend) {
-		TRAP_OFF;
-		print_internal_information(&htmlenv1);
-		backend_halfdump_buf = htmlenv1.buf;
 		return;
 	}
 phase2:

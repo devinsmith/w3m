@@ -2,7 +2,7 @@
 
 PROG=		w3s
 
-SRCS=		anchor.c backend.c buffer.c cookie.c display.c \
+SRCS=		anchor.c buffer.c cookie.c display.c \
 		entity.c etc.c file.c form.c frame.c ftp.c func.c \
 		history.c istream.c linein.c local.c mailcap.c \
 		main.c map.c menu.c mimehead.c parsetagx.c rc.c \
