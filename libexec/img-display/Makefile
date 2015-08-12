@@ -11,7 +11,7 @@ CFLAGS+=	-Wall -I../../include -I${PREFIX}/include \
 LDADD+=		-L${PREFIX}/lib -L${X11BASE}/lib -lImlib2 \
 		-lX11 -lXext -lxcb -lfreetype
 
-BINDIR=		${LIBEXEC_DIR}
+BINDIR?=	${LIBEXEC_DIR}
 
 install:
 	install -d ${BINDIR}

@@ -6,7 +6,7 @@ MAN=
 CFLAGS+=	-Wall -I${PREFIX}/include
 
 LDADD+=		-L${PREFIX}/lib -lz
-BINDIR=		${LIBEXEC_DIR}
+BINDIR?=	${LIBEXEC_DIR}
 
 install:
 	install -d ${BINDIR}
