@@ -35,11 +35,7 @@ LDADD+=		-L${PREFIX}/lib -lm -ltermcap -lcurses \
 LDADD+=		../libwc/libwc.a
 .endif
 
-BINDIR=		${PREFIX}/bin
-MANDIR=		${PREFIX}/man/man
-
-install:
-	install -d ${BINDIR}
-	install -m 755 w3s ${BINDIR}
+BINDIR?=	${PREFIX}/bin
+MANDIR?=	${PREFIX}/man/man
 
 .include <bsd.prog.mk>
