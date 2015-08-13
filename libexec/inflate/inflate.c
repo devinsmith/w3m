@@ -1,5 +1,4 @@
 /* $Id: inflate.c,v 1.7 2002/01/31 18:28:24 ukai Exp $ */
-#include <sys/tame.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <zlib.h>
@@ -19,8 +18,6 @@ main(int argc, char **argv)
 	FILE *f;
 	char inbuf[BUFSIZE], outbuf[BUFSIZE];
 	int status, flush, retry = 0, len = 0;
-
-	tame(TAME_STDIO);
 
 	if (argc > 1) {
 		f = fopen(argv[1], "rb");

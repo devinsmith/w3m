@@ -1,5 +1,4 @@
 /* $Id: w3mimgdisplay.c,v 1.19 2010/12/21 10:13:55 htrb Exp $ */
-#include <sys/tame.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -31,8 +30,6 @@ main(int argc, char **argv)
 {
 	int len;
 	char buf[1024 + 128];
-
-	tame(TAME_STDIO);
 
 	GetOption(argc, argv);
 	if (!defined_debug)
