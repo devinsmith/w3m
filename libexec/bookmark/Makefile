@@ -9,7 +9,7 @@ LDADD+=		-L${PREFIX}/lib -lgc \
 		../../libindep/libindep.a \
 		../dep-dummy/dummy.o
 
-BINDIR?=	${LIBEXEC_DIR}
+BINDIR?=	${LIBEXEC_DIR}/cgi-bin
 
 install:
 	install -d ${BINDIR}
