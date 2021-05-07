@@ -15,6 +15,7 @@
 #include <unistd.h>
 #include <curses.h>
 #include <ctype.h>
+#include <limits.h>
 /* foo */
 
 #include "html.h"
