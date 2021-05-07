@@ -41,8 +41,10 @@ instead of bcopy, etc).
 is indented.
 * Improved Gopher support.
 
-Building and installing
------------------------
+## Building and installing
+
+#### OpenBSD
+
 	# pkg_add boehm-gc imlib2
 	# make
 	# make install
@@ -55,3 +57,15 @@ support:
 	# USE_IMAGE=no USE_M17N=no make
 	# make install
 	$ w3s https://en.wikipedia.org
+
+#### Linux
+Under Linux based distributions you can should use CMake to build
+this program.
+
+    $ sudo apt install libgc-dev libbsd-dev
+    $ mkdir build
+    $ cd build
+    $ cmake ..
+    $ make
+    $ make install
+    $ w3s https://en.wikipedia.org
