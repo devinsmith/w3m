@@ -13,6 +13,8 @@
  * to warranty of fitness of purpose, or merchantability, or results obtained
  * from use of this software.
  */
+
+#define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
 #include <gc.h>
