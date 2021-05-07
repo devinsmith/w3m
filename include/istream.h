@@ -15,7 +15,7 @@ struct stream_buffer {
 
 typedef struct stream_buffer *StreamBuffer;
 
-struct file_handle {
+struct w3s_file_handle {
 	FILE *f;
 	void (*close) ();
 };
@@ -46,7 +46,7 @@ struct base_stream {
 
 struct file_stream {
 	struct stream_buffer stream;
-	struct file_handle *handle;
+	struct w3s_file_handle *handle;
 	char type;
 	char iseos;
 	int (*read) ();
