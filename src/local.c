@@ -10,6 +10,9 @@
 #include <unistd.h>
 #include "local.h"
 #include "hash.h"
+#ifdef USE_LIBBSD
+#include <bsd/stdlib.h>
+#endif
 
 #define CGIFN_NORMAL     0
 #define CGIFN_LIBDIR     1

@@ -23,6 +23,9 @@
 #include "local.h"
 #include "regex.h"
 #include "terms.h"
+#ifdef USE_LIBBSD
+#include <bsd/stdlib.h>
+#endif
 
 #ifndef max
 #define max(a,b)		((a) > (b) ? (a) : (b))

@@ -18,6 +18,9 @@
 #include <limits.h>
 #include "local.h"
 #include "regex.h"
+#ifdef USE_LIBBSD
+#include <bsd/stdlib.h>
+#endif
 
 static int is_saved = 1;
 static const char *special_domain[] = {

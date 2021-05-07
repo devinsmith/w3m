@@ -30,6 +30,11 @@ extern int do_getch();
 #endif
 #include "terms.h"
 
+#ifdef USE_LIBBSD
+#include <bsd/stdlib.h>
+#include <bsd/string.h>
+#endif
+
 #define DSTR_LEN	256
 
 Hist *LoadHist;

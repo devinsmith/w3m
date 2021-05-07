@@ -15,6 +15,9 @@
 #include <curses.h>
 #include <ctype.h>
 #include <assert.h>
+#ifdef USE_LIBBSD
+#include <bsd/string.h>
+#endif
 
 struct auth_pass {
 	int bad;

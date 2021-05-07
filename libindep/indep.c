@@ -10,6 +10,9 @@
 #include "Str.h"
 #include <gc.h>
 #include "entity.h"
+#ifdef USE_LIBBSD
+#include <bsd/string.h>
+#endif
 
 const unsigned char QUOTE_MAP[0x100] = {
 	/* NUL SOH STX ETX EOT ENQ ACK BEL  BS  HT  LF  VT  FF  CR  SO  SI */
