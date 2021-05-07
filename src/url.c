@@ -9,11 +9,14 @@
 #include <signal.h>
 #include <setjmp.h>
 #include <errno.h>
-#include <tls.h>
 #include <unistd.h>
 #include <curses.h>
 #include <assert.h>
 #include <ctype.h>
+
+#include <openssl/rand.h>
+#include <openssl/ssl.h>
+#include <openssl/err.h>
 
 #include <sys/stat.h>
 
@@ -226,63 +229,72 @@ KeyAbort(int sig)
 }
 
 static int
-openTLSHandle(int sock, const char *hostname,
-    struct tls **out_tls, struct tls_config **out_config)
+openTLSHandle(int sock, const char *hostname, SSL **out_tls)
 {
-	struct tls_config *config = NULL;
-	struct tls *client = NULL;
+  int ret;
+  SSL_CTX *ssl_context;
+  SSL *client = NULL;
 
-	if (!tls_initialized && tls_init() == -1) {
-		fprintf(stderr, "TLS error: tls_init() failed." \
-		    "Something is very wrong.");
-		exit(1);
-	}
+  if (!tls_initialized) {
+    /* Register the error strings for libcrypto & libssl */
+    SSL_load_error_strings();
+    /* Register the available ciphers and digests */
+    SSL_library_init();
+    OpenSSL_add_all_algorithms();
+  }
 
-	tls_initialized = TRUE;
+  tls_initialized = TRUE;
 
-	config = tls_config_new();
-	if (config == NULL) {
-		disp_err_message(Strnew_charp(
-		    "TLS error: tls_config_new() failed")->ptr, FALSE);
-		return -1;
-	}
+  ssl_context = SSL_CTX_new(TLS_client_method());
+  if (ssl_context == NULL) {
+    disp_err_message(Strnew_charp(
+        "TLS error: SSL_CTX_new() failed")->ptr, FALSE);
+    return -1;
+  }
 
-	if (tls_config_set_ciphers(config, "HIGH:!aNULL") == -1) {
-		disp_err_message(Strnew_charp(
-		    "TLS error: tls_config_set_ciphers() failed")->ptr, FALSE);
-		tls_config_free(config);
-		return -1;
-	}
+  SSL_CTX_set_mode(ssl_context, SSL_MODE_AUTO_RETRY);
+  SSL_CTX_set_session_cache_mode(ssl_context, SSL_SESS_CACHE_CLIENT);
 
-	client = tls_client();
-	if (client == NULL) {
-		disp_err_message(Strnew_charp(
-		    "TLS error: tls_client() failed")->ptr, FALSE);
-		tls_config_free(config);
-		return -1;
-	}
+  client = SSL_new(ssl_context);
+  if (client == NULL) {
+    disp_err_message(Strnew_charp(
+        "TLS error: SSL_new() failed")->ptr, FALSE);
+    return -1;
+  }
 
-	if (tls_configure(client, config) == -1) {
-		goto error;
-	}
+  if (!SSL_set_fd(client, sock)) {
+    disp_err_message(Strnew_charp(
+        "TLS error: SSL_set_fd() failed")->ptr, FALSE);
+    return -1;
+  }
 
-	if (tls_connect_socket(client, sock, hostname) == -1) {
-		goto error;
-	}
+  while ((ret = SSL_connect(client)) == -1) {
+    fd_set fds;
+    int ssl_err;
 
-	*out_tls = client;
-	*out_config = config;
-	return 0;
-error:
-	disp_err_message(Sprintf(
-	    "TLS error: %s", tls_error(client))->ptr, FALSE);
-	tls_config_free(config);
-	tls_free(client);
-	return -1;
+    FD_ZERO(&fds);
+    FD_SET(sock, &fds);
+
+    switch (ssl_err = SSL_get_error(client, ret)) {
+    case SSL_ERROR_WANT_READ:
+      select(sock + 1, &fds, NULL, NULL, NULL);
+      break;
+    case SSL_ERROR_WANT_WRITE:
+      select(sock + 1, NULL, &fds, NULL, NULL);
+      break;
+    default:
+      disp_err_message(Strnew_charp("TLS error during connect")->ptr, FALSE);
+      return -1;
+      break;
+    }
+  }
+
+  *out_tls = client;
+  return 0;
 }
 
 static void
-TLS_write_from_file(struct tls *tls, const char *file)
+TLS_write_from_file(SSL *tls, const char *file)
 {
 	FILE *f = fopen(file, "r");
 	unsigned char buf[1024];
@@ -295,7 +307,7 @@ TLS_write_from_file(struct tls *tls, const char *file)
 			if (read_count == 0) {
 				break;
 			}
-			(void)tls_write(tls, buf, read_count, &outlen);
+			(void)SSL_write(tls, buf, read_count);
 		}
 		fclose(f);
 	}
@@ -1229,8 +1241,7 @@ openURL(char *url, ParsedURL * pu, ParsedURL * current,
 	char *p, *q, *u;
 	URLFile uf;
 	HRequest hr0;
-	struct tls *tls = NULL;
-	struct tls_config *tls_cfg = NULL;
+	SSL *tls = NULL;
 
 	if (hr == NULL)
 		hr = &hr0;
@@ -1366,8 +1377,7 @@ retry:
 			hr->flag |= HR_FLAG_PROXY;
 			if (pu->scheme == SCM_HTTPS && *status == HTST_CONNECT) {
 				sock = tls_socket_of(ouf->stream);
-				if (openTLSHandle(sock, pu->host,
-				    &tls, &tls_cfg) == -1) {
+				if (openTLSHandle(sock, pu->host, &tls) == -1) {
 					*status = HTST_MISSING;
 					return uf;
 				}
@@ -1376,13 +1386,11 @@ retry:
 				     schemetable[HTTPS_proxy_parsed.scheme].
 					  cmdname, HTTPS_proxy_parsed.port);
 				tls = NULL;
-				tls_cfg = NULL;
 			} else {
 				sock = openSocket(HTTP_proxy_parsed.host,
 				      schemetable[HTTP_proxy_parsed.scheme].
 					   cmdname, HTTP_proxy_parsed.port);
 				tls = NULL;
-				tls_cfg = NULL;
 			}
 			if (sock < 0) {
 #ifdef SOCK_DEBUG
@@ -1412,8 +1420,7 @@ retry:
 				return uf;
 			}
 			if (pu->scheme == SCM_HTTPS) {
-				if (openTLSHandle(sock, pu->host,
-				    &tls, &tls_cfg) == -1) {
+				if (openTLSHandle(sock, pu->host, &tls) == -1) {
 					*status = HTST_MISSING;
 					return uf;
 				}
@@ -1426,7 +1433,7 @@ retry:
 			size_t outlen;
 			uf.stream = newTLSStream(tls, sock);
 			if (tls)
-				tls_write(tls, tmp->ptr, tmp->length, &outlen);
+				SSL_write(tls, tmp->ptr, tmp->length);
 			else
 				write(sock, tmp->ptr, tmp->length);
 			if (w3m_reqlog) {

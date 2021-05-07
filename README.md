@@ -23,8 +23,6 @@ Big5, KOI8-R, etc (see charset-list)
 
 Changes since 0.5.3
 -------------------
-* Use libtls from [LibreSSL](http://libressl.org) to implement
-Transport Layer Security (HTTPS) cleanly.
 * NULL pointer dereference and buffer overflow bugs fixed.
 * Format string fixes (including Y2038 fixes).
 * Inserted checks for integer overflow in allocation functions.

@@ -5,7 +5,6 @@
 #include <unistd.h>
 #include <signal.h>
 #include <curses.h>
-#include <tls.h>
 
 #define	uchar		unsigned char
 
@@ -135,7 +134,7 @@ static int
 tls_read_is(struct tls_handle *tls, char *buf, int len)
 {
 	size_t outlen;
-	if (tls_read(tls->tls, buf, len, &outlen) == -1 || outlen > INT_MAX) {
+	if ((outlen = SSL_read(tls->tls, buf, len)) == -1 || outlen > INT_MAX) {
 		return -1;
 	}
 	return (int) outlen;
@@ -144,11 +143,11 @@ tls_read_is(struct tls_handle *tls, char *buf, int len)
 static void
 tls_close_is(struct tls_handle *tls)
 {
-	(void)tls_close(tls->tls);
+	(void)SSL_shutdown(tls->tls);
 }
 
 InputStream
-newTLSStream(struct tls *tls, int sock)
+newTLSStream(SSL *tls, int sock)
 {
 	InputStream stream;
 	if (sock < 0)

@@ -8,6 +8,11 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
+#include <openssl/rand.h>
+#include <openssl/ssl.h>
+#include <openssl/err.h>
+
+
 struct stream_buffer {
 	unsigned char *buf;
 	int size, cur, next;
@@ -21,7 +26,7 @@ struct w3s_file_handle {
 };
 
 struct tls_handle {
-	struct tls *tls;
+	SSL *tls;
 	int sock;
 };
 
@@ -99,7 +104,7 @@ typedef union input_stream *InputStream;
 extern InputStream newInputStream(int des);
 extern InputStream newFileStream(FILE * f, void (*closep) ());
 extern InputStream newStrStream(Str s);
-extern InputStream newTLSStream(struct tls *tls, int sock);
+extern InputStream newTLSStream(SSL *tls, int sock);
 extern InputStream newEncodedStream(InputStream is, char encoding);
 extern int ISclose(InputStream stream);
 extern int ISgetc(InputStream stream);
