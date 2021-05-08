@@ -62,7 +62,7 @@ if (USE_M17N)
 endif()
 
 add_subdirectory(libindep)
-#add_subdirectory(libexec)
+add_subdirectory(libexec)
 add_subdirectory(src)
-#add_subdirectory(doc)
 
+install(DIRECTORY doc DESTINATION share/doc/w3s)

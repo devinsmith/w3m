@@ -33,6 +33,7 @@ target_link_libraries(${TARGET_NAME} PRIVATE ${LIBRARIES})
 target_include_directories(${TARGET_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/include ${INCLUDE_DIRS})
 #configure_file(config.h.in config.h)
 
+install(TARGETS w3s DESTINATION bin)
 #if(MSVC)
 #  target_compile_options(${TARGET_NAME} PRIVATE /W4 /WX)
 #else()

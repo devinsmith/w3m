@@ -17,7 +17,7 @@ Features
 * Renders tables, hyperlinks, forms, lists, horizontal rules,
 headings, images (in xterm, using imlib2).
 * vi(1)-like control scheme
-* Support for multiple character encodings: UTF-8, Shift_JIS,
+* Support for multiple character encodings: UTF-8, Shift\_JIS,
 Big5, KOI8-R, etc (see charset-list)
 * and cookies.
 
@@ -35,7 +35,7 @@ hand-rolled evilness.
 	doing anything useful beyond the non-MATRIX code.
 	* Unused character encodings (UTF-7, Johab...)
 	* Replacements for standard interfaces (curses, C library stuff...)
-* Use modern C features (size_t, const, enums, snprintf, memcpy 
+* Use modern C features (size\_t, const, enums, snprintf, memcpy 
 instead of bcopy, etc).
 * Formatted the code to a more readable style where every block
 is indented.
@@ -62,7 +62,7 @@ support:
 Under Linux based distributions you can should use CMake to build
 this program.
 
-    $ sudo apt install libgc-dev libbsd-dev
+    $ sudo apt install libgc-dev libbsd-dev libimlib2-dev
     $ mkdir build
     $ cd build
     $ cmake ..
