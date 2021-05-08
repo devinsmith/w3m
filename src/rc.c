@@ -11,6 +11,9 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <limits.h>
+#ifdef USE_LIBBSD
+#include <bsd/stdlib.h>
+#endif
 
 struct param_ptr {
 	char *name;

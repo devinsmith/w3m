@@ -19,6 +19,17 @@ if (BSD_FOUND)
   list(APPEND LIBRARIES ${BSD_LIBRARIES})
 endif()
 
+if (USE_IMAGE)
+  add_definitions(-DUSE_IMAGE)
+  list(APPEND SOURCES image.c)
+endif()
+
+if (USE_M17N)
+  add_definitions(-DUSE_M17N)
+  list(APPEND INCLUDE_DIRS wc)
+  list(APPEND LIBRARIES wc)
+endif()
+
 if (NEED_LINKING_AGAINST_LIBM)
   list(APPEND LIBRARIES m)
 endif()
