@@ -16,4 +16,4 @@ target_compile_definitions(${TARGET_NAME} PRIVATE DUMMY)
 #  target_compile_options(${TARGET_NAME} PRIVATE -Wall -Werror)
 #endif()
 
-install(TARGETS ${TARGET_NAME} DESTINATION libexec/w3s)
+install(TARGETS ${TARGET_NAME} DESTINATION libexec/w3s/cgi-bin)
